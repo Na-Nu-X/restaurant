@@ -1,0 +1,31 @@
+@import "../../partials/variables";
+
+.navigation_bar {
+    position: fixed;
+    width: 100%;
+    background-color: $yellow-color;
+    z-index: 1000;
+
+    ul {
+        li {
+            display: inline-block;
+            list-style-type: none;
+
+            a {
+                display: inline-block;
+                padding: 15px 10px;
+                color: $orange-color;
+                text-decoration: none;
+                text-transform: uppercase;
+                border-bottom: 1px solid $yellow-color;
+                transition: transform 0.1s ease, border-color 0.1s ease;
+
+                &:hover,
+                &:active {
+                    transform: translateY(-2px);
+                    border-color: $orange-color;
+                }
+            }
+        }
+    }
+}

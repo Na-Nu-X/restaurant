@@ -1,0 +1,44 @@
+@import "../../partials/variables";
+
+.banner {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: $main-width;
+    width: 100%;
+    height: calc(100vh - 49px - 100px);
+    padding: 100px + 49px 100px 0px 100px;
+
+    h1 {
+        font-family: $heading-font;
+        font-size: 3em;
+    }
+
+    .buttons {
+        display: flex;
+        gap: 20px;
+
+        .book,
+        .order {
+            all: unset;
+            padding: 10px 20px;
+            border-radius: $small-border-radius;
+            transition: transform 0.3s ease;
+
+            &:hover {
+                transform: scale(1.05);
+                cursor: pointer;
+            }
+        }
+    
+        .book {
+            background-color: $orange-color;
+            color: $secondary-color;
+        }
+
+        .order {
+            background-color: $yellow-color;
+            border: 1px solid $main-color;
+        }
+    }
+}
