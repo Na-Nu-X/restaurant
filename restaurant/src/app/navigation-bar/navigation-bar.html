@@ -11,11 +11,38 @@
         </ul>
 
         <div class="cart">
-            <p class="amount">0</p>
+            <p class="amount">{{ cart_amount$ | async }}</p>
 
-            <button class="show_cart" title="Zobraziť košík" aria-label="Zobraziť košík">
+            <button class="show_cart" title="Zobraziť košík" aria-label="Zobraziť košík" (click)="showCart()">
                 <i class="fa-solid fa-basket-shopping"></i> <!-- https://fontawesome.com/icons/basket-shopping -->
             </button>
         </div>
     </div>
 </nav>
+
+<dialog #cart class="cart_modal">
+    <div class="top">
+        <h2>Váš košík</h2>
+
+        <button class="close-btn" (click)="closeCart()">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+
+    <div class="middle">
+        <p class="empty_message" *ngIf="!cart_items || cart_items.length === 0">Váš košík je zatiaľ prázdny.</p>
+
+        <div class="all_items" *ngIf="cart_items && cart_items.length > 0">
+            <div class="one_item" *ngFor="let one_item of cart_items">
+                <img src="images/{{ one_item.image }}" alt="">
+
+                <p class="title">{{ one_item.title }}</p>
+                <p class="price">{{ (one_item.price / 100) | currency:'EUR':'':'1.2-2':'sk-SK' }}<span>€</span></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom" *ngIf="cart_items && cart_items.length > 0">
+        <button class="checkout">Pokračovať k platbe</button>
+    </div>
+</dialog>

@@ -77,10 +77,21 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'restaurant',
+        'USER': 'restaurant_admin',
+        'PASSWORD': 'aw!85b_!zgkz&gvg7rs2kr856t4v9!aeummgxipakwqu$8mh8&',
+        'HOST': 'localhost',
+        'PORT': '5433',
     }
 }
 

@@ -44,9 +44,11 @@ restaurant/__screenshots__/
 Thumbs.db
 
 # Django
-backend/venv/
+backend/.venv/
 backend/__pycache__/
 backend/db.sqlite3
 backend/staticfiles/
 backend/media/
 *.pyc
+
+.env

@@ -88,6 +88,87 @@
     }
 }
 
+.cart_modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    &::backdrop {
+        background-color: transparentize($main-color, 0.8);
+        backdrop-filter: blur(5px); 
+    }
+
+    .top {
+
+    }
+
+    .middle {
+        .all_items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            justify-content: center; 
+            justify-items: center;
+            align-items: center; 
+            gap: 10px;
+            width: 100%; 
+            margin: 0px auto;
+            padding: 0px 20px;
+
+            .one_item {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                width: 100%;
+                padding: 15px;
+                background-color: $secondary-color; 
+                border-radius: $medium-border-radius;
+                box-shadow: 0 4px 6px transparentize($main-color, 0.92), 0 2px 4px transparentize($main-color, 0.95);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            
+                &:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 10px 20px transparentize($main-color, 0.82), 0 4px 6px transparentize($main-color, 0.88);
+                    cursor: pointer;
+                }
+
+                img {
+                    max-width: 100%;
+                    width: 100%;
+                    aspect-ratio: 1 / 1;
+                    object-fit: cover;
+                    object-position: center;
+                    border-radius: $medium-border-radius;
+                }
+        
+                .title {
+                    margin-bottom: 10px;
+                    text-align: center;
+                    font-family: $heading-font;
+                    font-size: 1.2em;
+                    font-weight: bold;
+                }
+
+                .price {
+                    font-size: 1.2em;
+                    font-weight: bold;
+                    line-height: 1;
+                
+                    span {
+                        font-size: 0.6em;
+                        vertical-align: super;
+                        margin-left: 2px;
+                    }
+                }
+            }
+        }
+    }
+
+    .bottom {
+
+    }
+}
+
 @media (max-width: 600px) {
     .navigation_bar {
         .navigation_container {

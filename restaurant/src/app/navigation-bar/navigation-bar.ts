@@ -3,25 +3,44 @@ import {
   HostListener, 
   afterNextRender, 
   ViewChild, 
-  ElementRef 
+  ElementRef,
+  OnInit,
 } from "@angular/core"
+
+import { 
+  AsyncPipe, 
+  CurrencyPipe,
+  CommonModule
+} from "@angular/common"
+
+import { Cart } from "../cart"
+import { Observable } from "rxjs"
+
+import type { CartItem } from "../cart"
 
 @Component({
   selector: "app-navigation-bar",
-  imports: [],
+  imports: [AsyncPipe, CurrencyPipe, CommonModule],
   templateUrl: "./navigation-bar.html",
   styleUrl: "./navigation-bar.scss",
 })
 
-export class NavigationBar {
+export class NavigationBar implements OnInit {
   is_open:boolean = false // Stores The Information If The Menu Is Open
   is_scrolled:boolean = false  // Stores The Information If The Page Is Scrolled
-
-  constructor() {
+  cart_amount$!:Observable<number>
+  cart_items!:CartItem[]
+  
+  constructor(private cartService:Cart) {
     afterNextRender(() => {
       this.checkWindowWidth(window.innerWidth)
       this.onWindowScroll()
     })
+  }
+
+  // Method Which Executes In Beginning
+  ngOnInit() {
+    this.cart_amount$ = this.cartService.cart_amount$ // Sets The Cart Amount
   }
 
   // Method For Toggle The Menu
@@ -63,5 +82,20 @@ export class NavigationBar {
         window.scrollTo({ top: element_position - OFFSET, behavior: "smooth" }) // Starts The Scroll Animation
       }
     }
+  }
+
+  @ViewChild("cart", { static: false }) cart!:ElementRef<HTMLDialogElement> // Gets The Cart Dialog
+
+  // Method To Show The Cart Dialog
+  showCart():void {
+    this.cart_items = this.cartService.cart_items$ // Sets The Cart Items
+    this.cart.nativeElement.showModal() // Shows The Cart Dialog
+
+    console.log(this.cart_items)
+  }
+
+  // Method To Close The Cart Dialog
+  closeCart():void {
+    this.cart.nativeElement.close() // Closes The Cart Dialog
   }
 }
