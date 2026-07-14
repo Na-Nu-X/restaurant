@@ -54,18 +54,6 @@
             font-weight: bold;
         }
 
-        .price {
-            font-size: 1.2em;
-            font-weight: bold;
-            line-height: 1;
-        
-            span {
-                font-size: 0.6em;
-                vertical-align: super;
-                margin-left: 2px;
-            }
-        }
-
         .description {
             text-align: justify;
             text-justify: inter-word;
@@ -75,6 +63,50 @@
                 margin-right: 10px;
                 initial-letter: 2;
                 font-weight: bold;
+            }
+        }
+
+        .bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-top: auto;
+            padding-top: 10px;
+
+            .price {
+                font-size: 1.2em;
+                font-weight: bold;
+                line-height: 1;
+            
+                span {
+                    font-size: 0.6em;
+                    vertical-align: super;
+                    margin-left: 2px;
+                }
+            }
+
+            .add_to_cart {
+                all: unset;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 10px 15px;
+                background-color: lighten($main-color, 10%);
+                color: $secondary-color; 
+                border-radius: $small-border-radius;
+                font-weight: bold;
+                font-size: 0.9em;
+                cursor: pointer;
+                transition: background-color 0.2s ease, transform 0.1s ease;
+        
+                &:hover {
+                    background-color: $main-color;
+                }
+        
+                &:active {
+                    transform: scale(0.95);
+                }
             }
         }
     }

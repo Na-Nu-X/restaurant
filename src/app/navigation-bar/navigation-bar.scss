@@ -2,28 +2,40 @@
 
 .navigation_bar {
     position: fixed;
+    top: 0px;
+    left: 0px;
     width: 100%;
     background-color: $yellow-color;
+    box-shadow: 0 2px 10px transparentize($main-color, 0.95);
     z-index: 1000;
 
     ul {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 10px;
+        max-width: $main-width;
+        height: 60px;
+        margin: 0px auto;
+        padding: 0px;
+
         li {
-            display: inline-block;
             list-style-type: none;
 
             a {
-                display: inline-block;
-                padding: 15px 10px;
+                display: block;
+                padding: 10px 15px;
                 color: $orange-color;
                 text-decoration: none;
                 text-transform: uppercase;
-                border-bottom: 1px solid $yellow-color;
-                transition: transform 0.1s ease, border-color 0.1s ease;
+                font-weight: bold;
+                border-bottom: 2px solid transparent; 
+                transition: color 0.2s ease, border-color 0.2s ease;
 
                 &:hover,
                 &:active {
-                    transform: translateY(-2px);
-                    border-color: $orange-color;
+                    color: darken($orange-color, 10%);
+                    border-bottom-color: $orange-color;
                 }
             }
         }

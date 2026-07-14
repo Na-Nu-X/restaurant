@@ -3,42 +3,89 @@
 .banner {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     gap: 20px;
     max-width: $main-width;
     width: 100%;
-    height: calc(100vh - 49px - 100px);
-    padding: 100px + 49px 100px 0px 100px;
+    min-height: calc(100vh - 60px);
+    margin: 0px auto;
+    padding: 100px 20px 40px; 
+    color: $main-color; // Ak použiješ tmavé pozadie, text by mal byť biely
 
     h1 {
+        line-height: 1;
         font-family: $heading-font;
-        font-size: 3em;
+        font-size: clamp(2.5em, 5vw, 4em);
+    }
+
+    > p:first-of-type {
+        max-width: 600px;
+        font-size: 1.2em;
+        color: transparentize($main-color, 0.1);
     }
 
     .buttons {
         display: flex;
-        gap: 20px;
+        gap: 15px;
+        flex-wrap: wrap;
 
         .book,
         .order {
             all: unset;
-            padding: 10px 20px;
+            width: 150px;
+            padding: 10px 0px;
+            text-align: center;
+            font-weight: 600;
             border-radius: $small-border-radius;
-            transition: transform 0.3s ease;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            cursor: pointer;
 
             &:hover {
-                transform: scale(1.05);
-                cursor: pointer;
+                transform: translateY(-2px);
+            }
+            
+            &:active {
+                transform: translateY(1px);
             }
         }
     
         .book {
             background-color: $orange-color;
             color: $secondary-color;
+            border: 1px solid $light-yellow-color;
+
+            &:hover {
+                background-color: lighten($orange-color, 5%);
+            }
         }
 
         .order {
             background-color: $yellow-color;
-            border: 1px solid $main-color;
+            color: $orange-color;
+            border: 1px solid $orange-color;
+
+            &:hover {
+                background-color: lighten($yellow-color, 2%);
+            }
+        }
+    }
+
+    .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 10px;
+        color: $green-color;
+        font-weight: bold;
+
+        &::before {
+            content: "";
+            display: block;
+            width: 10px;
+            height: 10px;
+            background-color: $green-color;
+            border-radius: 50%;
+            box-shadow: 0 0 5px $green-color;
         }
     }
 }
