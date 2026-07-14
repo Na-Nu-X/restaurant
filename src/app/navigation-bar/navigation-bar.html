@@ -1,7 +1,21 @@
 <nav class="navigation_bar">
-    <ul>
-        <li><a href="#">Domov</a></li>
-        <li><a href="#">Rezervácia</a></li>
-        <li><a href="#">Menu</a></li>
-    </ul>
+    <div class="navigation_container">
+        <button class="hamburger" (click)="toggleMenu()">
+            <i class="fa-solid" [class.fa-bars]="!is_open" [class.fa-xmark]="is_open"></i> <!-- https://fontawesome.com/icons/bars / https://fontawesome.com/icons/magnifying-glass -->
+        </button>
+    
+        <ul [class.open]="is_open">
+            <li><a href="#">Domov</a></li>
+            <li><a href="#">Rezervácia</a></li>
+            <li (click)="scrollTo('.all_dishes')"><a>Menu</a></li>
+        </ul>
+
+        <div class="cart">
+            <p class="amount">0</p>
+
+            <button class="show_cart" title="Zobraziť košík" aria-label="Zobraziť košík">
+                <i class="fa-solid fa-basket-shopping"></i> <!-- https://fontawesome.com/icons/basket-shopping -->
+            </button>
+        </div>
+    </div>
 </nav>

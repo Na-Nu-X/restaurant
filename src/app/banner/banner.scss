@@ -7,7 +7,7 @@
     gap: 20px;
     max-width: $main-width;
     width: 100%;
-    min-height: calc(100vh - 60px);
+    min-height: calc(100vh - 45px - 20px);
     margin: 0px auto;
     padding: 100px 20px 40px; 
     color: $main-color; // Ak použiješ tmavé pozadie, text by mal byť biely
@@ -21,7 +21,7 @@
     > p:first-of-type {
         max-width: 600px;
         font-size: 1.2em;
-        color: transparentize($main-color, 0.1);
+        color: transparentize($main-color, 0.2);
     }
 
     .buttons {
