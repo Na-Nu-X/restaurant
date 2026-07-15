@@ -56,13 +56,11 @@
         }
 
         .description {
-            text-align: justify;
-            text-justify: inter-word;
-            hyphens: auto;
             display: -webkit-box;
             line-clamp: 4;
             -webkit-line-clamp: 4;
             -webkit-box-orient: vertical;
+            color: transparentize($main-color, 0.2);
             overflow: hidden;
         
             &::first-letter {
