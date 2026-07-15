@@ -13,15 +13,29 @@ export class Payment {
   constructor(private http: HttpClient) {}
 
   // Method For Create The Checkout Session
-  createCheckoutSession(items:CartItem[]):Observable<{ 
+  createCheckoutSession(items:CartItem[], tip_in_cents:number, selected_tip:number):Observable<{ 
         success:string,
         message:string,
         url?:string 
     }> {
+      const items_to_send:CartItem[] = [...items] // Saves The Copy Of Items
+
+      // If The Tip Is Selected
+      if(tip_in_cents > 0) {
+        // Adds The Tip To The Cart Items
+        items_to_send.push({
+          id: -1,
+          title: `Tringelt (${selected_tip}%)`,
+          description: "",
+          price: tip_in_cents,
+          image: "tip"
+        })
+      }
+
     return this.http.post<{ 
-        success:string,
-        message:string,
-        url?:string 
-    }>(this.api_url, { items }) // Returns The Data
+      success:string,
+      message:string,
+      url?:string 
+    }>(this.api_url, { items: items_to_send }) // Returns The Data
   }
 }

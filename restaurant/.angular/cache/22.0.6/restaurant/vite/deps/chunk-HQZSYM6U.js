@@ -1,4 +1,3 @@
-import { createRequire } from 'module';const require = createRequire(import.meta.url);
 import {
   DOCUMENT,
   Injectable,
@@ -9,7 +8,64 @@ import {
   ɵɵdefineInjectable,
   ɵɵdefineService,
   ɵɵinject
-} from "./chunk-SLSXXOXV.js";
+} from "./chunk-JTQG5XYN.js";
+
+// node_modules/@angular/common/fesm2022/_xhr-chunk.mjs
+function parseCookieValue(cookieStr, name) {
+  name = encodeURIComponent(name);
+  for (const cookie of cookieStr.split(";")) {
+    const eqIndex = cookie.indexOf("=");
+    const [cookieName, cookieValue] = eqIndex == -1 ? [cookie, ""] : [cookie.slice(0, eqIndex), cookie.slice(eqIndex + 1)];
+    if (cookieName.trim() === name) {
+      return decodeURIComponent(cookieValue);
+    }
+  }
+  return null;
+}
+var BrowserXhr = class _BrowserXhr {
+  build() {
+    return new XMLHttpRequest();
+  }
+  static ɵfac = function BrowserXhr_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _BrowserXhr)();
+  };
+  static ɵprov = ɵɵdefineService({
+    token: _BrowserXhr,
+    factory: _BrowserXhr.ɵfac
+  });
+};
+(() => {
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(BrowserXhr, [{
+    type: Service
+  }], null, null);
+})();
+var XhrFactory = class _XhrFactory {
+  static ɵfac = function XhrFactory_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _XhrFactory)();
+  };
+  static ɵprov = ɵɵdefineInjectable({
+    token: _XhrFactory,
+    factory: function XhrFactory_Factory(__ngFactoryType__) {
+      let __ngConditionalFactory__ = null;
+      if (__ngFactoryType__) {
+        __ngConditionalFactory__ = new (__ngFactoryType__ || _XhrFactory)();
+      } else {
+        __ngConditionalFactory__ = ɵɵinject(BrowserXhr);
+      }
+      return __ngConditionalFactory__;
+    },
+    providedIn: "root"
+  });
+};
+(() => {
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(XhrFactory, [{
+    type: Injectable,
+    args: [{
+      providedIn: "root",
+      useExisting: BrowserXhr
+    }]
+  }], null, null);
+})();
 
 // node_modules/@angular/common/fesm2022/_platform_location-chunk.mjs
 var _DOM = null;
@@ -127,71 +183,14 @@ var BrowserPlatformLocation = class _BrowserPlatformLocation extends PlatformLoc
   }], () => [], null);
 })();
 
-// node_modules/@angular/common/fesm2022/_xhr-chunk.mjs
-function parseCookieValue(cookieStr, name) {
-  name = encodeURIComponent(name);
-  for (const cookie of cookieStr.split(";")) {
-    const eqIndex = cookie.indexOf("=");
-    const [cookieName, cookieValue] = eqIndex == -1 ? [cookie, ""] : [cookie.slice(0, eqIndex), cookie.slice(eqIndex + 1)];
-    if (cookieName.trim() === name) {
-      return decodeURIComponent(cookieValue);
-    }
-  }
-  return null;
-}
-var BrowserXhr = class _BrowserXhr {
-  build() {
-    return new XMLHttpRequest();
-  }
-  static ɵfac = function BrowserXhr_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _BrowserXhr)();
-  };
-  static ɵprov = ɵɵdefineService({
-    token: _BrowserXhr,
-    factory: _BrowserXhr.ɵfac
-  });
-};
-(() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(BrowserXhr, [{
-    type: Service
-  }], null, null);
-})();
-var XhrFactory = class _XhrFactory {
-  static ɵfac = function XhrFactory_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _XhrFactory)();
-  };
-  static ɵprov = ɵɵdefineInjectable({
-    token: _XhrFactory,
-    factory: function XhrFactory_Factory(__ngFactoryType__) {
-      let __ngConditionalFactory__ = null;
-      if (__ngFactoryType__) {
-        __ngConditionalFactory__ = new (__ngFactoryType__ || _XhrFactory)();
-      } else {
-        __ngConditionalFactory__ = ɵɵinject(BrowserXhr);
-      }
-      return __ngConditionalFactory__;
-    },
-    providedIn: "root"
-  });
-};
-(() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(XhrFactory, [{
-    type: Injectable,
-    args: [{
-      providedIn: "root",
-      useExisting: BrowserXhr
-    }]
-  }], null, null);
-})();
-
 export {
+  parseCookieValue,
+  XhrFactory,
   getDOM,
   setRootDomAdapter,
   DomAdapter,
   PlatformLocation,
   LOCATION_INITIALIZED,
-  BrowserPlatformLocation,
-  parseCookieValue,
-  XhrFactory
+  BrowserPlatformLocation
 };
-//# sourceMappingURL=chunk-A6J47JJR.js.map
+//# sourceMappingURL=chunk-HQZSYM6U.js.map

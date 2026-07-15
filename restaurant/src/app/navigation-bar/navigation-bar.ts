@@ -32,6 +32,7 @@ export class NavigationBar implements OnInit {
   cart_amount$!:Observable<number>
   cart_items!:CartItem[]
   current_index:number = 0 // Stores The Current Index Of The Active Item
+  selected_tip:number = 10 // Stores The Selected Tip Percentage (10% By Default)
   
   constructor(private cartService:Cart, private paymentService:Payment) {
     afterNextRender(() => {
@@ -111,6 +112,11 @@ export class NavigationBar implements OnInit {
     this.current_index = 0 // Resets The Current Index Of The Active Item
   }
 
+  // Method For Change The Tip Amount
+  changeTipAmount(value:string):void {
+    this.selected_tip = parseInt(value, 10) // Sets The Selected Tip
+  }
+
   // Getter To Get The Total Price
   get total_price(): number {
     if(!this.cart_items || this.cart_items.length === 0) {
@@ -118,8 +124,13 @@ export class NavigationBar implements OnInit {
     }
     
     const total_in_cents:number = this.cart_items.reduce((sum, item) => sum + item.price, 0) // Calculates The Total Price In Cents
-    
     return total_in_cents // Returns The Total Price In Cents
+  }
+
+  // Getter To Get The Grand Total Price (Price Of Items + Tip)
+  get grand_total_price():number {
+    const tip_in_cents:number = Math.round(this.total_price * (this.selected_tip / 100)) // Calculates The Tip Amount In Cents
+    return this.total_price + tip_in_cents // Returns The Grand Total Price In Cents
   }
 
   // Method For Pay All Items In Cart
@@ -130,8 +141,10 @@ export class NavigationBar implements OnInit {
       return
     }
 
+    const tip_in_cents:number = Math.round(this.total_price * (this.selected_tip / 100)) // Calculates The Tip Amount In Cents
+
     // Creates The Checkout Session
-    this.paymentService.createCheckoutSession(this.cart_items).subscribe({
+    this.paymentService.createCheckoutSession(this.cart_items, tip_in_cents, this.selected_tip).subscribe({
       next:(response) => {
         if(response && response.success && response.url) {
           window.location.href = response.url // Redirects To The Responded URL
