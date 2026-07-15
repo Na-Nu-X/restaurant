@@ -14,6 +14,7 @@ import {
 } from "@angular/common"
 
 import { Cart } from "../services/cart"
+import { Payment } from "../services/payment"
 import { Observable } from "rxjs"
 
 import type { CartItem } from "../services/cart"
@@ -32,7 +33,7 @@ export class NavigationBar implements OnInit {
   cart_items!:CartItem[]
   current_index:number = 0 // Stores The Current Index Of The Active Item
   
-  constructor(private cartService:Cart) {
+  constructor(private cartService:Cart, private paymentService:Payment) {
     afterNextRender(() => {
       this.checkWindowWidth(window.innerWidth)
       this.onWindowScroll()
@@ -119,5 +120,32 @@ export class NavigationBar implements OnInit {
     const total_in_cents:number = this.cart_items.reduce((sum, item) => sum + item.price, 0) // Calculates The Total Price In Cents
     
     return total_in_cents // Returns The Total Price In Cents
+  }
+
+  // Method For Pay All Items In Cart
+  payAll():void {
+    // If The Cart Is Empty
+    if(!this.cart_items || this.cart_items.length === 0) {
+      alert("Košík je prázdny.") // Shows The Alert
+      return
+    }
+
+    // Creates The Checkout Session
+    this.paymentService.createCheckoutSession(this.cart_items).subscribe({
+      next:(response) => {
+        if(response && response.success && response.url) {
+          window.location.href = response.url // Redirects To The Responded URL
+        } 
+        
+        else {
+          console.error(response.message) // Shows The Error Message
+        }
+      },
+
+      error:(error) => {
+        console.error(error) // Shows The Error
+        alert("Pri spracovávaní platby došlo k chybe.") // Shows The Alert
+      }
+    })
   }
 }

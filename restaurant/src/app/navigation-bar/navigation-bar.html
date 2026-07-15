@@ -56,6 +56,6 @@
     </div>
 
     <div class="bottom" title="Platba" aria-label="Platba" *ngIf="cart_items && cart_items.length > 0">
-        <button class="checkout" title="Pokračovať k platbe" aria-label="Pokračovať k platbe">Zaplatiť <p class="total_price">{{ (total_price / 100) | currency:'EUR':'':'1.2-2':'sk-SK' }}<span>€</span></p></button>
+        <button class="checkout" title="Pokračovať k platbe" aria-label="Pokračovať k platbe" (click)="payAll()">Zaplatiť <p class="total_price">{{ (total_price / 100) | currency:'EUR':'':'1.2-2':'sk-SK' }}<span>€</span></p></button>
     </div>
 </dialog>

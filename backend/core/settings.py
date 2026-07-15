@@ -10,7 +10,17 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Environment Variables
+
+SETTINGS_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = SETTINGS_DIR.parent.parent
+ENV_PATH = PROJECT_ROOT / "restaurant" / ".env"
+
+load_dotenv(dotenv_path=ENV_PATH)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,10 +30,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-qju_kz(3z7sc!3aezkyxs=5+$8af=c680=3#xi05x((=-v8o16'
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = []
 
@@ -133,5 +143,9 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:4200",
+    os.environ.get("FRONT_END_DOMAIN_URL", "http://localhost:4200/").rstrip('/')
 ]
+
+# Stripe
+
+STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY")
