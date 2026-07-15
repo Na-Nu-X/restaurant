@@ -1,8 +1,8 @@
 <div class="search_bar_container">
     <i class="fa-solid fa-magnifying-glass"></i> <!-- https://fontawesome.com/icons/magnifying-glass -->
-    <input class="search_bar" type="search" placeholder="Pizza" name="" id="">
+    <input #search_bar class="search_bar" type="search" placeholder="Pizza" name="" id="" (input)="searchDish(search_bar.value)">
 
-    <button class="delete">
+    <button class="delete" title="Vymazať vyhľadávanie" aria-label="Vymazať vyhľadávanie" (click)="deleteSearch()">
         <i class="fa-solid fa-xmark"></i> <!-- https://fontawesome.com/icons/xmark -->
     </button>
 </div>

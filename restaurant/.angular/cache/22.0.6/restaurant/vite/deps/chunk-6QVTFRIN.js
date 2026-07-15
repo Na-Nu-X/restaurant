@@ -1,17 +1,16 @@
-import { createRequire } from 'module';const require = createRequire(import.meta.url);
 import {
   CommonModule,
   PLATFORM_BROWSER_ID
-} from "./chunk-QUAZDA4S.js";
+} from "./chunk-YKJ3L2JU.js";
 import {
   withHttpTransferCache
-} from "./chunk-QNATHFMV.js";
+} from "./chunk-3V4D63G4.js";
 import {
   DomAdapter,
   getDOM,
   parseCookieValue,
   setRootDomAdapter
-} from "./chunk-CFKDEPQ2.js";
+} from "./chunk-SVO6ZXI7.js";
 import {
   APP_BOOTSTRAP_LISTENER,
   APP_ID,
@@ -78,11 +77,10 @@ import {
   ɵɵdefineNgModule,
   ɵɵdefineService,
   ɵɵinject
-} from "./chunk-TJGBRGBM.js";
+} from "./chunk-JTQG5XYN.js";
 import {
-  __spreadProps,
   __spreadValues
-} from "./chunk-6DU2HRTW.js";
+} from "./chunk-GOMI4DH3.js";
 
 // node_modules/@angular/platform-browser/fesm2022/_dom_renderer-chunk.mjs
 var EventManagerPlugin = class {
@@ -309,7 +307,7 @@ var SharedStylesHost = class _SharedStylesHost {
     if (this.nonce) {
       element.setAttribute("nonce", this.nonce);
     }
-    if (true) {
+    if (false) {
       element.setAttribute(APP_ID_ATTRIBUTE_NAME, this.appId);
     }
     return host.appendChild(element);
@@ -426,7 +424,7 @@ var DomRendererFactory2 = class _DomRendererFactory2 {
     if (!element || !type) {
       return this.defaultRenderer;
     }
-    if (type.encapsulation === ViewEncapsulation.ShadowDom || type.encapsulation === ViewEncapsulation.ExperimentalIsolatedShadowDom) {
+    if (false) {
       type = __spreadProps(__spreadValues({}, type), {
         encapsulation: ViewEncapsulation.Emulated
       });
@@ -657,7 +655,7 @@ var DefaultDomRenderer2 = class {
       if (event === "__ngUnwrap__") {
         return eventHandler;
       }
-      const allowDefaultBehavior = true ? this.ngZone.runGuarded(() => eventHandler(event)) : eventHandler(event);
+      const allowDefaultBehavior = false ? this.ngZone.runGuarded(() => eventHandler(event)) : eventHandler(event);
       if (allowDefaultBehavior === false) {
         event.preventDefault();
       }
@@ -1547,4 +1545,4 @@ export {
   DomSanitizerImpl,
   VERSION
 };
-//# sourceMappingURL=chunk-474YLEN2.js.map
+//# sourceMappingURL=chunk-6QVTFRIN.js.map

@@ -149,6 +149,11 @@
         padding: 0px 50px;
         overflow: hidden;
 
+        .empty_message {
+            margin-top: 20px;
+            text-align: center;
+        }
+
         .all_items {
             display: flex;
             gap: 20px;

@@ -1,17 +1,30 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Injectable } from "@angular/core"
+import { HttpClient } from "@angular/common/http"
+import { BehaviorSubject, Observable } from "rxjs"
+import { debounceTime, distinctUntilChanged } from "rxjs/operators"
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
-export class DishService {
-  private apiUrl = 'http://localhost:8001/api/dishes/' // Django PORT 8001
+export class Dish {
+    private api_url:string = "http://127.0.0.1:8001/api/dishes/" // Connection To The Back-End API
+    private searched_text = new BehaviorSubject<string>("")
 
-  constructor(private http: HttpClient) {}
+    // Reacts To Searched Text Only After 300MS Of Typing Delay
+    searched_text$ = this.searched_text.asObservable().pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    )
 
-  // Funkcia, ktorá pošle HTTP GET požiadavku do Djanga a vráti zoznam jedál
-  getDishes(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl);
-  }
+    constructor(private http: HttpClient) { }
+
+    // Method For Get Dishes
+    getDishes():Observable<any[]> {
+        return this.http.get<any[]>(this.api_url) // Returns The Data
+    }
+
+    // Method For Search The Dishes
+    searchDish(searched_text:string):void {
+      this.searched_text.next(searched_text)
+    }
 }

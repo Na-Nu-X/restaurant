@@ -1,15 +1,16 @@
+import { createRequire } from 'module';const require = createRequire(import.meta.url);
 import {
-  BehaviorSubject,
-  Observable,
-  Subject,
-  Subscription,
-  map
-} from "./chunk-RSS3ODKE.js";
+  require_cjs
+} from "./chunk-WGUHO3FC.js";
+import {
+  require_operators
+} from "./chunk-ZABWFEIQ.js";
 import {
   __objRest,
   __spreadProps,
-  __spreadValues
-} from "./chunk-GOMI4DH3.js";
+  __spreadValues,
+  __toESM
+} from "./chunk-6DU2HRTW.js";
 
 // node_modules/@angular/core/fesm2022/_effect-chunk.mjs
 var activeConsumer = null;
@@ -340,9 +341,9 @@ function createSignal(initialValue, equal) {
     getter.toString = () => `[Signal${node.debugName ? " (" + node.debugName + ")" : ""}: ${String(node.value)}]`;
   }
   runPostProducerCreatedFn(node);
-  const set2 = (newValue) => signalSetFn(node, newValue);
+  const set = (newValue) => signalSetFn(node, newValue);
   const update = (updateFn) => signalUpdateFn(node, updateFn);
-  return [getter, set2, update];
+  return [getter, set, update];
 }
 function signalGetFn(node) {
   producerAccessed(node);
@@ -624,6 +625,7 @@ if (typeof ngDevMode === "undefined" || ngDevMode) {
 }
 
 // node_modules/@angular/core/fesm2022/_pending_tasks-chunk.mjs
+var import_rxjs = __toESM(require_cjs(), 1);
 var Version = class {
   full;
   major;
@@ -1391,13 +1393,13 @@ function newArray(size, value) {
   }
   return list;
 }
-function arraySplice(array, index, count2) {
-  const length = array.length - count2;
+function arraySplice(array, index, count) {
+  const length = array.length - count;
   while (index < length) {
-    array[index] = array[index + count2];
+    array[index] = array[index + count];
     index++;
   }
-  while (count2--) {
+  while (count--) {
     array.pop();
   }
 }
@@ -2504,10 +2506,10 @@ function setBindingIndex(value) {
 function nextBindingIndex() {
   return instructionState.lFrame.bindingIndex++;
 }
-function incrementBindingIndex(count2) {
+function incrementBindingIndex(count) {
   const lFrame = instructionState.lFrame;
   const index = lFrame.bindingIndex;
-  lFrame.bindingIndex = lFrame.bindingIndex + count2;
+  lFrame.bindingIndex = lFrame.bindingIndex + count;
   return index;
 }
 function isInI18nBlock() {
@@ -2785,7 +2787,7 @@ var PendingTasksInternal = class _PendingTasksInternal {
   taskId = 0;
   pendingTasks = /* @__PURE__ */ new Set();
   destroyed = false;
-  pendingTask = new BehaviorSubject(false);
+  pendingTask = new import_rxjs.BehaviorSubject(false);
   debugTaskTracker = inject2(DEBUG_TASK_TRACKER, {
     optional: true
   });
@@ -2794,7 +2796,7 @@ var PendingTasksInternal = class _PendingTasksInternal {
   }
   get hasPendingTasksObservable() {
     if (this.destroyed) {
-      return new Observable((subscriber) => {
+      return new import_rxjs.Observable((subscriber) => {
         subscriber.next(false);
         subscriber.complete();
       });
@@ -2834,7 +2836,7 @@ var PendingTasksInternal = class _PendingTasksInternal {
     factory: () => new _PendingTasksInternal()
   });
 };
-var EventEmitter_ = class extends Subject {
+var EventEmitter_ = class extends import_rxjs.Subject {
   __isAsync;
   destroyRef = void 0;
   pendingTasks = void 0;
@@ -2882,7 +2884,7 @@ var EventEmitter_ = class extends Subject {
       error: errorFn,
       complete: completeFn
     });
-    if (observerOrNext instanceof Subscription) {
+    if (observerOrNext instanceof import_rxjs.Subscription) {
       observerOrNext.add(sink);
     }
     return sink;
@@ -3223,11 +3225,11 @@ var errorHandlerEnvironmentInitializer = {
 };
 var globalErrorListeners = new InjectionToken(typeof ngDevMode !== "undefined" && ngDevMode ? "GlobalErrorListeners" : "", {
   factory: () => {
-    if (false) {
+    if (true) {
       return;
     }
-    const window3 = inject2(DOCUMENT).defaultView;
-    if (!window3) {
+    const window2 = inject2(DOCUMENT).defaultView;
+    if (!window2) {
       return;
     }
     const errorHandler = inject2(INTERNAL_APPLICATION_ERROR_HANDLER);
@@ -3246,8 +3248,8 @@ var globalErrorListeners = new InjectionToken(typeof ngDevMode !== "undefined" &
       e.preventDefault();
     };
     const setupEventListeners = () => {
-      window3.addEventListener("unhandledrejection", rejectionListener);
-      window3.addEventListener("error", errorListener);
+      window2.addEventListener("unhandledrejection", rejectionListener);
+      window2.addEventListener("error", errorListener);
     };
     if (typeof Zone !== "undefined") {
       Zone.root.run(setupEventListeners);
@@ -3255,8 +3257,8 @@ var globalErrorListeners = new InjectionToken(typeof ngDevMode !== "undefined" &
       setupEventListeners();
     }
     inject2(DestroyRef).onDestroy(() => {
-      window3.removeEventListener("error", errorListener);
-      window3.removeEventListener("unhandledrejection", rejectionListener);
+      window2.removeEventListener("error", errorListener);
+      window2.removeEventListener("unhandledrejection", rejectionListener);
     });
   }
 });
@@ -3267,10 +3269,10 @@ function ɵunwrapWritableSignal(value) {
   return null;
 }
 function signal(initialValue, options) {
-  const [get2, set2, update] = createSignal(initialValue, options?.equal);
-  const signalFn = get2;
+  const [get, set, update] = createSignal(initialValue, options?.equal);
+  const signalFn = get;
   const node = signalFn[SIGNAL];
-  signalFn.set = set2;
+  signalFn.set = set;
   signalFn.update = update;
   signalFn.asReadonly = signalAsReadonlyFn.bind(signalFn);
   if (typeof ngDevMode !== "undefined" && ngDevMode) {
@@ -3333,7 +3335,7 @@ var TransferState = class _TransferState {
     providedIn: "root",
     factory: () => {
       const transferState = new _TransferState();
-      if (true) {
+      if (false) {
         transferState.store = retrieveTransferredState(inject2(DOCUMENT), inject2(APP_ID));
       }
       return transferState;
@@ -3655,6 +3657,10 @@ var PendingTasks = class _PendingTasks {
   });
 };
 
+// node_modules/@angular/core/fesm2022/_debug_node-chunk.mjs
+var import_rxjs2 = __toESM(require_cjs(), 1);
+var import_operators = __toESM(require_operators(), 1);
+
 // node_modules/@angular/core/fesm2022/_attribute-chunk.mjs
 var Attribute = {
   JSACTION: "jsaction"
@@ -3867,9 +3873,9 @@ function callHooks(currentView, arr, initPhase, currentNodeIndex) {
   ngDevMode && assertEqual(isInCheckNoChangesMode(), false, "Hooks should never be run when in check no changes mode.");
   const startIndex = currentNodeIndex !== void 0 ? currentView[PREORDER_HOOK_FLAGS] & 65535 : 0;
   const nodeIndexLimit = currentNodeIndex != null ? currentNodeIndex : -1;
-  const max2 = arr.length - 1;
+  const max = arr.length - 1;
   let lastNodeIndexFound = 0;
-  for (let i = startIndex; i < max2; i++) {
+  for (let i = startIndex; i < max; i++) {
     const hook = arr[i + 1];
     if (typeof hook === "number") {
       lastNodeIndexFound = arr[i];
@@ -5067,7 +5073,7 @@ var QueryList = class {
   first = void 0;
   last = void 0;
   get changes() {
-    return this._changes ??= new Subject();
+    return this._changes ??= new import_rxjs2.Subject();
   }
   constructor(_emitDistinctChangesOnly = false) {
     this._emitDistinctChangesOnly = _emitDistinctChangesOnly;
@@ -5857,14 +5863,6 @@ function setJSActionAttributes(nativeElement, eventTypes, parentDeferBlockId = n
     nativeElement.setAttribute(DEFER_BLOCK_SSR_ID_ATTRIBUTE, blockName);
   }
 }
-var sharedStashFunction = (rEl, eventType, listenerFn) => {
-  const el = rEl;
-  const eventListenerMap = el.__jsaction_fns ?? /* @__PURE__ */ new Map();
-  const eventListeners = eventListenerMap.get(eventType) ?? [];
-  eventListeners.push(listenerFn);
-  eventListenerMap.set(eventType, eventListeners);
-  el.__jsaction_fns = eventListenerMap;
-};
 var sharedMapFunction = (rEl, jsActionMap) => {
   const el = rEl;
   let blockName = el.getAttribute(DEFER_BLOCK_SSR_ID_ATTRIBUTE) ?? "";
@@ -5904,38 +5902,10 @@ function markEventHandledForElement(event, element) {
   }
   elements.add(element);
 }
-function invokeListeners(event, currentTarget) {
-  const handlerFns = currentTarget?.__jsaction_fns?.get(event.type);
-  if (!handlerFns || !currentTarget?.isConnected) {
-    return;
-  }
-  if (currentTarget && handledEventElements.get(event)?.has(currentTarget)) {
-    return;
-  }
-  for (const handler of handlerFns) {
-    handler(event);
-  }
-}
-var stashEventListeners = /* @__PURE__ */ new Map();
-function setStashFn(appId, fn) {
-  stashEventListeners.set(appId, fn);
-  return () => stashEventListeners.delete(appId);
-}
-var isStashEventListenerImplEnabled = false;
 var _stashEventListenerImpl = (lView, target, eventName, wrappedListener) => {
 };
 function stashEventListenerImpl(lView, target, eventName, wrappedListener) {
   _stashEventListenerImpl(lView, target, eventName, wrappedListener);
-}
-function enableStashEventListenerImpl() {
-  if (!isStashEventListenerImplEnabled) {
-    _stashEventListenerImpl = (lView, target, eventName, wrappedListener) => {
-      const appId = lView[INJECTOR].get(APP_ID);
-      const stashEventListener = stashEventListeners.get(appId);
-      stashEventListener?.(target, eventName, wrappedListener);
-    };
-    isStashEventListenerImplEnabled = true;
-  }
 }
 var DEHYDRATED_BLOCK_REGISTRY = new InjectionToken(typeof ngDevMode !== "undefined" && ngDevMode ? "DEHYDRATED_BLOCK_REGISTRY" : "");
 var DehydratedBlockRegistry = class _DehydratedBlockRegistry {
@@ -6127,13 +6097,6 @@ function markRNodeAsSkippedByHydration(node) {
   });
   ngDevMode.componentsSkippedHydration++;
 }
-function countBlocksSkippedByHydration(injector) {
-  const transferState = injector.get(TransferState);
-  const nghDeferData = transferState.get(NGH_DEFER_BLOCKS_KEY, {});
-  if (ngDevMode) {
-    ngDevMode.deferBlocksWithIncrementalHydration = Object.keys(nghDeferData).length;
-  }
-}
 function markRNodeAsHavingHydrationMismatch(node, expectedNodeDetails = null, actualNodeDetails = null) {
   if (!ngDevMode) {
     throw new Error("Calling `markRNodeAsMismatchedByHydration` in prod mode is not supported and likely a mistake.");
@@ -6173,9 +6136,6 @@ function warnIncrementalHydrationNotConfigured() {
     incrementalHydrationEnabledWarned = true;
     console.warn(formatRuntimeError(508, "Angular has detected that some `@defer` blocks use `hydrate` triggers, but incremental hydration was not enabled. Incremental hydration is enabled by default with `provideClientHydration()`. Make sure `provideClientHydration()` is included in your application config and that you have not opted out using `withNoIncrementalHydration()`."));
   }
-}
-function assertSsrIdDefined(ssrUniqueId) {
-  assertDefined(ssrUniqueId, "Internal error: expecting an SSR id for a defer block that should be hydrated, but the id is not present");
 }
 function getNgContainerSize(hydrationInfo, index) {
   const data = hydrationInfo.data;
@@ -6714,7 +6674,7 @@ function tagSet(tags) {
   for (const t of tags.split(",")) res[t] = true;
   return res;
 }
-function merge2(...sets) {
+function merge(...sets) {
   const res = {};
   for (const s of sets) {
     for (const v in s) {
@@ -6726,14 +6686,14 @@ function merge2(...sets) {
 var VOID_ELEMENTS = tagSet("area,br,col,hr,img,wbr");
 var OPTIONAL_END_TAG_BLOCK_ELEMENTS = tagSet("colgroup,dd,dt,li,p,tbody,td,tfoot,th,thead,tr");
 var OPTIONAL_END_TAG_INLINE_ELEMENTS = tagSet("rp,rt");
-var OPTIONAL_END_TAG_ELEMENTS = merge2(OPTIONAL_END_TAG_INLINE_ELEMENTS, OPTIONAL_END_TAG_BLOCK_ELEMENTS);
-var BLOCK_ELEMENTS = merge2(OPTIONAL_END_TAG_BLOCK_ELEMENTS, tagSet("address,article,aside,blockquote,caption,center,del,details,dialog,dir,div,dl,figure,figcaption,footer,h1,h2,h3,h4,h5,h6,header,hgroup,hr,ins,main,map,menu,nav,ol,pre,section,summary,table,ul"));
-var INLINE_ELEMENTS = merge2(OPTIONAL_END_TAG_INLINE_ELEMENTS, tagSet("a,abbr,acronym,audio,b,bdi,bdo,big,br,cite,code,del,dfn,em,font,i,img,ins,kbd,label,map,mark,picture,q,ruby,rp,rt,s,samp,small,source,span,strike,strong,sub,sup,time,track,tt,u,var,video"));
-var VALID_ELEMENTS = merge2(VOID_ELEMENTS, BLOCK_ELEMENTS, INLINE_ELEMENTS, OPTIONAL_END_TAG_ELEMENTS);
+var OPTIONAL_END_TAG_ELEMENTS = merge(OPTIONAL_END_TAG_INLINE_ELEMENTS, OPTIONAL_END_TAG_BLOCK_ELEMENTS);
+var BLOCK_ELEMENTS = merge(OPTIONAL_END_TAG_BLOCK_ELEMENTS, tagSet("address,article,aside,blockquote,caption,center,del,details,dialog,dir,div,dl,figure,figcaption,footer,h1,h2,h3,h4,h5,h6,header,hgroup,hr,ins,main,map,menu,nav,ol,pre,section,summary,table,ul"));
+var INLINE_ELEMENTS = merge(OPTIONAL_END_TAG_INLINE_ELEMENTS, tagSet("a,abbr,acronym,audio,b,bdi,bdo,big,br,cite,code,del,dfn,em,font,i,img,ins,kbd,label,map,mark,picture,q,ruby,rp,rt,s,samp,small,source,span,strike,strong,sub,sup,time,track,tt,u,var,video"));
+var VALID_ELEMENTS = merge(VOID_ELEMENTS, BLOCK_ELEMENTS, INLINE_ELEMENTS, OPTIONAL_END_TAG_ELEMENTS);
 var URI_ATTRS = tagSet("background,cite,href,itemtype,longdesc,poster,src,xlink:href");
 var HTML_ATTRS = tagSet("abbr,accesskey,align,alt,autoplay,axis,bgcolor,border,cellpadding,cellspacing,class,clear,color,cols,colspan,compact,controls,coords,datetime,default,dir,download,face,headers,height,hidden,hreflang,hspace,ismap,itemscope,itemprop,kind,label,lang,language,loop,media,muted,nohref,nowrap,open,preload,rel,rev,role,rows,rowspan,rules,scope,scrolling,shape,size,sizes,span,srclang,srcset,start,summary,tabindex,target,title,translate,type,usemap,valign,value,vspace,width");
 var ARIA_ATTRS = tagSet("aria-activedescendant,aria-atomic,aria-autocomplete,aria-busy,aria-checked,aria-colcount,aria-colindex,aria-colspan,aria-controls,aria-current,aria-describedby,aria-details,aria-disabled,aria-dropeffect,aria-errormessage,aria-expanded,aria-flowto,aria-grabbed,aria-haspopup,aria-hidden,aria-invalid,aria-keyshortcuts,aria-label,aria-labelledby,aria-level,aria-live,aria-modal,aria-multiline,aria-multiselectable,aria-orientation,aria-owns,aria-placeholder,aria-posinset,aria-pressed,aria-readonly,aria-relevant,aria-required,aria-roledescription,aria-rowcount,aria-rowindex,aria-rowspan,aria-selected,aria-setsize,aria-sort,aria-valuemax,aria-valuemin,aria-valuenow,aria-valuetext");
-var VALID_ATTRS = merge2(URI_ATTRS, HTML_ATTRS, ARIA_ATTRS);
+var VALID_ATTRS = merge(URI_ATTRS, HTML_ATTRS, ARIA_ATTRS);
 var SKIP_TRAVERSING_CONTENT_IF_INVALID_ELEMENTS = tagSet("script,style,template");
 var SanitizingHtmlSerializer = class {
   sanitizedSomething = false;
@@ -7252,8 +7212,8 @@ function assertComponentDef(type) {
     throw new RuntimeError(906, `The ${stringifyForError(type)} is not an Angular component, make sure it has the \`@Component\` decorator.`);
   }
 }
-function throwMultipleComponentError(tNode, first2, second) {
-  throw new RuntimeError(-300, `Multiple components match node with tagname ${tNode.value}: ${stringifyForError(first2)} and ${stringifyForError(second)}`);
+function throwMultipleComponentError(tNode, first, second) {
+  throw new RuntimeError(-300, `Multiple components match node with tagname ${tNode.value}: ${stringifyForError(first)} and ${stringifyForError(second)}`);
 }
 function throwErrorIfNoChangesMode(creationMode, oldValue, currValue, propName, lView) {
   const hostComponentDef = getDeclarationComponentDef(lView);
@@ -7598,7 +7558,7 @@ var MAX_ANIMATION_TIMEOUT = new InjectionToken(typeof ngDevMode !== "undefined" 
 });
 var MAX_ANIMATION_TIMEOUT_DEFAULT = 4e3;
 var DEFAULT_ANIMATIONS_DISABLED = false;
-var areAnimationSupported = typeof document !== "undefined" && typeof document?.documentElement?.getAnimations === "function";
+var areAnimationSupported = false;
 function areAnimationsDisabled(lView) {
   const injector = lView[INJECTOR];
   return injector.get(ANIMATIONS_DISABLED, DEFAULT_ANIMATIONS_DISABLED);
@@ -8051,7 +8011,7 @@ function afterEveryRender(callbackOrSpec, options) {
     assertInInjectionContext(afterEveryRender);
   }
   const injector = options?.injector ?? inject2(Injector);
-  if (false) {
+  if (true) {
     return NOOP_AFTER_RENDER_REF;
   }
   performanceMarkFeature("NgAfterRender");
@@ -8062,7 +8022,7 @@ function afterNextRender(callbackOrSpec, options) {
     assertInInjectionContext(afterNextRender);
   }
   const injector = options?.injector ?? inject2(Injector);
-  if (false) {
+  if (true) {
     return NOOP_AFTER_RENDER_REF;
   }
   performanceMarkFeature("NgAfterNextRender");
@@ -8089,6 +8049,10 @@ function afterEveryRenderImpl(callbackOrSpec, injector, options, once) {
   manager.impl.register(sequence);
   return sequence;
 }
+var NOOP_AFTER_RENDER_REF = {
+  destroy() {
+  }
+};
 var ANIMATION_QUEUE = new InjectionToken(typeof ngDevMode !== "undefined" && ngDevMode ? "AnimationQueue" : "", {
   factory: () => {
     const injector = inject2(EnvironmentInjector);
@@ -10611,9 +10575,9 @@ function decompressNodeLocation(path) {
   const [_, refNodeId, refNodeName, rest] = matches;
   const ref = refNodeId ? parseInt(refNodeId, 10) : refNodeName;
   const steps = [];
-  for (const [_2, step, count2] of rest.matchAll(/(f|n)(\d*)/g)) {
-    const repeat2 = parseInt(count2, 10) || 1;
-    steps.push(step, repeat2);
+  for (const [_2, step, count] of rest.matchAll(/(f|n)(\d*)/g)) {
+    const repeat = parseInt(count, 10) || 1;
+    steps.push(step, repeat);
   }
   return [ref, ...steps];
 }
@@ -10677,9 +10641,9 @@ function locateNextRNode(hydrationInfo, tView, lView, tNode) {
   }
   return native;
 }
-function siblingAfter(skip2, from) {
+function siblingAfter(skip, from) {
   let currentNode = from;
-  for (let i = 0; i < skip2; i++) {
+  for (let i = 0; i < skip; i++) {
     ngDevMode && validateSiblingNodeExists(currentNode);
     currentNode = currentNode.nextSibling;
   }
@@ -10689,8 +10653,8 @@ function stringifyNavigationInstructions(instructions) {
   const container = [];
   for (let i = 0; i < instructions.length; i += 2) {
     const step = instructions[i];
-    const repeat2 = instructions[i + 1];
-    for (let r = 0; r < repeat2; r++) {
+    const repeat = instructions[i + 1];
+    for (let r = 0; r < repeat; r++) {
       container.push(step === NODE_NAVIGATION_STEP_FIRST_CHILD ? "firstChild" : "nextSibling");
     }
   }
@@ -10700,8 +10664,8 @@ function navigateToNode(from, instructions) {
   let node = from;
   for (let i = 0; i < instructions.length; i += 2) {
     const step = instructions[i];
-    const repeat2 = instructions[i + 1];
-    for (let r = 0; r < repeat2; r++) {
+    const repeat = instructions[i + 1];
+    for (let r = 0; r < repeat; r++) {
       if (ngDevMode && !node) {
         throw nodeNotFoundAtPathError(from, stringifyNavigationInstructions(instructions));
       }
@@ -10970,9 +10934,9 @@ function appendI18nNodeToCollection(context, state, astNode) {
   }
   return currentNode;
 }
-function skipSiblingNodes(state, skip2) {
+function skipSiblingNodes(state, skip) {
   let currentNode = state.currentNode;
-  for (let i = 0; i < skip2; i++) {
+  for (let i = 0; i < skip; i++) {
     if (!currentNode) {
       break;
     }
@@ -13764,7 +13728,7 @@ function getComponentId(componentDef) {
   }
   hash += 2147483647 + 1;
   const compId = "c" + hash;
-  if ((typeof ngDevMode === "undefined" || ngDevMode) && true) {
+  if ((typeof ngDevMode === "undefined" || ngDevMode) && false) {
     if (GENERATED_COMP_IDS.has(compId)) {
       const previousCompDefType = GENERATED_COMP_IDS.get(compId);
       if (previousCompDefType !== componentDef.type) {
@@ -14560,14 +14524,14 @@ var CachedInjectorService = class _CachedInjectorService {
     factory: () => new _CachedInjectorService()
   });
 };
-function onTimer(delay2) {
-  return (callback, injector) => scheduleTimerTrigger(delay2, callback, injector);
+function onTimer(delay) {
+  return (callback, injector) => scheduleTimerTrigger(delay, callback, injector);
 }
-function scheduleTimerTrigger(delay2, callback, injector) {
+function scheduleTimerTrigger(delay, callback, injector) {
   const scheduler = injector.get(TimerScheduler);
   const ngZone = injector.get(NgZone);
   const cleanupFn = () => scheduler.remove(callback);
-  scheduler.add(delay2, callback, ngZone);
+  scheduler.add(delay, callback, ngZone);
   return cleanupFn;
 }
 var TimerScheduler = class _TimerScheduler {
@@ -14576,9 +14540,9 @@ var TimerScheduler = class _TimerScheduler {
   invokeTimerAt = null;
   current = [];
   deferred = [];
-  add(delay2, callback, ngZone) {
+  add(delay, callback, ngZone) {
     const target = this.executingCallbacks ? this.deferred : this.current;
-    this.addToQueue(target, Date.now() + delay2, callback);
+    this.addToQueue(target, Date.now() + delay, callback);
     this.scheduleTimer(ngZone);
   }
   remove(callback) {
@@ -14663,10 +14627,10 @@ var TimerScheduler = class _TimerScheduler {
       const invokeAt = this.current[0];
       if (this.timeoutId === null || this.invokeTimerAt && this.invokeTimerAt - invokeAt > FRAME_DURATION_MS) {
         this.clearTimeout();
-        const timeout2 = Math.max(invokeAt - now, FRAME_DURATION_MS);
+        const timeout = Math.max(invokeAt - now, FRAME_DURATION_MS);
         this.invokeTimerAt = invokeAt;
         this.timeoutId = ngZone.runOutsideAngular(() => {
-          return setTimeout(() => ngZone.run(callback), timeout2);
+          return setTimeout(() => ngZone.run(callback), timeout);
         });
       }
     }
@@ -14721,7 +14685,7 @@ function renderDeferBlockState(newState, tNode, lContainer, skipTimerScheduling 
   }
   if (isValidStateChange(currentState, newState) && isValidStateChange(lDetails[NEXT_DEFER_BLOCK_STATE] ?? -1, newState)) {
     const tDetails = getTDeferBlockDetails(hostTView, tNode);
-    const needsScheduling = !skipTimerScheduling && true && (getLoadingBlockAfter(tDetails) !== null || getMinimumDurationForState(tDetails, DeferBlockState.Loading) !== null || getMinimumDurationForState(tDetails, DeferBlockState.Placeholder));
+    const needsScheduling = !skipTimerScheduling && false;
     if (ngDevMode && needsScheduling) {
       assertDefined(applyDeferBlockStateWithSchedulingImpl, "Expected scheduling function to be defined");
     }
@@ -14810,7 +14774,7 @@ function applyDeferBlockStateWithScheduling(newState, lDetails, lContainer, tNod
     lDetails[NEXT_DEFER_BLOCK_STATE] = newState;
   }
 }
-function scheduleDeferBlockUpdate(timeout2, lDetails, tNode, lContainer, hostLView) {
+function scheduleDeferBlockUpdate(timeout, lDetails, tNode, lContainer, hostLView) {
   const callback = () => {
     const nextState = lDetails[NEXT_DEFER_BLOCK_STATE];
     lDetails[STATE_IS_FROZEN_UNTIL] = null;
@@ -14819,7 +14783,7 @@ function scheduleDeferBlockUpdate(timeout2, lDetails, tNode, lContainer, hostLVi
       renderDeferBlockState(nextState, tNode, lContainer);
     }
   };
-  return scheduleTimerTrigger(timeout2, callback, hostLView[INJECTOR]);
+  return scheduleTimerTrigger(timeout, callback, hostLView[INJECTOR]);
 }
 function isValidStateChange(currentState, newState) {
   return currentState < newState;
@@ -14854,7 +14818,7 @@ function ɵɵdeferEnableTimerScheduling(tView, tDetails, placeholderConfigIndex,
   }
 }
 function shouldTriggerDeferBlock(triggerType, lView) {
-  if (triggerType === 0 && true && false) {
+  if (triggerType === 0 && true && true) {
     return false;
   }
   const injector = lView[INJECTOR];
@@ -16081,13 +16045,13 @@ var Testability = class _Testability {
       };
     });
   }
-  addCallback(cb, timeout2, updateCb) {
+  addCallback(cb, timeout, updateCb) {
     let timeoutId = -1;
-    if (timeout2 && timeout2 > 0) {
+    if (timeout && timeout > 0) {
       timeoutId = setTimeout(() => {
         this._callbacks = this._callbacks.filter((cb2) => cb2.timeoutId !== timeoutId);
         cb();
-      }, timeout2);
+      }, timeout);
     }
     this._callbacks.push({
       doneCb: cb,
@@ -16095,11 +16059,11 @@ var Testability = class _Testability {
       updateCb
     });
   }
-  whenStable(doneCb, timeout2, updateCb) {
+  whenStable(doneCb, timeout, updateCb) {
     if (updateCb && !this._taskTrackingZone) {
       throw new Error('Task tracking zone is required when passing an update callback to whenStable(). Is "zone.js/plugins/task-tracking" loaded?');
     }
-    this.addCallback(doneCb, timeout2, updateCb);
+    this.addCallback(doneCb, timeout, updateCb);
     this._runCallbacksIfReady();
   }
   registerApplication(token) {
@@ -16213,7 +16177,7 @@ var ApplicationRef = class _ApplicationRef {
   allTestViews = /* @__PURE__ */ new Set();
   autoDetectTestViews = /* @__PURE__ */ new Set();
   includeAllTestViews = false;
-  afterTick = new Subject();
+  afterTick = new import_rxjs2.Subject();
   get allViews() {
     return [...(this.includeAllTestViews ? this.allTestViews : this.autoDetectTestViews).keys(), ...this._views];
   }
@@ -16224,7 +16188,7 @@ var ApplicationRef = class _ApplicationRef {
   components = [];
   internalPendingTask = inject2(PendingTasksInternal);
   get isStable() {
-    return this.internalPendingTask.hasPendingTasksObservable.pipe(map((pending) => !pending));
+    return this.internalPendingTask.hasPendingTasksObservable.pipe((0, import_operators.map)((pending) => !pending));
   }
   constructor() {
     inject2(TracingService, {
@@ -16585,7 +16549,7 @@ function scheduleDelayedTrigger(scheduleFn) {
   storeTriggerCleanupFn(0, lDetails, cleanupFn);
 }
 function scheduleDelayedPrefetching(scheduleFn) {
-  if (false) return;
+  if (true) return;
   const lView = getLView();
   const injector = lView[INJECTOR];
   const tNode = getCurrentTNode();
@@ -16597,15 +16561,6 @@ function scheduleDelayedPrefetching(scheduleFn) {
     const cleanupFn = scheduleFn(prefetch, injector);
     storeTriggerCleanupFn(1, lDetails, cleanupFn);
   }
-}
-function scheduleDelayedHydrating(scheduleFn, lView, tNode) {
-  if (false) return;
-  const injector = lView[INJECTOR];
-  const lDetails = getLDeferBlockDetails(lView, tNode);
-  const ssrUniqueId = lDetails[SSR_UNIQUE_ID];
-  ngDevMode && assertSsrIdDefined(ssrUniqueId);
-  const cleanupFn = scheduleFn(() => triggerHydrationFromBlockName(injector, ssrUniqueId), injector);
-  storeTriggerCleanupFn(2, lDetails, cleanupFn);
 }
 function triggerPrefetching(tDetails, lView, tNode) {
   triggerResourceLoading(tDetails, lView, tNode);
@@ -16852,7 +16807,7 @@ function shouldAttachTrigger(triggerType, lView, tNode) {
   } else if (triggerType === 2) {
     return !shouldAttachRegularTrigger(lView, tNode);
   }
-  return true;
+  return false;
 }
 function hasHydrateTriggers(flags) {
   return flags != null && (flags & 1) === 1;
@@ -16862,7 +16817,7 @@ function shouldAttachRegularTrigger(lView, tNode) {
   const tDetails = getTDeferBlockDetails(lView[TVIEW], tNode);
   const incrementalHydrationEnabled = isIncrementalHydrationEnabled(injector);
   const _hasHydrateTriggers = hasHydrateTriggers(tDetails.flags);
-  if (false) {
+  if (true) {
     return !incrementalHydrationEnabled || !_hasHydrateTriggers;
   }
   const lDetails = getLDeferBlockDetails(lView, tNode);
@@ -17080,7 +17035,7 @@ function ɵɵdeferHydrateWhen(rawValue) {
   const hydrateTriggers = getHydrateTriggers(tView, tNode);
   hydrateTriggers.set(6, null);
   if (bindingUpdated(lView, bindingIndex, rawValue)) {
-    if (false) {
+    if (true) {
       triggerDeferBlock(2, lView, tNode);
     } else {
       const injector = lView[INJECTOR];
@@ -17108,49 +17063,49 @@ function ɵɵdeferHydrateNever() {
   if (!shouldAttachTrigger(2, lView, tNode)) return;
   const hydrateTriggers = getHydrateTriggers(getTView(), tNode);
   hydrateTriggers.set(7, null);
-  if (false) {
+  if (true) {
     triggerDeferBlock(2, lView, tNode);
   }
 }
-function ɵɵdeferOnIdle(timeout2) {
+function ɵɵdeferOnIdle(timeout) {
   const lView = getLView();
   const tNode = getCurrentTNode();
   if (ngDevMode) {
-    const expression = timeout2 ? `on idle(${timeout2})` : "on idle";
+    const expression = timeout ? `on idle(${timeout})` : "on idle";
     trackTriggerForDebugging(lView[TVIEW], tNode, expression);
   }
   if (!shouldAttachTrigger(0, lView, tNode)) return;
   scheduleDelayedTrigger(onIdleWrapper({
-    timeout: timeout2
+    timeout
   }));
 }
-function ɵɵdeferPrefetchOnIdle(timeout2) {
+function ɵɵdeferPrefetchOnIdle(timeout) {
   const lView = getLView();
   const tNode = getCurrentTNode();
   if (ngDevMode) {
-    const expression = timeout2 ? `prefetch on idle(${timeout2})` : "prefetch on idle";
+    const expression = timeout ? `prefetch on idle(${timeout})` : "prefetch on idle";
     trackTriggerForDebugging(lView[TVIEW], tNode, expression);
   }
   if (!shouldAttachTrigger(1, lView, tNode)) return;
   scheduleDelayedPrefetching(onIdleWrapper({
-    timeout: timeout2
+    timeout
   }));
 }
-function ɵɵdeferHydrateOnIdle(timeout2) {
+function ɵɵdeferHydrateOnIdle(timeout) {
   const lView = getLView();
   const tNode = getCurrentTNode();
   if (ngDevMode) {
-    const expression = timeout2 ? `hydrate on idle(${timeout2})` : "hydrate on idle";
+    const expression = timeout ? `hydrate on idle(${timeout})` : "hydrate on idle";
     trackTriggerForDebugging(lView[TVIEW], tNode, expression);
   }
   if (!shouldAttachTrigger(2, lView, tNode)) return;
   const hydrateTriggers = getHydrateTriggers(getTView(), tNode);
   hydrateTriggers.set(0, null);
-  if (false) {
+  if (true) {
     triggerDeferBlock(2, lView, tNode);
   } else {
     scheduleDelayedHydrating(onIdleWrapper({
-      timeout: timeout2
+      timeout
     }), lView, tNode);
   }
 }
@@ -17189,7 +17144,7 @@ function ɵɵdeferHydrateOnImmediate() {
   if (!shouldAttachTrigger(2, lView, tNode)) return;
   const hydrateTriggers = getHydrateTriggers(getTView(), tNode);
   hydrateTriggers.set(1, null);
-  if (false) {
+  if (true) {
     triggerDeferBlock(2, lView, tNode);
   } else {
     const injector = lView[INJECTOR];
@@ -17199,40 +17154,40 @@ function ɵɵdeferHydrateOnImmediate() {
     triggerHydrationFromBlockName(injector, ssrUniqueId);
   }
 }
-function ɵɵdeferOnTimer(delay2) {
+function ɵɵdeferOnTimer(delay) {
   const lView = getLView();
   const tNode = getCurrentTNode();
   if (ngDevMode) {
-    trackTriggerForDebugging(lView[TVIEW], tNode, `on timer(${delay2}ms)`);
+    trackTriggerForDebugging(lView[TVIEW], tNode, `on timer(${delay}ms)`);
   }
   if (!shouldAttachTrigger(0, lView, tNode)) return;
-  scheduleDelayedTrigger(onTimer(delay2));
+  scheduleDelayedTrigger(onTimer(delay));
 }
-function ɵɵdeferPrefetchOnTimer(delay2) {
+function ɵɵdeferPrefetchOnTimer(delay) {
   const lView = getLView();
   const tNode = getCurrentTNode();
   if (ngDevMode) {
-    trackTriggerForDebugging(lView[TVIEW], tNode, `prefetch on timer(${delay2}ms)`);
+    trackTriggerForDebugging(lView[TVIEW], tNode, `prefetch on timer(${delay}ms)`);
   }
   if (!shouldAttachTrigger(1, lView, tNode)) return;
-  scheduleDelayedPrefetching(onTimer(delay2));
+  scheduleDelayedPrefetching(onTimer(delay));
 }
-function ɵɵdeferHydrateOnTimer(delay2) {
+function ɵɵdeferHydrateOnTimer(delay) {
   const lView = getLView();
   const tNode = getCurrentTNode();
   if (ngDevMode) {
-    trackTriggerForDebugging(lView[TVIEW], tNode, `hydrate on timer(${delay2}ms)`);
+    trackTriggerForDebugging(lView[TVIEW], tNode, `hydrate on timer(${delay}ms)`);
   }
   if (!shouldAttachTrigger(2, lView, tNode)) return;
   const hydrateTriggers = getHydrateTriggers(getTView(), tNode);
   hydrateTriggers.set(5, {
     type: 5,
-    delay: delay2
+    delay
   });
-  if (false) {
+  if (true) {
     triggerDeferBlock(2, lView, tNode);
   } else {
-    scheduleDelayedHydrating(onTimer(delay2), lView, tNode);
+    scheduleDelayedHydrating(onTimer(delay), lView, tNode);
   }
 }
 function ɵɵdeferOnHover(triggerIndex, walkUpTimes) {
@@ -17243,7 +17198,7 @@ function ɵɵdeferOnHover(triggerIndex, walkUpTimes) {
   }
   if (!shouldAttachTrigger(0, lView, tNode)) return;
   renderPlaceholder(lView, tNode);
-  if (true) {
+  if (false) {
     registerDomTrigger(lView, tNode, triggerIndex, walkUpTimes, onHover, () => triggerDeferBlock(0, lView, tNode), 0);
   }
 }
@@ -17269,7 +17224,7 @@ function ɵɵdeferHydrateOnHover() {
   if (!shouldAttachTrigger(2, lView, tNode)) return;
   const hydrateTriggers = getHydrateTriggers(getTView(), tNode);
   hydrateTriggers.set(4, null);
-  if (false) {
+  if (true) {
     triggerDeferBlock(2, lView, tNode);
   }
 }
@@ -17281,7 +17236,7 @@ function ɵɵdeferOnInteraction(triggerIndex, walkUpTimes) {
   }
   if (!shouldAttachTrigger(0, lView, tNode)) return;
   renderPlaceholder(lView, tNode);
-  if (true) {
+  if (false) {
     registerDomTrigger(lView, tNode, triggerIndex, walkUpTimes, onInteraction, () => triggerDeferBlock(0, lView, tNode), 0);
   }
 }
@@ -17307,7 +17262,7 @@ function ɵɵdeferHydrateOnInteraction() {
   if (!shouldAttachTrigger(2, lView, tNode)) return;
   const hydrateTriggers = getHydrateTriggers(getTView(), tNode);
   hydrateTriggers.set(3, null);
-  if (false) {
+  if (true) {
     triggerDeferBlock(2, lView, tNode);
   }
 }
@@ -17326,7 +17281,7 @@ function ɵɵdeferOnViewport(triggerIndex, walkUpTimes, options) {
   }
   if (!shouldAttachTrigger(0, lView, tNode)) return;
   renderPlaceholder(lView, tNode);
-  if (true) {
+  if (false) {
     registerDomTrigger(lView, tNode, triggerIndex, walkUpTimes, onViewportWrapper, () => triggerDeferBlock(0, lView, tNode), 0, options);
   }
 }
@@ -17362,7 +17317,7 @@ function ɵɵdeferHydrateOnViewport(options) {
     type: 2,
     intersectionObserverOptions: options
   } : null);
-  if (false) {
+  if (true) {
     triggerDeferBlock(2, lView, tNode);
   }
 }
@@ -17398,7 +17353,7 @@ function ɵɵattribute(name, value, sanitizer, namespace) {
 }
 function ɵɵanimateEnter(value) {
   performanceMarkFeature("NgAnimateEnter");
-  if (!areAnimationSupported) {
+  if (true) {
     return ɵɵanimateEnter;
   }
   ngDevMode && assertAnimationTypes(value, "animate.enter");
@@ -17470,7 +17425,7 @@ function enterAnimationEnd(event, nativeElement, renderer) {
 }
 function ɵɵanimateEnterListener(value) {
   performanceMarkFeature("NgAnimateEnter");
-  if (!areAnimationSupported) {
+  if (true) {
     return ɵɵanimateEnterListener;
   }
   ngDevMode && assertAnimationTypes(value, "animate.enter");
@@ -17494,7 +17449,7 @@ function runEnterAnimationFunction(lView, tNode, value) {
 }
 function ɵɵanimateLeave(value) {
   performanceMarkFeature("NgAnimateLeave");
-  if (!areAnimationSupported) {
+  if (true) {
     return ɵɵanimateLeave;
   }
   ngDevMode && assertAnimationTypes(value, "animate.leave");
@@ -17582,7 +17537,7 @@ function animateLeaveClassRunner(el, tNode, lView, classList, renderer, ngZone) 
 }
 function ɵɵanimateLeaveListener(value) {
   performanceMarkFeature("NgAnimateLeave");
-  if (!areAnimationSupported) {
+  if (true) {
     return ɵɵanimateLeaveListener;
   }
   ngDevMode && assertAnimationTypes(value, "animate.leave");
@@ -19124,14 +19079,14 @@ function generateBindingUpdateOpCodes(updateOpCodes, str, destinationNode, attrN
   return mask;
 }
 function countBindings(opCodes) {
-  let count2 = 0;
+  let count = 0;
   for (let i = 0; i < opCodes.length; i++) {
     const opCode = opCodes[i];
     if (typeof opCode === "number" && opCode < 0) {
-      count2++;
+      count++;
     }
   }
-  return count2;
+  return count;
 }
 function toMaskBit(bindingIndex) {
   return 1 << Math.min(bindingIndex, 31);
@@ -19672,8 +19627,8 @@ function ɵɵprojection(nodeIndex, selectorIndex = 0, attrs, fallbackTemplateFn,
   const hydrationInfo = lView[HYDRATION];
   const isNodeCreationMode = !hydrationInfo || isInSkipHydrationBlock();
   const componentHostNode = lView[DECLARATION_COMPONENT_VIEW][T_HOST];
-  const isEmpty2 = componentHostNode.projection[tProjectionNode.projection] === null;
-  if (isEmpty2 && fallbackIndex !== null) {
+  const isEmpty = componentHostNode.projection[tProjectionNode.projection] === null;
+  if (isEmpty && fallbackIndex !== null) {
     insertFallbackContent(lView, tView, fallbackIndex);
   } else if (isNodeCreationMode && !isDetachedByI18n(tProjectionNode)) {
     applyProjection(tView, lView, tProjectionNode);
@@ -20800,9 +20755,6 @@ var isIncrementalHydrationRuntimeActive = false;
 function createDehydratedBlockRegistry() {
   return _dehydratedBlockRegistryFactory();
 }
-function runIncrementalHydrationBootstrap(injector, doc) {
-  _runIncrementalHydrationBootstrap(injector, doc);
-}
 function ɵɵenableIncrementalHydrationRuntime() {
   if (isIncrementalHydrationRuntimeActive) {
     return;
@@ -21016,8 +20968,8 @@ function ɵsetClassDebugInfo(type, debugInfo) {
     def.debugInfo = debugInfo;
   }
 }
-function ɵɵgetReplaceMetadataURL(id, timestamp2, base) {
-  const url = `./@ng/component?c=${id}&t=${encodeURIComponent(timestamp2)}`;
+function ɵɵgetReplaceMetadataURL(id, timestamp, base) {
+  const url = `./@ng/component?c=${id}&t=${encodeURIComponent(timestamp)}`;
   return new URL(url, base).href;
 }
 function ɵɵreplaceMetadata(type, applyMetadata, namespaces, locals, importMeta = null, id = null) {
@@ -22129,7 +22081,7 @@ var ChangeDetectionSchedulerImpl = class _ChangeDetectionSchedulerImpl {
       "__scheduler_tick__": true
     }
   }];
-  subscriptions = new Subscription();
+  subscriptions = new import_rxjs2.Subscription();
   angularZoneId = this.zoneIsDefined ? this.ngZone._inner?.get(angularZoneInstanceIdProperty) : null;
   scheduleInRootZone = !this.zonelessEnabled && this.zoneIsDefined && (inject2(SCHEDULE_IN_ROOT_ZONE, {
     optional: true
@@ -23118,7 +23070,7 @@ var ResourceImpl = class extends BaseWritableResource {
           stream
         });
         const result = untracked2(stream);
-        if (false) {
+        if (true) {
           saveToTransferState(result, this.transferCacheKey, this.transferState);
         }
       } else {
@@ -23133,7 +23085,7 @@ var ResourceImpl = class extends BaseWritableResource {
           stream: resolvedStream
         });
         const result = resolvedStream ? untracked2(resolvedStream) : void 0;
-        if (false) {
+        if (true) {
           saveToTransferState(result, this.transferCacheKey, this.transferState);
         }
       }
@@ -23162,6 +23114,11 @@ var ResourceImpl = class extends BaseWritableResource {
     this.resolvePendingTask = void 0;
   }
 };
+function saveToTransferState(result, transferCacheKey, transferState) {
+  if (transferCacheKey && transferState && result && isResolved(result)) {
+    transferState.set(transferCacheKey, result.value);
+  }
+}
 function wrapEqualityFn(equal) {
   return (a, b) => a === void 0 || b === void 0 ? a === b : equal(a, b);
 }
@@ -23256,24 +23213,10 @@ function rethrowFatalErrors(error) {
   }
 }
 
+// node_modules/@angular/core/fesm2022/core.mjs
+var import_rxjs3 = __toESM(require_cjs(), 1);
+
 // node_modules/@angular/core/fesm2022/primitives-event-dispatch.mjs
-var Property = {
-  JSACTION: "__jsaction",
-  OWNER: "__owner"
-};
-var parseCache = {};
-function get(element) {
-  return element[Property.JSACTION];
-}
-function set(element, actionMap) {
-  element[Property.JSACTION] = actionMap;
-}
-function getParsed(text) {
-  return parseCache[text];
-}
-function setParsed(text, parsed) {
-  parseCache[text] = parsed;
-}
 var EventType = {
   CLICK: "click",
   CLICKMOD: "clickmod",
@@ -23307,647 +23250,15 @@ var CAPTURE_EVENT_TYPES = [EventType.FOCUS, EventType.BLUR, EventType.ERROR, Eve
 var isCaptureEventType = (eventType) => CAPTURE_EVENT_TYPES.indexOf(eventType) >= 0;
 var EARLY_EVENT_TYPES = BUBBLE_EVENT_TYPES.concat(CAPTURE_EVENT_TYPES);
 var isEarlyEventType = (eventType) => EARLY_EVENT_TYPES.indexOf(eventType) >= 0;
-function getBrowserEventType(eventType) {
-  if (eventType === EventType.MOUSEENTER) {
-    return EventType.MOUSEOVER;
-  } else if (eventType === EventType.MOUSELEAVE) {
-    return EventType.MOUSEOUT;
-  } else if (eventType === EventType.POINTERENTER) {
-    return EventType.POINTEROVER;
-  } else if (eventType === EventType.POINTERLEAVE) {
-    return EventType.POINTEROUT;
-  }
-  return eventType;
-}
-function addEventListener(element, eventType, handler, passive) {
-  let capture = false;
-  if (isCaptureEventType(eventType)) {
-    capture = true;
-  }
-  const options = typeof passive === "boolean" ? {
-    capture,
-    passive
-  } : capture;
-  element.addEventListener(eventType, handler, options);
-  return {
-    eventType,
-    handler,
-    capture,
-    passive
-  };
-}
-function removeEventListener(element, info) {
-  if (element.removeEventListener) {
-    const options = typeof info.passive === "boolean" ? {
-      capture: info.capture
-    } : info.capture;
-    element.removeEventListener(info.eventType, info.handler, options);
-  } else if (element.detachEvent) {
-    element.detachEvent(`on${info.eventType}`, info.handler);
-  }
-}
-function preventDefault(e) {
-  e.preventDefault ? e.preventDefault() : e.returnValue = false;
-}
 var isMac = typeof navigator !== "undefined" && /Macintosh/.test(navigator.userAgent);
-function isMiddleClick(e) {
-  return e.which === 2 || e.which == null && e.button === 4;
-}
-function isModifiedClickEvent(e) {
-  return isMac && e.metaKey || !isMac && e.ctrlKey || isMiddleClick(e) || e.shiftKey;
-}
-function isMouseSpecialEvent(e, type, element) {
-  const related = e.relatedTarget;
-  return (e.type === EventType.MOUSEOVER && type === EventType.MOUSEENTER || e.type === EventType.MOUSEOUT && type === EventType.MOUSELEAVE || e.type === EventType.POINTEROVER && type === EventType.POINTERENTER || e.type === EventType.POINTEROUT && type === EventType.POINTERLEAVE) && (!related || related !== element && !element.contains(related));
-}
-function createMouseSpecialEvent(e, target) {
-  const copy = {};
-  for (const property in e) {
-    if (property === "srcElement" || property === "target") {
-      continue;
-    }
-    const key = property;
-    const value = e[key];
-    if (typeof value === "function") {
-      continue;
-    }
-    copy[key] = value;
-  }
-  if (e.type === EventType.MOUSEOVER) {
-    copy["type"] = EventType.MOUSEENTER;
-  } else if (e.type === EventType.MOUSEOUT) {
-    copy["type"] = EventType.MOUSELEAVE;
-  } else if (e.type === EventType.POINTEROVER) {
-    copy["type"] = EventType.POINTERENTER;
-  } else {
-    copy["type"] = EventType.POINTERLEAVE;
-  }
-  copy["target"] = copy["srcElement"] = target;
-  copy["bubbles"] = false;
-  copy["_originalEvent"] = e;
-  return copy;
-}
-var EventContractContainer = class {
-  element;
-  handlerInfos = [];
-  constructor(element) {
-    this.element = element;
-  }
-  addEventListener(eventType, getHandler, passive) {
-    this.handlerInfos.push(addEventListener(this.element, eventType, getHandler(this.element), passive));
-  }
-  cleanUp() {
-    for (let i = 0; i < this.handlerInfos.length; i++) {
-      removeEventListener(this.element, this.handlerInfos[i]);
-    }
-    this.handlerInfos = [];
-  }
-};
-var Char = {
-  EVENT_ACTION_SEPARATOR: ":"
-};
-function getEventType(eventInfo) {
-  return eventInfo.eventType;
-}
-function setEventType(eventInfo, eventType) {
-  eventInfo.eventType = eventType;
-}
-function getEvent(eventInfo) {
-  return eventInfo.event;
-}
-function setEvent(eventInfo, event) {
-  eventInfo.event = event;
-}
-function getTargetElement(eventInfo) {
-  return eventInfo.targetElement;
-}
-function setTargetElement(eventInfo, targetElement) {
-  eventInfo.targetElement = targetElement;
-}
-function getContainer(eventInfo) {
-  return eventInfo.eic;
-}
-function setContainer(eventInfo, container) {
-  eventInfo.eic = container;
-}
-function getTimestamp(eventInfo) {
-  return eventInfo.timeStamp;
-}
-function setTimestamp(eventInfo, timestamp2) {
-  eventInfo.timeStamp = timestamp2;
-}
-function getAction(eventInfo) {
-  return eventInfo.eia;
-}
-function setAction(eventInfo, actionName, actionElement) {
-  eventInfo.eia = [actionName, actionElement];
-}
-function unsetAction(eventInfo) {
-  eventInfo.eia = void 0;
-}
-function getActionElement(actionInfo) {
-  return actionInfo[1];
-}
-function getIsReplay(eventInfo) {
-  return eventInfo.eirp;
-}
-function setIsReplay(eventInfo, replay) {
-  eventInfo.eirp = replay;
-}
-function getResolved(eventInfo) {
-  return eventInfo.eir;
-}
-function setResolved(eventInfo, resolved) {
-  eventInfo.eir = resolved;
-}
-function cloneEventInfo(eventInfo) {
-  return {
-    eventType: eventInfo.eventType,
-    event: eventInfo.event,
-    targetElement: eventInfo.targetElement,
-    eic: eventInfo.eic,
-    eia: eventInfo.eia,
-    timeStamp: eventInfo.timeStamp,
-    eirp: eventInfo.eirp,
-    eiack: eventInfo.eiack,
-    eir: eventInfo.eir
-  };
-}
-function createEventInfoFromParameters(eventType, event, targetElement, container, timestamp2, action, isReplay, a11yClickKey) {
-  return {
-    eventType,
-    event,
-    targetElement,
-    eic: container,
-    timeStamp: timestamp2,
-    eia: action,
-    eirp: isReplay,
-    eiack: a11yClickKey
-  };
-}
-var EventInfoWrapper = class _EventInfoWrapper {
-  eventInfo;
-  constructor(eventInfo) {
-    this.eventInfo = eventInfo;
-  }
-  getEventType() {
-    return getEventType(this.eventInfo);
-  }
-  setEventType(eventType) {
-    setEventType(this.eventInfo, eventType);
-  }
-  getEvent() {
-    return getEvent(this.eventInfo);
-  }
-  setEvent(event) {
-    setEvent(this.eventInfo, event);
-  }
-  getTargetElement() {
-    return getTargetElement(this.eventInfo);
-  }
-  setTargetElement(targetElement) {
-    setTargetElement(this.eventInfo, targetElement);
-  }
-  getContainer() {
-    return getContainer(this.eventInfo);
-  }
-  setContainer(container) {
-    setContainer(this.eventInfo, container);
-  }
-  getTimestamp() {
-    return getTimestamp(this.eventInfo);
-  }
-  setTimestamp(timestamp2) {
-    setTimestamp(this.eventInfo, timestamp2);
-  }
-  getAction() {
-    const action = getAction(this.eventInfo);
-    if (!action) return void 0;
-    return {
-      name: action[0],
-      element: action[1]
-    };
-  }
-  setAction(action) {
-    if (!action) {
-      unsetAction(this.eventInfo);
-      return;
-    }
-    setAction(this.eventInfo, action.name, action.element);
-  }
-  getIsReplay() {
-    return getIsReplay(this.eventInfo);
-  }
-  setIsReplay(replay) {
-    setIsReplay(this.eventInfo, replay);
-  }
-  getResolved() {
-    return getResolved(this.eventInfo);
-  }
-  setResolved(resolved) {
-    setResolved(this.eventInfo, resolved);
-  }
-  clone() {
-    return new _EventInfoWrapper(cloneEventInfo(this.eventInfo));
-  }
-};
-var EMPTY_ACTION_MAP = {};
-var REGEXP_SEMICOLON = /\s*;\s*/;
 var DEFAULT_EVENT_TYPE = EventType.CLICK;
-var ActionResolver = class {
-  a11yClickSupport = false;
-  clickModSupport = true;
-  syntheticMouseEventSupport;
-  updateEventInfoForA11yClick = void 0;
-  preventDefaultForA11yClick = void 0;
-  populateClickOnlyAction = void 0;
-  constructor({
-    syntheticMouseEventSupport = false,
-    clickModSupport = true
-  } = {}) {
-    this.syntheticMouseEventSupport = syntheticMouseEventSupport;
-    this.clickModSupport = clickModSupport;
-  }
-  resolveEventType(eventInfo) {
-    if (this.clickModSupport && getEventType(eventInfo) === EventType.CLICK && isModifiedClickEvent(getEvent(eventInfo))) {
-      setEventType(eventInfo, EventType.CLICKMOD);
-    } else if (this.a11yClickSupport) {
-      this.updateEventInfoForA11yClick(eventInfo);
-    }
-  }
-  resolveAction(eventInfo) {
-    if (getResolved(eventInfo)) {
-      return;
-    }
-    this.populateAction(eventInfo, getTargetElement(eventInfo));
-    setResolved(eventInfo, true);
-  }
-  resolveParentAction(eventInfo) {
-    const action = getAction(eventInfo);
-    const actionElement = action && getActionElement(action);
-    unsetAction(eventInfo);
-    const parentNode = actionElement && this.getParentNode(actionElement);
-    if (!parentNode) {
-      return;
-    }
-    this.populateAction(eventInfo, parentNode);
-  }
-  populateAction(eventInfo, currentTarget) {
-    let actionElement = currentTarget;
-    while (actionElement && actionElement !== getContainer(eventInfo)) {
-      if (actionElement.nodeType === Node.ELEMENT_NODE) {
-        this.populateActionOnElement(actionElement, eventInfo);
-      }
-      if (getAction(eventInfo)) {
-        break;
-      }
-      actionElement = this.getParentNode(actionElement);
-    }
-    const action = getAction(eventInfo);
-    if (!action) {
-      return;
-    }
-    if (this.a11yClickSupport) {
-      this.preventDefaultForA11yClick(eventInfo);
-    }
-    if (this.syntheticMouseEventSupport) {
-      if (getEventType(eventInfo) === EventType.MOUSEENTER || getEventType(eventInfo) === EventType.MOUSELEAVE || getEventType(eventInfo) === EventType.POINTERENTER || getEventType(eventInfo) === EventType.POINTERLEAVE) {
-        if (isMouseSpecialEvent(getEvent(eventInfo), getEventType(eventInfo), getActionElement(action))) {
-          const copiedEvent = createMouseSpecialEvent(getEvent(eventInfo), getActionElement(action));
-          setEvent(eventInfo, copiedEvent);
-          setTargetElement(eventInfo, getActionElement(action));
-        } else {
-          unsetAction(eventInfo);
-        }
-      }
-    }
-  }
-  getParentNode(element) {
-    const owner = element[Property.OWNER];
-    if (owner) {
-      return owner;
-    }
-    const parentNode = element.parentNode;
-    if (parentNode?.nodeName === "#document-fragment") {
-      return parentNode?.host ?? null;
-    }
-    return parentNode;
-  }
-  populateActionOnElement(actionElement, eventInfo) {
-    const actionMap = this.parseActions(actionElement);
-    const actionName = actionMap[getEventType(eventInfo)];
-    if (actionName !== void 0) {
-      setAction(eventInfo, actionName, actionElement);
-    }
-    if (this.a11yClickSupport) {
-      this.populateClickOnlyAction(actionElement, eventInfo, actionMap);
-    }
-  }
-  parseActions(actionElement) {
-    let actionMap = get(actionElement);
-    if (!actionMap) {
-      const jsactionAttribute = actionElement.getAttribute(Attribute.JSACTION);
-      if (!jsactionAttribute) {
-        actionMap = EMPTY_ACTION_MAP;
-        set(actionElement, actionMap);
-      } else {
-        actionMap = getParsed(jsactionAttribute);
-        if (!actionMap) {
-          actionMap = {};
-          const values = jsactionAttribute.split(REGEXP_SEMICOLON);
-          for (let idx = 0; idx < values.length; idx++) {
-            const value = values[idx];
-            if (!value) {
-              continue;
-            }
-            const colon = value.indexOf(Char.EVENT_ACTION_SEPARATOR);
-            const hasColon = colon !== -1;
-            const type = hasColon ? value.substr(0, colon).trim() : DEFAULT_EVENT_TYPE;
-            const action = hasColon ? value.substr(colon + 1).trim() : value;
-            actionMap[type] = action;
-          }
-          setParsed(jsactionAttribute, actionMap);
-        }
-        set(actionElement, actionMap);
-      }
-    }
-    return actionMap;
-  }
-  addA11yClickSupport(updateEventInfoForA11yClick, preventDefaultForA11yClick, populateClickOnlyAction) {
-    this.a11yClickSupport = true;
-    this.updateEventInfoForA11yClick = updateEventInfoForA11yClick;
-    this.preventDefaultForA11yClick = preventDefaultForA11yClick;
-    this.populateClickOnlyAction = populateClickOnlyAction;
-  }
-};
 var Restriction;
 (function(Restriction2) {
   Restriction2[Restriction2["I_AM_THE_JSACTION_FRAMEWORK"] = 0] = "I_AM_THE_JSACTION_FRAMEWORK";
 })(Restriction || (Restriction = {}));
-var Dispatcher = class {
-  dispatchDelegate;
-  actionResolver;
-  eventReplayer;
-  eventReplayScheduled = false;
-  replayEventInfoWrappers = [];
-  constructor(dispatchDelegate, {
-    actionResolver,
-    eventReplayer
-  } = {}) {
-    this.dispatchDelegate = dispatchDelegate;
-    this.actionResolver = actionResolver;
-    this.eventReplayer = eventReplayer;
-  }
-  dispatch(eventInfo) {
-    const eventInfoWrapper = new EventInfoWrapper(eventInfo);
-    this.actionResolver?.resolveEventType(eventInfo);
-    this.actionResolver?.resolveAction(eventInfo);
-    const action = eventInfoWrapper.getAction();
-    if (action && shouldPreventDefaultBeforeDispatching(action.element, eventInfoWrapper)) {
-      preventDefault(eventInfoWrapper.getEvent());
-    }
-    if (this.eventReplayer && eventInfoWrapper.getIsReplay()) {
-      this.scheduleEventInfoWrapperReplay(eventInfoWrapper);
-      return;
-    }
-    this.dispatchDelegate(eventInfoWrapper);
-  }
-  scheduleEventInfoWrapperReplay(eventInfoWrapper) {
-    this.replayEventInfoWrappers.push(eventInfoWrapper);
-    if (this.eventReplayScheduled) {
-      return;
-    }
-    this.eventReplayScheduled = true;
-    Promise.resolve().then(() => {
-      this.eventReplayScheduled = false;
-      this.eventReplayer(this.replayEventInfoWrappers);
-    });
-  }
-};
-function shouldPreventDefaultBeforeDispatching(actionElement, eventInfoWrapper) {
-  return actionElement.tagName === "A" && (eventInfoWrapper.getEventType() === EventType.CLICK || eventInfoWrapper.getEventType() === EventType.CLICKMOD);
-}
-var PROPAGATION_STOPPED_SYMBOL = /* @__PURE__ */ Symbol.for("propagationStopped");
-var EventPhase = {
-  REPLAY: 101
-};
-var PREVENT_DEFAULT_ERROR_MESSAGE_DETAILS = " Because event replay occurs after browser dispatch, `preventDefault` would have no effect. You can check whether an event is being replayed by accessing the event phase: `event.eventPhase === EventPhase.REPLAY`.";
-var PREVENT_DEFAULT_ERROR_MESSAGE = `\`preventDefault\` called during event replay.`;
-var COMPOSED_PATH_ERROR_MESSAGE_DETAILS = " Because event replay occurs after browser dispatch, `composedPath()` will be empty. Iterate parent nodes from `event.target` or `event.currentTarget` if you need to check elements in the event path.";
-var COMPOSED_PATH_ERROR_MESSAGE = `\`composedPath\` called during event replay.`;
-var EventDispatcher = class {
-  dispatchDelegate;
-  clickModSupport;
-  actionResolver;
-  dispatcher;
-  constructor(dispatchDelegate, clickModSupport = true) {
-    this.dispatchDelegate = dispatchDelegate;
-    this.clickModSupport = clickModSupport;
-    this.actionResolver = new ActionResolver({
-      clickModSupport
-    });
-    this.dispatcher = new Dispatcher((eventInfoWrapper) => {
-      this.dispatchToDelegate(eventInfoWrapper);
-    }, {
-      actionResolver: this.actionResolver
-    });
-  }
-  dispatch(eventInfo) {
-    this.dispatcher.dispatch(eventInfo);
-  }
-  dispatchToDelegate(eventInfoWrapper) {
-    if (eventInfoWrapper.getIsReplay()) {
-      prepareEventForReplay(eventInfoWrapper);
-    }
-    prepareEventForBubbling(eventInfoWrapper);
-    while (eventInfoWrapper.getAction()) {
-      prepareEventForDispatch(eventInfoWrapper);
-      if (isCaptureEventType(eventInfoWrapper.getEventType()) && eventInfoWrapper.getAction().element !== eventInfoWrapper.getTargetElement()) {
-        return;
-      }
-      this.dispatchDelegate(eventInfoWrapper.getEvent(), eventInfoWrapper.getAction().name);
-      if (propagationStopped(eventInfoWrapper)) {
-        return;
-      }
-      this.actionResolver.resolveParentAction(eventInfoWrapper.eventInfo);
-    }
-  }
-};
-function prepareEventForBubbling(eventInfoWrapper) {
-  const event = eventInfoWrapper.getEvent();
-  const originalStopPropagation = eventInfoWrapper.getEvent().stopPropagation.bind(event);
-  const stopPropagation = () => {
-    event[PROPAGATION_STOPPED_SYMBOL] = true;
-    originalStopPropagation();
-  };
-  patchEventInstance(event, "stopPropagation", stopPropagation);
-  patchEventInstance(event, "stopImmediatePropagation", stopPropagation);
-}
-function propagationStopped(eventInfoWrapper) {
-  const event = eventInfoWrapper.getEvent();
-  return !!event[PROPAGATION_STOPPED_SYMBOL];
-}
-function prepareEventForReplay(eventInfoWrapper) {
-  const event = eventInfoWrapper.getEvent();
-  const target = eventInfoWrapper.getTargetElement();
-  const originalPreventDefault = event.preventDefault.bind(event);
-  patchEventInstance(event, "target", target);
-  patchEventInstance(event, "eventPhase", EventPhase.REPLAY);
-  patchEventInstance(event, "preventDefault", () => {
-    originalPreventDefault();
-    throw new Error(PREVENT_DEFAULT_ERROR_MESSAGE + (ngDevMode ? PREVENT_DEFAULT_ERROR_MESSAGE_DETAILS : ""));
-  });
-  patchEventInstance(event, "composedPath", () => {
-    throw new Error(COMPOSED_PATH_ERROR_MESSAGE + (ngDevMode ? COMPOSED_PATH_ERROR_MESSAGE_DETAILS : ""));
-  });
-}
-function prepareEventForDispatch(eventInfoWrapper) {
-  const event = eventInfoWrapper.getEvent();
-  const currentTarget = eventInfoWrapper.getAction()?.element;
-  if (currentTarget) {
-    patchEventInstance(event, "currentTarget", currentTarget, {
-      configurable: true
-    });
-  }
-}
-function patchEventInstance(event, property, value, {
-  configurable = false
-} = {}) {
-  Object.defineProperty(event, property, {
-    value,
-    configurable
-  });
-}
-function registerDispatcher$1(eventContract, dispatcher) {
-  eventContract.ecrd((eventInfo) => {
-    dispatcher.dispatch(eventInfo);
-  }, Restriction.I_AM_THE_JSACTION_FRAMEWORK);
-}
-function getQueuedEventInfos(earlyJsactionData) {
-  return earlyJsactionData?.q ?? [];
-}
-function removeAllEventListeners(earlyJsactionData) {
-  if (!earlyJsactionData) {
-    return;
-  }
-  removeEventListeners(earlyJsactionData.c, earlyJsactionData.et, earlyJsactionData.h);
-  removeEventListeners(earlyJsactionData.c, earlyJsactionData.etc, earlyJsactionData.h, true);
-}
-function removeEventListeners(container, eventTypes, earlyEventHandler, capture) {
-  for (let i = 0; i < eventTypes.length; i++) {
-    container.removeEventListener(eventTypes[i], earlyEventHandler, capture);
-  }
-}
-var MOUSE_SPECIAL_SUPPORT = false;
-var EventContract = class _EventContract {
-  static MOUSE_SPECIAL_SUPPORT = MOUSE_SPECIAL_SUPPORT;
-  containerManager;
-  eventHandlers = {};
-  browserEventTypeToExtraEventTypes = {};
-  dispatcher = null;
-  queuedEventInfos = [];
-  constructor(containerManager) {
-    this.containerManager = containerManager;
-  }
-  handleEvent(eventType, event, container) {
-    const eventInfo = createEventInfoFromParameters(eventType, event, event.target, container, Date.now());
-    this.handleEventInfo(eventInfo);
-  }
-  handleEventInfo(eventInfo) {
-    if (!this.dispatcher) {
-      setIsReplay(eventInfo, true);
-      this.queuedEventInfos?.push(eventInfo);
-      return;
-    }
-    this.dispatcher(eventInfo);
-  }
-  addEvent(eventType, prefixedEventType, passive) {
-    if (eventType in this.eventHandlers || !this.containerManager) {
-      return;
-    }
-    if (!_EventContract.MOUSE_SPECIAL_SUPPORT && MOUSE_SPECIAL_EVENT_TYPES.indexOf(eventType) >= 0) {
-      return;
-    }
-    const eventHandler = (eventType2, event, container) => {
-      this.handleEvent(eventType2, event, container);
-    };
-    this.eventHandlers[eventType] = eventHandler;
-    const browserEventType = getBrowserEventType(prefixedEventType || eventType);
-    if (browserEventType !== eventType) {
-      const eventTypes = this.browserEventTypeToExtraEventTypes[browserEventType] || [];
-      eventTypes.push(eventType);
-      this.browserEventTypeToExtraEventTypes[browserEventType] = eventTypes;
-    }
-    this.containerManager.addEventListener(browserEventType, (element) => {
-      return (event) => {
-        eventHandler(eventType, event, element);
-      };
-    }, passive);
-  }
-  replayEarlyEvents(earlyJsactionData = window._ejsa) {
-    if (!earlyJsactionData) {
-      return;
-    }
-    this.replayEarlyEventInfos(earlyJsactionData.q);
-    removeAllEventListeners(earlyJsactionData);
-    delete window._ejsa;
-  }
-  replayEarlyEventInfos(earlyEventInfos) {
-    for (let i = 0; i < earlyEventInfos.length; i++) {
-      const earlyEventInfo = earlyEventInfos[i];
-      const eventTypes = this.getEventTypesForBrowserEventType(earlyEventInfo.eventType);
-      for (let j = 0; j < eventTypes.length; j++) {
-        const eventInfo = cloneEventInfo(earlyEventInfo);
-        setEventType(eventInfo, eventTypes[j]);
-        this.handleEventInfo(eventInfo);
-      }
-    }
-  }
-  getEventTypesForBrowserEventType(browserEventType) {
-    const eventTypes = [];
-    if (this.eventHandlers[browserEventType]) {
-      eventTypes.push(browserEventType);
-    }
-    if (this.browserEventTypeToExtraEventTypes[browserEventType]) {
-      eventTypes.push(...this.browserEventTypeToExtraEventTypes[browserEventType]);
-    }
-    return eventTypes;
-  }
-  handler(eventType) {
-    return this.eventHandlers[eventType];
-  }
-  cleanUp() {
-    this.containerManager?.cleanUp();
-    this.containerManager = null;
-    this.eventHandlers = {};
-    this.browserEventTypeToExtraEventTypes = {};
-    this.dispatcher = null;
-    this.queuedEventInfos = [];
-  }
-  registerDispatcher(dispatcher, restriction) {
-    this.ecrd(dispatcher, restriction);
-  }
-  ecrd(dispatcher, restriction) {
-    this.dispatcher = dispatcher;
-    if (this.queuedEventInfos?.length) {
-      for (let i = 0; i < this.queuedEventInfos.length; i++) {
-        this.handleEventInfo(this.queuedEventInfos[i]);
-      }
-      this.queuedEventInfos = null;
-    }
-  }
-};
-function getAppScopedQueuedEventInfos(appId, dataContainer = window) {
-  return getQueuedEventInfos(dataContainer._ejsas?.[appId]);
-}
-function clearAppScopedEarlyEventContract(appId, dataContainer = window) {
-  if (!dataContainer._ejsas) {
-    return;
-  }
-  dataContainer._ejsas[appId] = void 0;
-}
 
 // node_modules/@angular/core/fesm2022/core.mjs
+var import_operators2 = __toESM(require_operators(), 1);
 var REQUIRED_UNSET_VALUE = /* @__PURE__ */ Symbol("InputSignalNode#UNSET");
 var INPUT_SIGNAL_NODE = (() => {
   return __spreadProps(__spreadValues({}, SIGNAL_NODE), {
@@ -24244,17 +23555,12 @@ var REQUEST_CONTEXT = new InjectionToken(typeof ngDevMode === "undefined" || ngD
   providedIn: "platform",
   factory: () => null
 });
-var appsWithEventReplay = /* @__PURE__ */ new WeakSet();
-var EAGER_CONTENT_LISTENERS_KEY = "";
-function shouldEnableEventReplay(injector) {
-  return injector.get(IS_EVENT_REPLAY_ENABLED, EVENT_REPLAY_ENABLED_DEFAULT);
-}
 function withEventReplay() {
   const providers = [{
     provide: IS_EVENT_REPLAY_ENABLED,
     useFactory: () => {
       let isEnabled = true;
-      if (true) {
+      if (false) {
         const appId = inject2(APP_ID);
         isEnabled = !!window._ejsas?.[appId];
       }
@@ -24264,7 +23570,7 @@ function withEventReplay() {
       return isEnabled;
     }
   }];
-  if (true) {
+  if (false) {
     providers.push({
       provide: ENVIRONMENT_INITIALIZER,
       useValue: () => {
@@ -24302,7 +23608,7 @@ function withEventReplay() {
           const appId = injector.get(APP_ID);
           appRef.onDestroy(() => {
             appsWithEventReplay.delete(appRef);
-            if (true) {
+            if (false) {
               clearAppScopedEarlyEventContract(appId);
             }
           });
@@ -24329,24 +23635,6 @@ function withEventReplay() {
   }
   return providers;
 }
-var initEventReplay = (eventDelegation, injector) => {
-  const appId = injector.get(APP_ID);
-  const earlyJsactionData = window._ejsas[appId];
-  const eventContract = eventDelegation.instance = new EventContract(new EventContractContainer(earlyJsactionData.c));
-  for (const et of earlyJsactionData.et) {
-    eventContract.addEvent(et);
-  }
-  for (const et of earlyJsactionData.etc) {
-    eventContract.addEvent(et);
-  }
-  const eventInfos = getAppScopedQueuedEventInfos(appId);
-  eventContract.replayEarlyEventInfos(eventInfos);
-  clearAppScopedEarlyEventContract(appId);
-  const dispatcher = new EventDispatcher((event) => {
-    invokeRegisteredReplayListeners(injector, event, event.currentTarget);
-  });
-  registerDispatcher$1(eventContract, dispatcher);
-};
 function collectDomEventsInfo(tView, lView, eventTypesToReplay) {
   const domEventsInfo = /* @__PURE__ */ new Map();
   const lCleanup = lView[CLEANUP];
@@ -24384,44 +23672,6 @@ function collectDomEventsInfo(tView, lView, eventTypesToReplay) {
   }
   return domEventsInfo;
 }
-function invokeRegisteredReplayListeners(injector, event, currentTarget) {
-  const blockName = (currentTarget && currentTarget.getAttribute(DEFER_BLOCK_SSR_ID_ATTRIBUTE)) ?? "";
-  if (/d\d+/.test(blockName)) {
-    hydrateAndInvokeBlockListeners(blockName, injector, event, currentTarget);
-  } else if (event.eventPhase === EventPhase.REPLAY) {
-    invokeListeners(event, currentTarget);
-  }
-}
-function hydrateAndInvokeBlockListeners(blockName, injector, event, currentTarget) {
-  const queue = injector.get(EVENT_REPLAY_QUEUE);
-  queue.push({
-    event,
-    currentTarget
-  });
-  triggerHydrationFromBlockName(injector, blockName, createReplayQueuedBlockEventsFn(queue));
-}
-function createReplayQueuedBlockEventsFn(queue) {
-  return (hydratedBlocks) => {
-    const hydrated = new Set(hydratedBlocks);
-    const newQueue = [];
-    for (let {
-      event,
-      currentTarget
-    } of queue) {
-      const blockName = currentTarget.getAttribute(DEFER_BLOCK_SSR_ID_ATTRIBUTE);
-      if (hydrated.has(blockName)) {
-        invokeListeners(event, currentTarget);
-      } else {
-        newQueue.push({
-          event,
-          currentTarget
-        });
-      }
-    }
-    queue.length = 0;
-    queue.push(...newQueue);
-  };
-}
 var isHydrationSupportEnabled = false;
 var isI18nHydrationRuntimeSupportEnabled = false;
 var APPLICATION_IS_STABLE_TIMEOUT = 1e4;
@@ -24446,34 +23696,16 @@ function enableI18nHydrationRuntimeSupport() {
     enableClaimDehydratedIcuCaseImpl();
   }
 }
-function printHydrationStats(injector) {
-  const console2 = injector.get(Console);
-  const message = `Angular hydrated ${ngDevMode.hydratedComponents} component(s) and ${ngDevMode.hydratedNodes} node(s), ${ngDevMode.componentsSkippedHydration} component(s) were skipped. ` + (isIncrementalHydrationEnabled(injector) ? `${ngDevMode.deferBlocksWithIncrementalHydration} defer block(s) were configured to use incremental hydration. ` : "") + `Learn more at ${DOC_PAGE_BASE_URL}/guide/hydration.`;
-  console2.log(message);
-}
-function whenStableWithTimeout(appRef) {
-  const whenStablePromise = appRef.whenStable();
-  if (typeof ngDevMode !== "undefined" && ngDevMode) {
-    const timeoutTime = APPLICATION_IS_STABLE_TIMEOUT;
-    const console2 = appRef.injector.get(Console);
-    const ngZone = appRef.injector.get(NgZone);
-    const timeoutId = ngZone.runOutsideAngular(() => {
-      return setTimeout(() => logWarningOnStableTimedout(timeoutTime, console2), timeoutTime);
-    });
-    whenStablePromise.finally(() => clearTimeout(timeoutId));
-  }
-  return whenStablePromise;
-}
 var CLIENT_RENDER_MODE_FLAG = "ngcm";
 function isClientRenderModeEnabled(doc) {
-  return doc.body.hasAttribute(CLIENT_RENDER_MODE_FLAG);
+  return false;
 }
 function withDomHydration() {
   const providers = [{
     provide: IS_HYDRATION_DOM_REUSE_ENABLED,
     useFactory: () => {
       let isEnabled = true;
-      if (true) {
+      if (false) {
         const transferState = inject2(TransferState, {
           optional: true
         });
@@ -24488,7 +23720,7 @@ function withDomHydration() {
     provide: ENVIRONMENT_INITIALIZER,
     useValue: () => {
       setIsI18nHydrationSupportEnabled(false);
-      if (false) {
+      if (true) {
         return;
       }
       const doc = inject2(DOCUMENT);
@@ -24503,7 +23735,7 @@ function withDomHydration() {
     },
     multi: true
   }];
-  if (true) {
+  if (false) {
     providers.push({
       provide: PRESERVE_HOST_CONTENT,
       useFactory: () => {
@@ -24561,7 +23793,7 @@ function withIncrementalHydration() {
     provide: DEHYDRATED_BLOCK_REGISTRY,
     useFactory: createDehydratedBlockRegistry
   }];
-  if (true) {
+  if (false) {
     providers.push({
       provide: APP_BOOTSTRAP_LISTENER,
       useFactory: () => {
@@ -24575,10 +23807,6 @@ function withIncrementalHydration() {
     });
   }
   return providers;
-}
-function logWarningOnStableTimedout(time, console2) {
-  const message = `Angular hydration expected the ApplicationRef.isStable() to emit \`true\`, but it didn't happen within ${time}ms. Angular hydration logic depends on the application becoming stable as a signal to complete hydration process.`;
-  console2.warn(formatRuntimeError(-506, message));
 }
 var STABILITY_WARNING_THRESHOLD = APPLICATION_IS_STABLE_TIMEOUT - 1e3;
 var DebugTaskTrackerImpl = class {
@@ -25545,7 +24773,7 @@ function getNgZoneOptions(options) {
   };
 }
 var ZoneStablePendingTask = class _ZoneStablePendingTask {
-  subscription = new Subscription();
+  subscription = new import_rxjs3.Subscription();
   initialized = false;
   zone = inject2(NgZone);
   pendingTasks = inject2(PendingTasksInternal);
@@ -25635,7 +24863,7 @@ var ImagePerformanceWarning = class _ImagePerformanceWarning {
   options = inject2(IMAGE_CONFIG);
   lcpImageUrl;
   start() {
-    if (typeof PerformanceObserver === "undefined" || this.options?.disableImageSizeWarning && this.options?.disableImageLazyLoadWarning) {
+    if (true) {
       return;
     }
     this.observer = this.initPerformanceObserver();
@@ -26214,7 +25442,7 @@ function createPlatform(injector) {
   if (typeof ngDevMode !== "undefined" && ngDevMode) {
     _unregisterAiTools = registerAiTools();
   }
-  _platformInjector = true ? injector : null;
+  _platformInjector = false ? injector : null;
   const platform = injector.get(PlatformRef);
   runPlatformInitializers(injector);
   return platform;
@@ -26231,7 +25459,7 @@ function createPlatformFactory(parentPlatformFactory, name, providers = []) {
       }];
       platform = parentPlatformFactory?.(platformProviders) ?? createPlatform(createPlatformInjector(platformProviders, desc));
     }
-    return false ? platform : assertPlatform(marker);
+    return true ? platform : assertPlatform(marker);
   };
 }
 function createPlatformInjector(providers = [], name) {
@@ -26257,7 +25485,7 @@ function assertPlatform(requiredToken) {
   return platform;
 }
 function getPlatform() {
-  if (false) {
+  if (true) {
     return null;
   }
   return _platformInjector?.get(PlatformRef) ?? null;
@@ -26276,7 +25504,7 @@ function createOrReusePlatformInjector(providers = []) {
     _unregisterAiTools = registerAiTools();
   }
   const injector = createPlatformInjector(providers);
-  if (true) {
+  if (false) {
     _platformInjector = injector;
   }
   publishSignalConfiguration();
@@ -26304,7 +25532,7 @@ function internalCreateApplication(config) {
     platformRef
   } = config;
   profiler(ProfilerEvent.BootstrapApplicationStart);
-  if (false) {
+  if (!platformRef) {
     throw new RuntimeError(-401, ngDevMode && "Missing Platform: This may be due to using `bootstrapApplication` on the server without passing a `BootstrapContext`. Please make sure that `bootstrapApplication` is called with a `context` argument.");
   }
   try {
@@ -26891,7 +26119,7 @@ function afterRenderEffect(callbackOrSpec, options) {
   if (ngDevMode && !options?.injector) {
     assertInInjectionContext(afterRenderEffect);
   }
-  if (false) {
+  if (true) {
     return NOOP_AFTER_RENDER_REF;
   }
   const injector = options?.injector ?? inject2(Injector);
@@ -27216,7 +26444,7 @@ function enableProdMode() {
   }
 }
 function declareExperimentalWebMcpTool(tool, injector) {
-  if (false) return;
+  if (true) return;
   const modelContext = globalThis.document.modelContext ?? globalThis.navigator.modelContext;
   if (!modelContext || typeof modelContext.registerTool !== "function") return;
   if (typeof ngDevMode !== "undefined" && ngDevMode) {
@@ -27760,4 +26988,4 @@ export {
   declareExperimentalWebMcpTool,
   provideExperimentalWebMcpTools
 };
-//# sourceMappingURL=chunk-UYJEKWXO.js.map
+//# sourceMappingURL=chunk-SLSXXOXV.js.map

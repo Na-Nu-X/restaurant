@@ -1,648 +1,15 @@
-import { createRequire } from 'module';const require = createRequire(import.meta.url);
 import {
-  require_argsOrArgArray,
-  require_audit,
-  require_auditTime,
-  require_buffer,
-  require_bufferCount,
-  require_bufferTime,
-  require_bufferToggle,
-  require_bufferWhen,
-  require_catchError,
-  require_cjs,
-  require_combineAll,
-  require_combineLatest,
-  require_combineLatestAll,
-  require_combineLatestWith,
-  require_concat,
-  require_concatAll,
-  require_concatMap,
-  require_concatMapTo,
-  require_concatWith,
-  require_connect,
-  require_count,
-  require_debounce,
-  require_debounceTime,
-  require_defaultIfEmpty,
-  require_delay,
-  require_delayWhen,
-  require_dematerialize,
-  require_distinct,
-  require_distinctUntilChanged,
-  require_distinctUntilKeyChanged,
-  require_elementAt,
-  require_endWith,
-  require_every,
-  require_exhaust,
-  require_exhaustAll,
-  require_exhaustMap,
-  require_expand,
-  require_filter,
-  require_finalize,
-  require_find,
-  require_findIndex,
-  require_first,
-  require_flatMap,
-  require_groupBy,
-  require_ignoreElements,
-  require_isEmpty,
-  require_last,
-  require_map,
-  require_mapTo,
-  require_materialize,
-  require_max,
-  require_merge,
-  require_mergeAll,
-  require_mergeMap,
-  require_mergeMapTo,
-  require_mergeScan,
-  require_mergeWith,
-  require_min,
-  require_multicast,
-  require_not,
-  require_observeOn,
-  require_onErrorResumeNextWith,
-  require_pairwise,
-  require_pluck,
-  require_publish,
-  require_publishBehavior,
-  require_publishLast,
-  require_publishReplay,
-  require_raceWith,
-  require_reduce,
-  require_refCount,
-  require_repeat,
-  require_repeatWhen,
-  require_retry,
-  require_retryWhen,
-  require_sample,
-  require_sampleTime,
-  require_scan,
-  require_sequenceEqual,
-  require_share,
-  require_shareReplay,
-  require_single,
-  require_skip,
-  require_skipLast,
-  require_skipUntil,
-  require_skipWhile,
-  require_startWith,
-  require_subscribeOn,
-  require_switchAll,
-  require_switchMap,
-  require_switchMapTo,
-  require_switchScan,
-  require_take,
-  require_takeLast,
-  require_takeUntil,
-  require_takeWhile,
-  require_tap,
-  require_throttle,
-  require_throttleTime,
-  require_throwIfEmpty,
-  require_timeInterval,
-  require_timeout,
-  require_timeoutWith,
-  require_timestamp,
-  require_toArray,
-  require_window,
-  require_windowCount,
-  require_windowTime,
-  require_windowToggle,
-  require_windowWhen,
-  require_withLatestFrom,
-  require_zip,
-  require_zipAll,
-  require_zipWith
-} from "./chunk-O5J3CNTX.js";
+  BehaviorSubject,
+  Observable,
+  Subject,
+  Subscription,
+  map
+} from "./chunk-MARUHEWW.js";
 import {
-  __commonJS,
   __objRest,
   __spreadProps,
-  __spreadValues,
-  __toESM
-} from "./chunk-6DU2HRTW.js";
-
-// node_modules/rxjs/dist/cjs/internal/operators/partition.js
-var require_partition = __commonJS({
-  "node_modules/rxjs/dist/cjs/internal/operators/partition.js"(exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.partition = void 0;
-    var not_1 = require_not();
-    var filter_1 = require_filter();
-    function partition(predicate, thisArg) {
-      return function(source) {
-        return [filter_1.filter(predicate, thisArg)(source), filter_1.filter(not_1.not(predicate, thisArg))(source)];
-      };
-    }
-    exports.partition = partition;
-  }
-});
-
-// node_modules/rxjs/dist/cjs/internal/operators/race.js
-var require_race = __commonJS({
-  "node_modules/rxjs/dist/cjs/internal/operators/race.js"(exports) {
-    "use strict";
-    var __read = exports && exports.__read || function(o, n) {
-      var m = typeof Symbol === "function" && o[Symbol.iterator];
-      if (!m) return o;
-      var i = m.call(o), r, ar = [], e;
-      try {
-        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
-      } catch (error) {
-        e = { error };
-      } finally {
-        try {
-          if (r && !r.done && (m = i["return"])) m.call(i);
-        } finally {
-          if (e) throw e.error;
-        }
-      }
-      return ar;
-    };
-    var __spreadArray = exports && exports.__spreadArray || function(to, from) {
-      for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
-        to[j] = from[i];
-      return to;
-    };
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.race = void 0;
-    var argsOrArgArray_1 = require_argsOrArgArray();
-    var raceWith_1 = require_raceWith();
-    function race() {
-      var args = [];
-      for (var _i = 0; _i < arguments.length; _i++) {
-        args[_i] = arguments[_i];
-      }
-      return raceWith_1.raceWith.apply(void 0, __spreadArray([], __read(argsOrArgArray_1.argsOrArgArray(args))));
-    }
-    exports.race = race;
-  }
-});
-
-// node_modules/rxjs/dist/cjs/operators/index.js
-var require_operators = __commonJS({
-  "node_modules/rxjs/dist/cjs/operators/index.js"(exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.mergeAll = exports.merge = exports.max = exports.materialize = exports.mapTo = exports.map = exports.last = exports.isEmpty = exports.ignoreElements = exports.groupBy = exports.first = exports.findIndex = exports.find = exports.finalize = exports.filter = exports.expand = exports.exhaustMap = exports.exhaustAll = exports.exhaust = exports.every = exports.endWith = exports.elementAt = exports.distinctUntilKeyChanged = exports.distinctUntilChanged = exports.distinct = exports.dematerialize = exports.delayWhen = exports.delay = exports.defaultIfEmpty = exports.debounceTime = exports.debounce = exports.count = exports.connect = exports.concatWith = exports.concatMapTo = exports.concatMap = exports.concatAll = exports.concat = exports.combineLatestWith = exports.combineLatest = exports.combineLatestAll = exports.combineAll = exports.catchError = exports.bufferWhen = exports.bufferToggle = exports.bufferTime = exports.bufferCount = exports.buffer = exports.auditTime = exports.audit = void 0;
-    exports.timeInterval = exports.throwIfEmpty = exports.throttleTime = exports.throttle = exports.tap = exports.takeWhile = exports.takeUntil = exports.takeLast = exports.take = exports.switchScan = exports.switchMapTo = exports.switchMap = exports.switchAll = exports.subscribeOn = exports.startWith = exports.skipWhile = exports.skipUntil = exports.skipLast = exports.skip = exports.single = exports.shareReplay = exports.share = exports.sequenceEqual = exports.scan = exports.sampleTime = exports.sample = exports.refCount = exports.retryWhen = exports.retry = exports.repeatWhen = exports.repeat = exports.reduce = exports.raceWith = exports.race = exports.publishReplay = exports.publishLast = exports.publishBehavior = exports.publish = exports.pluck = exports.partition = exports.pairwise = exports.onErrorResumeNext = exports.observeOn = exports.multicast = exports.min = exports.mergeWith = exports.mergeScan = exports.mergeMapTo = exports.mergeMap = exports.flatMap = void 0;
-    exports.zipWith = exports.zipAll = exports.zip = exports.withLatestFrom = exports.windowWhen = exports.windowToggle = exports.windowTime = exports.windowCount = exports.window = exports.toArray = exports.timestamp = exports.timeoutWith = exports.timeout = void 0;
-    var audit_1 = require_audit();
-    Object.defineProperty(exports, "audit", { enumerable: true, get: function() {
-      return audit_1.audit;
-    } });
-    var auditTime_1 = require_auditTime();
-    Object.defineProperty(exports, "auditTime", { enumerable: true, get: function() {
-      return auditTime_1.auditTime;
-    } });
-    var buffer_1 = require_buffer();
-    Object.defineProperty(exports, "buffer", { enumerable: true, get: function() {
-      return buffer_1.buffer;
-    } });
-    var bufferCount_1 = require_bufferCount();
-    Object.defineProperty(exports, "bufferCount", { enumerable: true, get: function() {
-      return bufferCount_1.bufferCount;
-    } });
-    var bufferTime_1 = require_bufferTime();
-    Object.defineProperty(exports, "bufferTime", { enumerable: true, get: function() {
-      return bufferTime_1.bufferTime;
-    } });
-    var bufferToggle_1 = require_bufferToggle();
-    Object.defineProperty(exports, "bufferToggle", { enumerable: true, get: function() {
-      return bufferToggle_1.bufferToggle;
-    } });
-    var bufferWhen_1 = require_bufferWhen();
-    Object.defineProperty(exports, "bufferWhen", { enumerable: true, get: function() {
-      return bufferWhen_1.bufferWhen;
-    } });
-    var catchError_1 = require_catchError();
-    Object.defineProperty(exports, "catchError", { enumerable: true, get: function() {
-      return catchError_1.catchError;
-    } });
-    var combineAll_1 = require_combineAll();
-    Object.defineProperty(exports, "combineAll", { enumerable: true, get: function() {
-      return combineAll_1.combineAll;
-    } });
-    var combineLatestAll_1 = require_combineLatestAll();
-    Object.defineProperty(exports, "combineLatestAll", { enumerable: true, get: function() {
-      return combineLatestAll_1.combineLatestAll;
-    } });
-    var combineLatest_1 = require_combineLatest();
-    Object.defineProperty(exports, "combineLatest", { enumerable: true, get: function() {
-      return combineLatest_1.combineLatest;
-    } });
-    var combineLatestWith_1 = require_combineLatestWith();
-    Object.defineProperty(exports, "combineLatestWith", { enumerable: true, get: function() {
-      return combineLatestWith_1.combineLatestWith;
-    } });
-    var concat_1 = require_concat();
-    Object.defineProperty(exports, "concat", { enumerable: true, get: function() {
-      return concat_1.concat;
-    } });
-    var concatAll_1 = require_concatAll();
-    Object.defineProperty(exports, "concatAll", { enumerable: true, get: function() {
-      return concatAll_1.concatAll;
-    } });
-    var concatMap_1 = require_concatMap();
-    Object.defineProperty(exports, "concatMap", { enumerable: true, get: function() {
-      return concatMap_1.concatMap;
-    } });
-    var concatMapTo_1 = require_concatMapTo();
-    Object.defineProperty(exports, "concatMapTo", { enumerable: true, get: function() {
-      return concatMapTo_1.concatMapTo;
-    } });
-    var concatWith_1 = require_concatWith();
-    Object.defineProperty(exports, "concatWith", { enumerable: true, get: function() {
-      return concatWith_1.concatWith;
-    } });
-    var connect_1 = require_connect();
-    Object.defineProperty(exports, "connect", { enumerable: true, get: function() {
-      return connect_1.connect;
-    } });
-    var count_1 = require_count();
-    Object.defineProperty(exports, "count", { enumerable: true, get: function() {
-      return count_1.count;
-    } });
-    var debounce_1 = require_debounce();
-    Object.defineProperty(exports, "debounce", { enumerable: true, get: function() {
-      return debounce_1.debounce;
-    } });
-    var debounceTime_1 = require_debounceTime();
-    Object.defineProperty(exports, "debounceTime", { enumerable: true, get: function() {
-      return debounceTime_1.debounceTime;
-    } });
-    var defaultIfEmpty_1 = require_defaultIfEmpty();
-    Object.defineProperty(exports, "defaultIfEmpty", { enumerable: true, get: function() {
-      return defaultIfEmpty_1.defaultIfEmpty;
-    } });
-    var delay_1 = require_delay();
-    Object.defineProperty(exports, "delay", { enumerable: true, get: function() {
-      return delay_1.delay;
-    } });
-    var delayWhen_1 = require_delayWhen();
-    Object.defineProperty(exports, "delayWhen", { enumerable: true, get: function() {
-      return delayWhen_1.delayWhen;
-    } });
-    var dematerialize_1 = require_dematerialize();
-    Object.defineProperty(exports, "dematerialize", { enumerable: true, get: function() {
-      return dematerialize_1.dematerialize;
-    } });
-    var distinct_1 = require_distinct();
-    Object.defineProperty(exports, "distinct", { enumerable: true, get: function() {
-      return distinct_1.distinct;
-    } });
-    var distinctUntilChanged_1 = require_distinctUntilChanged();
-    Object.defineProperty(exports, "distinctUntilChanged", { enumerable: true, get: function() {
-      return distinctUntilChanged_1.distinctUntilChanged;
-    } });
-    var distinctUntilKeyChanged_1 = require_distinctUntilKeyChanged();
-    Object.defineProperty(exports, "distinctUntilKeyChanged", { enumerable: true, get: function() {
-      return distinctUntilKeyChanged_1.distinctUntilKeyChanged;
-    } });
-    var elementAt_1 = require_elementAt();
-    Object.defineProperty(exports, "elementAt", { enumerable: true, get: function() {
-      return elementAt_1.elementAt;
-    } });
-    var endWith_1 = require_endWith();
-    Object.defineProperty(exports, "endWith", { enumerable: true, get: function() {
-      return endWith_1.endWith;
-    } });
-    var every_1 = require_every();
-    Object.defineProperty(exports, "every", { enumerable: true, get: function() {
-      return every_1.every;
-    } });
-    var exhaust_1 = require_exhaust();
-    Object.defineProperty(exports, "exhaust", { enumerable: true, get: function() {
-      return exhaust_1.exhaust;
-    } });
-    var exhaustAll_1 = require_exhaustAll();
-    Object.defineProperty(exports, "exhaustAll", { enumerable: true, get: function() {
-      return exhaustAll_1.exhaustAll;
-    } });
-    var exhaustMap_1 = require_exhaustMap();
-    Object.defineProperty(exports, "exhaustMap", { enumerable: true, get: function() {
-      return exhaustMap_1.exhaustMap;
-    } });
-    var expand_1 = require_expand();
-    Object.defineProperty(exports, "expand", { enumerable: true, get: function() {
-      return expand_1.expand;
-    } });
-    var filter_1 = require_filter();
-    Object.defineProperty(exports, "filter", { enumerable: true, get: function() {
-      return filter_1.filter;
-    } });
-    var finalize_1 = require_finalize();
-    Object.defineProperty(exports, "finalize", { enumerable: true, get: function() {
-      return finalize_1.finalize;
-    } });
-    var find_1 = require_find();
-    Object.defineProperty(exports, "find", { enumerable: true, get: function() {
-      return find_1.find;
-    } });
-    var findIndex_1 = require_findIndex();
-    Object.defineProperty(exports, "findIndex", { enumerable: true, get: function() {
-      return findIndex_1.findIndex;
-    } });
-    var first_1 = require_first();
-    Object.defineProperty(exports, "first", { enumerable: true, get: function() {
-      return first_1.first;
-    } });
-    var groupBy_1 = require_groupBy();
-    Object.defineProperty(exports, "groupBy", { enumerable: true, get: function() {
-      return groupBy_1.groupBy;
-    } });
-    var ignoreElements_1 = require_ignoreElements();
-    Object.defineProperty(exports, "ignoreElements", { enumerable: true, get: function() {
-      return ignoreElements_1.ignoreElements;
-    } });
-    var isEmpty_1 = require_isEmpty();
-    Object.defineProperty(exports, "isEmpty", { enumerable: true, get: function() {
-      return isEmpty_1.isEmpty;
-    } });
-    var last_1 = require_last();
-    Object.defineProperty(exports, "last", { enumerable: true, get: function() {
-      return last_1.last;
-    } });
-    var map_1 = require_map();
-    Object.defineProperty(exports, "map", { enumerable: true, get: function() {
-      return map_1.map;
-    } });
-    var mapTo_1 = require_mapTo();
-    Object.defineProperty(exports, "mapTo", { enumerable: true, get: function() {
-      return mapTo_1.mapTo;
-    } });
-    var materialize_1 = require_materialize();
-    Object.defineProperty(exports, "materialize", { enumerable: true, get: function() {
-      return materialize_1.materialize;
-    } });
-    var max_1 = require_max();
-    Object.defineProperty(exports, "max", { enumerable: true, get: function() {
-      return max_1.max;
-    } });
-    var merge_1 = require_merge();
-    Object.defineProperty(exports, "merge", { enumerable: true, get: function() {
-      return merge_1.merge;
-    } });
-    var mergeAll_1 = require_mergeAll();
-    Object.defineProperty(exports, "mergeAll", { enumerable: true, get: function() {
-      return mergeAll_1.mergeAll;
-    } });
-    var flatMap_1 = require_flatMap();
-    Object.defineProperty(exports, "flatMap", { enumerable: true, get: function() {
-      return flatMap_1.flatMap;
-    } });
-    var mergeMap_1 = require_mergeMap();
-    Object.defineProperty(exports, "mergeMap", { enumerable: true, get: function() {
-      return mergeMap_1.mergeMap;
-    } });
-    var mergeMapTo_1 = require_mergeMapTo();
-    Object.defineProperty(exports, "mergeMapTo", { enumerable: true, get: function() {
-      return mergeMapTo_1.mergeMapTo;
-    } });
-    var mergeScan_1 = require_mergeScan();
-    Object.defineProperty(exports, "mergeScan", { enumerable: true, get: function() {
-      return mergeScan_1.mergeScan;
-    } });
-    var mergeWith_1 = require_mergeWith();
-    Object.defineProperty(exports, "mergeWith", { enumerable: true, get: function() {
-      return mergeWith_1.mergeWith;
-    } });
-    var min_1 = require_min();
-    Object.defineProperty(exports, "min", { enumerable: true, get: function() {
-      return min_1.min;
-    } });
-    var multicast_1 = require_multicast();
-    Object.defineProperty(exports, "multicast", { enumerable: true, get: function() {
-      return multicast_1.multicast;
-    } });
-    var observeOn_1 = require_observeOn();
-    Object.defineProperty(exports, "observeOn", { enumerable: true, get: function() {
-      return observeOn_1.observeOn;
-    } });
-    var onErrorResumeNextWith_1 = require_onErrorResumeNextWith();
-    Object.defineProperty(exports, "onErrorResumeNext", { enumerable: true, get: function() {
-      return onErrorResumeNextWith_1.onErrorResumeNext;
-    } });
-    var pairwise_1 = require_pairwise();
-    Object.defineProperty(exports, "pairwise", { enumerable: true, get: function() {
-      return pairwise_1.pairwise;
-    } });
-    var partition_1 = require_partition();
-    Object.defineProperty(exports, "partition", { enumerable: true, get: function() {
-      return partition_1.partition;
-    } });
-    var pluck_1 = require_pluck();
-    Object.defineProperty(exports, "pluck", { enumerable: true, get: function() {
-      return pluck_1.pluck;
-    } });
-    var publish_1 = require_publish();
-    Object.defineProperty(exports, "publish", { enumerable: true, get: function() {
-      return publish_1.publish;
-    } });
-    var publishBehavior_1 = require_publishBehavior();
-    Object.defineProperty(exports, "publishBehavior", { enumerable: true, get: function() {
-      return publishBehavior_1.publishBehavior;
-    } });
-    var publishLast_1 = require_publishLast();
-    Object.defineProperty(exports, "publishLast", { enumerable: true, get: function() {
-      return publishLast_1.publishLast;
-    } });
-    var publishReplay_1 = require_publishReplay();
-    Object.defineProperty(exports, "publishReplay", { enumerable: true, get: function() {
-      return publishReplay_1.publishReplay;
-    } });
-    var race_1 = require_race();
-    Object.defineProperty(exports, "race", { enumerable: true, get: function() {
-      return race_1.race;
-    } });
-    var raceWith_1 = require_raceWith();
-    Object.defineProperty(exports, "raceWith", { enumerable: true, get: function() {
-      return raceWith_1.raceWith;
-    } });
-    var reduce_1 = require_reduce();
-    Object.defineProperty(exports, "reduce", { enumerable: true, get: function() {
-      return reduce_1.reduce;
-    } });
-    var repeat_1 = require_repeat();
-    Object.defineProperty(exports, "repeat", { enumerable: true, get: function() {
-      return repeat_1.repeat;
-    } });
-    var repeatWhen_1 = require_repeatWhen();
-    Object.defineProperty(exports, "repeatWhen", { enumerable: true, get: function() {
-      return repeatWhen_1.repeatWhen;
-    } });
-    var retry_1 = require_retry();
-    Object.defineProperty(exports, "retry", { enumerable: true, get: function() {
-      return retry_1.retry;
-    } });
-    var retryWhen_1 = require_retryWhen();
-    Object.defineProperty(exports, "retryWhen", { enumerable: true, get: function() {
-      return retryWhen_1.retryWhen;
-    } });
-    var refCount_1 = require_refCount();
-    Object.defineProperty(exports, "refCount", { enumerable: true, get: function() {
-      return refCount_1.refCount;
-    } });
-    var sample_1 = require_sample();
-    Object.defineProperty(exports, "sample", { enumerable: true, get: function() {
-      return sample_1.sample;
-    } });
-    var sampleTime_1 = require_sampleTime();
-    Object.defineProperty(exports, "sampleTime", { enumerable: true, get: function() {
-      return sampleTime_1.sampleTime;
-    } });
-    var scan_1 = require_scan();
-    Object.defineProperty(exports, "scan", { enumerable: true, get: function() {
-      return scan_1.scan;
-    } });
-    var sequenceEqual_1 = require_sequenceEqual();
-    Object.defineProperty(exports, "sequenceEqual", { enumerable: true, get: function() {
-      return sequenceEqual_1.sequenceEqual;
-    } });
-    var share_1 = require_share();
-    Object.defineProperty(exports, "share", { enumerable: true, get: function() {
-      return share_1.share;
-    } });
-    var shareReplay_1 = require_shareReplay();
-    Object.defineProperty(exports, "shareReplay", { enumerable: true, get: function() {
-      return shareReplay_1.shareReplay;
-    } });
-    var single_1 = require_single();
-    Object.defineProperty(exports, "single", { enumerable: true, get: function() {
-      return single_1.single;
-    } });
-    var skip_1 = require_skip();
-    Object.defineProperty(exports, "skip", { enumerable: true, get: function() {
-      return skip_1.skip;
-    } });
-    var skipLast_1 = require_skipLast();
-    Object.defineProperty(exports, "skipLast", { enumerable: true, get: function() {
-      return skipLast_1.skipLast;
-    } });
-    var skipUntil_1 = require_skipUntil();
-    Object.defineProperty(exports, "skipUntil", { enumerable: true, get: function() {
-      return skipUntil_1.skipUntil;
-    } });
-    var skipWhile_1 = require_skipWhile();
-    Object.defineProperty(exports, "skipWhile", { enumerable: true, get: function() {
-      return skipWhile_1.skipWhile;
-    } });
-    var startWith_1 = require_startWith();
-    Object.defineProperty(exports, "startWith", { enumerable: true, get: function() {
-      return startWith_1.startWith;
-    } });
-    var subscribeOn_1 = require_subscribeOn();
-    Object.defineProperty(exports, "subscribeOn", { enumerable: true, get: function() {
-      return subscribeOn_1.subscribeOn;
-    } });
-    var switchAll_1 = require_switchAll();
-    Object.defineProperty(exports, "switchAll", { enumerable: true, get: function() {
-      return switchAll_1.switchAll;
-    } });
-    var switchMap_1 = require_switchMap();
-    Object.defineProperty(exports, "switchMap", { enumerable: true, get: function() {
-      return switchMap_1.switchMap;
-    } });
-    var switchMapTo_1 = require_switchMapTo();
-    Object.defineProperty(exports, "switchMapTo", { enumerable: true, get: function() {
-      return switchMapTo_1.switchMapTo;
-    } });
-    var switchScan_1 = require_switchScan();
-    Object.defineProperty(exports, "switchScan", { enumerable: true, get: function() {
-      return switchScan_1.switchScan;
-    } });
-    var take_1 = require_take();
-    Object.defineProperty(exports, "take", { enumerable: true, get: function() {
-      return take_1.take;
-    } });
-    var takeLast_1 = require_takeLast();
-    Object.defineProperty(exports, "takeLast", { enumerable: true, get: function() {
-      return takeLast_1.takeLast;
-    } });
-    var takeUntil_1 = require_takeUntil();
-    Object.defineProperty(exports, "takeUntil", { enumerable: true, get: function() {
-      return takeUntil_1.takeUntil;
-    } });
-    var takeWhile_1 = require_takeWhile();
-    Object.defineProperty(exports, "takeWhile", { enumerable: true, get: function() {
-      return takeWhile_1.takeWhile;
-    } });
-    var tap_1 = require_tap();
-    Object.defineProperty(exports, "tap", { enumerable: true, get: function() {
-      return tap_1.tap;
-    } });
-    var throttle_1 = require_throttle();
-    Object.defineProperty(exports, "throttle", { enumerable: true, get: function() {
-      return throttle_1.throttle;
-    } });
-    var throttleTime_1 = require_throttleTime();
-    Object.defineProperty(exports, "throttleTime", { enumerable: true, get: function() {
-      return throttleTime_1.throttleTime;
-    } });
-    var throwIfEmpty_1 = require_throwIfEmpty();
-    Object.defineProperty(exports, "throwIfEmpty", { enumerable: true, get: function() {
-      return throwIfEmpty_1.throwIfEmpty;
-    } });
-    var timeInterval_1 = require_timeInterval();
-    Object.defineProperty(exports, "timeInterval", { enumerable: true, get: function() {
-      return timeInterval_1.timeInterval;
-    } });
-    var timeout_1 = require_timeout();
-    Object.defineProperty(exports, "timeout", { enumerable: true, get: function() {
-      return timeout_1.timeout;
-    } });
-    var timeoutWith_1 = require_timeoutWith();
-    Object.defineProperty(exports, "timeoutWith", { enumerable: true, get: function() {
-      return timeoutWith_1.timeoutWith;
-    } });
-    var timestamp_1 = require_timestamp();
-    Object.defineProperty(exports, "timestamp", { enumerable: true, get: function() {
-      return timestamp_1.timestamp;
-    } });
-    var toArray_1 = require_toArray();
-    Object.defineProperty(exports, "toArray", { enumerable: true, get: function() {
-      return toArray_1.toArray;
-    } });
-    var window_1 = require_window();
-    Object.defineProperty(exports, "window", { enumerable: true, get: function() {
-      return window_1.window;
-    } });
-    var windowCount_1 = require_windowCount();
-    Object.defineProperty(exports, "windowCount", { enumerable: true, get: function() {
-      return windowCount_1.windowCount;
-    } });
-    var windowTime_1 = require_windowTime();
-    Object.defineProperty(exports, "windowTime", { enumerable: true, get: function() {
-      return windowTime_1.windowTime;
-    } });
-    var windowToggle_1 = require_windowToggle();
-    Object.defineProperty(exports, "windowToggle", { enumerable: true, get: function() {
-      return windowToggle_1.windowToggle;
-    } });
-    var windowWhen_1 = require_windowWhen();
-    Object.defineProperty(exports, "windowWhen", { enumerable: true, get: function() {
-      return windowWhen_1.windowWhen;
-    } });
-    var withLatestFrom_1 = require_withLatestFrom();
-    Object.defineProperty(exports, "withLatestFrom", { enumerable: true, get: function() {
-      return withLatestFrom_1.withLatestFrom;
-    } });
-    var zip_1 = require_zip();
-    Object.defineProperty(exports, "zip", { enumerable: true, get: function() {
-      return zip_1.zip;
-    } });
-    var zipAll_1 = require_zipAll();
-    Object.defineProperty(exports, "zipAll", { enumerable: true, get: function() {
-      return zipAll_1.zipAll;
-    } });
-    var zipWith_1 = require_zipWith();
-    Object.defineProperty(exports, "zipWith", { enumerable: true, get: function() {
-      return zipWith_1.zipWith;
-    } });
-  }
-});
+  __spreadValues
+} from "./chunk-GOMI4DH3.js";
 
 // node_modules/@angular/core/fesm2022/_effect-chunk.mjs
 var activeConsumer = null;
@@ -973,9 +340,9 @@ function createSignal(initialValue, equal) {
     getter.toString = () => `[Signal${node.debugName ? " (" + node.debugName + ")" : ""}: ${String(node.value)}]`;
   }
   runPostProducerCreatedFn(node);
-  const set = (newValue) => signalSetFn(node, newValue);
+  const set2 = (newValue) => signalSetFn(node, newValue);
   const update = (updateFn) => signalUpdateFn(node, updateFn);
-  return [getter, set, update];
+  return [getter, set2, update];
 }
 function signalGetFn(node) {
   producerAccessed(node);
@@ -1257,7 +624,6 @@ if (typeof ngDevMode === "undefined" || ngDevMode) {
 }
 
 // node_modules/@angular/core/fesm2022/_pending_tasks-chunk.mjs
-var import_rxjs = __toESM(require_cjs(), 1);
 var Version = class {
   full;
   major;
@@ -3419,7 +2785,7 @@ var PendingTasksInternal = class _PendingTasksInternal {
   taskId = 0;
   pendingTasks = /* @__PURE__ */ new Set();
   destroyed = false;
-  pendingTask = new import_rxjs.BehaviorSubject(false);
+  pendingTask = new BehaviorSubject(false);
   debugTaskTracker = inject2(DEBUG_TASK_TRACKER, {
     optional: true
   });
@@ -3428,7 +2794,7 @@ var PendingTasksInternal = class _PendingTasksInternal {
   }
   get hasPendingTasksObservable() {
     if (this.destroyed) {
-      return new import_rxjs.Observable((subscriber) => {
+      return new Observable((subscriber) => {
         subscriber.next(false);
         subscriber.complete();
       });
@@ -3468,7 +2834,7 @@ var PendingTasksInternal = class _PendingTasksInternal {
     factory: () => new _PendingTasksInternal()
   });
 };
-var EventEmitter_ = class extends import_rxjs.Subject {
+var EventEmitter_ = class extends Subject {
   __isAsync;
   destroyRef = void 0;
   pendingTasks = void 0;
@@ -3516,7 +2882,7 @@ var EventEmitter_ = class extends import_rxjs.Subject {
       error: errorFn,
       complete: completeFn
     });
-    if (observerOrNext instanceof import_rxjs.Subscription) {
+    if (observerOrNext instanceof Subscription) {
       observerOrNext.add(sink);
     }
     return sink;
@@ -3857,7 +3223,7 @@ var errorHandlerEnvironmentInitializer = {
 };
 var globalErrorListeners = new InjectionToken(typeof ngDevMode !== "undefined" && ngDevMode ? "GlobalErrorListeners" : "", {
   factory: () => {
-    if (true) {
+    if (false) {
       return;
     }
     const window2 = inject2(DOCUMENT).defaultView;
@@ -3901,10 +3267,10 @@ function ɵunwrapWritableSignal(value) {
   return null;
 }
 function signal(initialValue, options) {
-  const [get, set, update] = createSignal(initialValue, options?.equal);
-  const signalFn = get;
+  const [get2, set2, update] = createSignal(initialValue, options?.equal);
+  const signalFn = get2;
   const node = signalFn[SIGNAL];
-  signalFn.set = set;
+  signalFn.set = set2;
   signalFn.update = update;
   signalFn.asReadonly = signalAsReadonlyFn.bind(signalFn);
   if (typeof ngDevMode !== "undefined" && ngDevMode) {
@@ -3967,7 +3333,7 @@ var TransferState = class _TransferState {
     providedIn: "root",
     factory: () => {
       const transferState = new _TransferState();
-      if (false) {
+      if (true) {
         transferState.store = retrieveTransferredState(inject2(DOCUMENT), inject2(APP_ID));
       }
       return transferState;
@@ -4288,10 +3654,6 @@ var PendingTasks = class _PendingTasks {
     factory: () => new _PendingTasks()
   });
 };
-
-// node_modules/@angular/core/fesm2022/_debug_node-chunk.mjs
-var import_rxjs2 = __toESM(require_cjs(), 1);
-var import_operators = __toESM(require_operators(), 1);
 
 // node_modules/@angular/core/fesm2022/_attribute-chunk.mjs
 var Attribute = {
@@ -5705,7 +5067,7 @@ var QueryList = class {
   first = void 0;
   last = void 0;
   get changes() {
-    return this._changes ??= new import_rxjs2.Subject();
+    return this._changes ??= new Subject();
   }
   constructor(_emitDistinctChangesOnly = false) {
     this._emitDistinctChangesOnly = _emitDistinctChangesOnly;
@@ -6495,6 +5857,14 @@ function setJSActionAttributes(nativeElement, eventTypes, parentDeferBlockId = n
     nativeElement.setAttribute(DEFER_BLOCK_SSR_ID_ATTRIBUTE, blockName);
   }
 }
+var sharedStashFunction = (rEl, eventType, listenerFn) => {
+  const el = rEl;
+  const eventListenerMap = el.__jsaction_fns ?? /* @__PURE__ */ new Map();
+  const eventListeners = eventListenerMap.get(eventType) ?? [];
+  eventListeners.push(listenerFn);
+  eventListenerMap.set(eventType, eventListeners);
+  el.__jsaction_fns = eventListenerMap;
+};
 var sharedMapFunction = (rEl, jsActionMap) => {
   const el = rEl;
   let blockName = el.getAttribute(DEFER_BLOCK_SSR_ID_ATTRIBUTE) ?? "";
@@ -6534,10 +5904,38 @@ function markEventHandledForElement(event, element) {
   }
   elements.add(element);
 }
+function invokeListeners(event, currentTarget) {
+  const handlerFns = currentTarget?.__jsaction_fns?.get(event.type);
+  if (!handlerFns || !currentTarget?.isConnected) {
+    return;
+  }
+  if (currentTarget && handledEventElements.get(event)?.has(currentTarget)) {
+    return;
+  }
+  for (const handler of handlerFns) {
+    handler(event);
+  }
+}
+var stashEventListeners = /* @__PURE__ */ new Map();
+function setStashFn(appId, fn) {
+  stashEventListeners.set(appId, fn);
+  return () => stashEventListeners.delete(appId);
+}
+var isStashEventListenerImplEnabled = false;
 var _stashEventListenerImpl = (lView, target, eventName, wrappedListener) => {
 };
 function stashEventListenerImpl(lView, target, eventName, wrappedListener) {
   _stashEventListenerImpl(lView, target, eventName, wrappedListener);
+}
+function enableStashEventListenerImpl() {
+  if (!isStashEventListenerImplEnabled) {
+    _stashEventListenerImpl = (lView, target, eventName, wrappedListener) => {
+      const appId = lView[INJECTOR].get(APP_ID);
+      const stashEventListener = stashEventListeners.get(appId);
+      stashEventListener?.(target, eventName, wrappedListener);
+    };
+    isStashEventListenerImplEnabled = true;
+  }
 }
 var DEHYDRATED_BLOCK_REGISTRY = new InjectionToken(typeof ngDevMode !== "undefined" && ngDevMode ? "DEHYDRATED_BLOCK_REGISTRY" : "");
 var DehydratedBlockRegistry = class _DehydratedBlockRegistry {
@@ -6729,6 +6127,13 @@ function markRNodeAsSkippedByHydration(node) {
   });
   ngDevMode.componentsSkippedHydration++;
 }
+function countBlocksSkippedByHydration(injector) {
+  const transferState = injector.get(TransferState);
+  const nghDeferData = transferState.get(NGH_DEFER_BLOCKS_KEY, {});
+  if (ngDevMode) {
+    ngDevMode.deferBlocksWithIncrementalHydration = Object.keys(nghDeferData).length;
+  }
+}
 function markRNodeAsHavingHydrationMismatch(node, expectedNodeDetails = null, actualNodeDetails = null) {
   if (!ngDevMode) {
     throw new Error("Calling `markRNodeAsMismatchedByHydration` in prod mode is not supported and likely a mistake.");
@@ -6768,6 +6173,9 @@ function warnIncrementalHydrationNotConfigured() {
     incrementalHydrationEnabledWarned = true;
     console.warn(formatRuntimeError(508, "Angular has detected that some `@defer` blocks use `hydrate` triggers, but incremental hydration was not enabled. Incremental hydration is enabled by default with `provideClientHydration()`. Make sure `provideClientHydration()` is included in your application config and that you have not opted out using `withNoIncrementalHydration()`."));
   }
+}
+function assertSsrIdDefined(ssrUniqueId) {
+  assertDefined(ssrUniqueId, "Internal error: expecting an SSR id for a defer block that should be hydrated, but the id is not present");
 }
 function getNgContainerSize(hydrationInfo, index) {
   const data = hydrationInfo.data;
@@ -8190,7 +7598,7 @@ var MAX_ANIMATION_TIMEOUT = new InjectionToken(typeof ngDevMode !== "undefined" 
 });
 var MAX_ANIMATION_TIMEOUT_DEFAULT = 4e3;
 var DEFAULT_ANIMATIONS_DISABLED = false;
-var areAnimationSupported = false;
+var areAnimationSupported = typeof document !== "undefined" && typeof document?.documentElement?.getAnimations === "function";
 function areAnimationsDisabled(lView) {
   const injector = lView[INJECTOR];
   return injector.get(ANIMATIONS_DISABLED, DEFAULT_ANIMATIONS_DISABLED);
@@ -8643,7 +8051,7 @@ function afterEveryRender(callbackOrSpec, options) {
     assertInInjectionContext(afterEveryRender);
   }
   const injector = options?.injector ?? inject2(Injector);
-  if (true) {
+  if (false) {
     return NOOP_AFTER_RENDER_REF;
   }
   performanceMarkFeature("NgAfterRender");
@@ -8654,7 +8062,7 @@ function afterNextRender(callbackOrSpec, options) {
     assertInInjectionContext(afterNextRender);
   }
   const injector = options?.injector ?? inject2(Injector);
-  if (true) {
+  if (false) {
     return NOOP_AFTER_RENDER_REF;
   }
   performanceMarkFeature("NgAfterNextRender");
@@ -8681,10 +8089,6 @@ function afterEveryRenderImpl(callbackOrSpec, injector, options, once) {
   manager.impl.register(sequence);
   return sequence;
 }
-var NOOP_AFTER_RENDER_REF = {
-  destroy() {
-  }
-};
 var ANIMATION_QUEUE = new InjectionToken(typeof ngDevMode !== "undefined" && ngDevMode ? "AnimationQueue" : "", {
   factory: () => {
     const injector = inject2(EnvironmentInjector);
@@ -14360,7 +13764,7 @@ function getComponentId(componentDef) {
   }
   hash += 2147483647 + 1;
   const compId = "c" + hash;
-  if ((typeof ngDevMode === "undefined" || ngDevMode) && false) {
+  if ((typeof ngDevMode === "undefined" || ngDevMode) && true) {
     if (GENERATED_COMP_IDS.has(compId)) {
       const previousCompDefType = GENERATED_COMP_IDS.get(compId);
       if (previousCompDefType !== componentDef.type) {
@@ -15317,7 +14721,7 @@ function renderDeferBlockState(newState, tNode, lContainer, skipTimerScheduling 
   }
   if (isValidStateChange(currentState, newState) && isValidStateChange(lDetails[NEXT_DEFER_BLOCK_STATE] ?? -1, newState)) {
     const tDetails = getTDeferBlockDetails(hostTView, tNode);
-    const needsScheduling = !skipTimerScheduling && false;
+    const needsScheduling = !skipTimerScheduling && true && (getLoadingBlockAfter(tDetails) !== null || getMinimumDurationForState(tDetails, DeferBlockState.Loading) !== null || getMinimumDurationForState(tDetails, DeferBlockState.Placeholder));
     if (ngDevMode && needsScheduling) {
       assertDefined(applyDeferBlockStateWithSchedulingImpl, "Expected scheduling function to be defined");
     }
@@ -15450,7 +14854,7 @@ function ɵɵdeferEnableTimerScheduling(tView, tDetails, placeholderConfigIndex,
   }
 }
 function shouldTriggerDeferBlock(triggerType, lView) {
-  if (triggerType === 0 && true && true) {
+  if (triggerType === 0 && true && false) {
     return false;
   }
   const injector = lView[INJECTOR];
@@ -16809,7 +16213,7 @@ var ApplicationRef = class _ApplicationRef {
   allTestViews = /* @__PURE__ */ new Set();
   autoDetectTestViews = /* @__PURE__ */ new Set();
   includeAllTestViews = false;
-  afterTick = new import_rxjs2.Subject();
+  afterTick = new Subject();
   get allViews() {
     return [...(this.includeAllTestViews ? this.allTestViews : this.autoDetectTestViews).keys(), ...this._views];
   }
@@ -16820,7 +16224,7 @@ var ApplicationRef = class _ApplicationRef {
   components = [];
   internalPendingTask = inject2(PendingTasksInternal);
   get isStable() {
-    return this.internalPendingTask.hasPendingTasksObservable.pipe((0, import_operators.map)((pending) => !pending));
+    return this.internalPendingTask.hasPendingTasksObservable.pipe(map((pending) => !pending));
   }
   constructor() {
     inject2(TracingService, {
@@ -17181,7 +16585,7 @@ function scheduleDelayedTrigger(scheduleFn) {
   storeTriggerCleanupFn(0, lDetails, cleanupFn);
 }
 function scheduleDelayedPrefetching(scheduleFn) {
-  if (true) return;
+  if (false) return;
   const lView = getLView();
   const injector = lView[INJECTOR];
   const tNode = getCurrentTNode();
@@ -17193,6 +16597,15 @@ function scheduleDelayedPrefetching(scheduleFn) {
     const cleanupFn = scheduleFn(prefetch, injector);
     storeTriggerCleanupFn(1, lDetails, cleanupFn);
   }
+}
+function scheduleDelayedHydrating(scheduleFn, lView, tNode) {
+  if (false) return;
+  const injector = lView[INJECTOR];
+  const lDetails = getLDeferBlockDetails(lView, tNode);
+  const ssrUniqueId = lDetails[SSR_UNIQUE_ID];
+  ngDevMode && assertSsrIdDefined(ssrUniqueId);
+  const cleanupFn = scheduleFn(() => triggerHydrationFromBlockName(injector, ssrUniqueId), injector);
+  storeTriggerCleanupFn(2, lDetails, cleanupFn);
 }
 function triggerPrefetching(tDetails, lView, tNode) {
   triggerResourceLoading(tDetails, lView, tNode);
@@ -17439,7 +16852,7 @@ function shouldAttachTrigger(triggerType, lView, tNode) {
   } else if (triggerType === 2) {
     return !shouldAttachRegularTrigger(lView, tNode);
   }
-  return false;
+  return true;
 }
 function hasHydrateTriggers(flags) {
   return flags != null && (flags & 1) === 1;
@@ -17449,7 +16862,7 @@ function shouldAttachRegularTrigger(lView, tNode) {
   const tDetails = getTDeferBlockDetails(lView[TVIEW], tNode);
   const incrementalHydrationEnabled = isIncrementalHydrationEnabled(injector);
   const _hasHydrateTriggers = hasHydrateTriggers(tDetails.flags);
-  if (true) {
+  if (false) {
     return !incrementalHydrationEnabled || !_hasHydrateTriggers;
   }
   const lDetails = getLDeferBlockDetails(lView, tNode);
@@ -17667,7 +17080,7 @@ function ɵɵdeferHydrateWhen(rawValue) {
   const hydrateTriggers = getHydrateTriggers(tView, tNode);
   hydrateTriggers.set(6, null);
   if (bindingUpdated(lView, bindingIndex, rawValue)) {
-    if (true) {
+    if (false) {
       triggerDeferBlock(2, lView, tNode);
     } else {
       const injector = lView[INJECTOR];
@@ -17695,7 +17108,7 @@ function ɵɵdeferHydrateNever() {
   if (!shouldAttachTrigger(2, lView, tNode)) return;
   const hydrateTriggers = getHydrateTriggers(getTView(), tNode);
   hydrateTriggers.set(7, null);
-  if (true) {
+  if (false) {
     triggerDeferBlock(2, lView, tNode);
   }
 }
@@ -17733,7 +17146,7 @@ function ɵɵdeferHydrateOnIdle(timeout) {
   if (!shouldAttachTrigger(2, lView, tNode)) return;
   const hydrateTriggers = getHydrateTriggers(getTView(), tNode);
   hydrateTriggers.set(0, null);
-  if (true) {
+  if (false) {
     triggerDeferBlock(2, lView, tNode);
   } else {
     scheduleDelayedHydrating(onIdleWrapper({
@@ -17776,7 +17189,7 @@ function ɵɵdeferHydrateOnImmediate() {
   if (!shouldAttachTrigger(2, lView, tNode)) return;
   const hydrateTriggers = getHydrateTriggers(getTView(), tNode);
   hydrateTriggers.set(1, null);
-  if (true) {
+  if (false) {
     triggerDeferBlock(2, lView, tNode);
   } else {
     const injector = lView[INJECTOR];
@@ -17816,7 +17229,7 @@ function ɵɵdeferHydrateOnTimer(delay) {
     type: 5,
     delay
   });
-  if (true) {
+  if (false) {
     triggerDeferBlock(2, lView, tNode);
   } else {
     scheduleDelayedHydrating(onTimer(delay), lView, tNode);
@@ -17830,7 +17243,7 @@ function ɵɵdeferOnHover(triggerIndex, walkUpTimes) {
   }
   if (!shouldAttachTrigger(0, lView, tNode)) return;
   renderPlaceholder(lView, tNode);
-  if (false) {
+  if (true) {
     registerDomTrigger(lView, tNode, triggerIndex, walkUpTimes, onHover, () => triggerDeferBlock(0, lView, tNode), 0);
   }
 }
@@ -17856,7 +17269,7 @@ function ɵɵdeferHydrateOnHover() {
   if (!shouldAttachTrigger(2, lView, tNode)) return;
   const hydrateTriggers = getHydrateTriggers(getTView(), tNode);
   hydrateTriggers.set(4, null);
-  if (true) {
+  if (false) {
     triggerDeferBlock(2, lView, tNode);
   }
 }
@@ -17868,7 +17281,7 @@ function ɵɵdeferOnInteraction(triggerIndex, walkUpTimes) {
   }
   if (!shouldAttachTrigger(0, lView, tNode)) return;
   renderPlaceholder(lView, tNode);
-  if (false) {
+  if (true) {
     registerDomTrigger(lView, tNode, triggerIndex, walkUpTimes, onInteraction, () => triggerDeferBlock(0, lView, tNode), 0);
   }
 }
@@ -17894,7 +17307,7 @@ function ɵɵdeferHydrateOnInteraction() {
   if (!shouldAttachTrigger(2, lView, tNode)) return;
   const hydrateTriggers = getHydrateTriggers(getTView(), tNode);
   hydrateTriggers.set(3, null);
-  if (true) {
+  if (false) {
     triggerDeferBlock(2, lView, tNode);
   }
 }
@@ -17913,7 +17326,7 @@ function ɵɵdeferOnViewport(triggerIndex, walkUpTimes, options) {
   }
   if (!shouldAttachTrigger(0, lView, tNode)) return;
   renderPlaceholder(lView, tNode);
-  if (false) {
+  if (true) {
     registerDomTrigger(lView, tNode, triggerIndex, walkUpTimes, onViewportWrapper, () => triggerDeferBlock(0, lView, tNode), 0, options);
   }
 }
@@ -17949,7 +17362,7 @@ function ɵɵdeferHydrateOnViewport(options) {
     type: 2,
     intersectionObserverOptions: options
   } : null);
-  if (true) {
+  if (false) {
     triggerDeferBlock(2, lView, tNode);
   }
 }
@@ -17985,7 +17398,7 @@ function ɵɵattribute(name, value, sanitizer, namespace) {
 }
 function ɵɵanimateEnter(value) {
   performanceMarkFeature("NgAnimateEnter");
-  if (true) {
+  if (!areAnimationSupported) {
     return ɵɵanimateEnter;
   }
   ngDevMode && assertAnimationTypes(value, "animate.enter");
@@ -18057,7 +17470,7 @@ function enterAnimationEnd(event, nativeElement, renderer) {
 }
 function ɵɵanimateEnterListener(value) {
   performanceMarkFeature("NgAnimateEnter");
-  if (true) {
+  if (!areAnimationSupported) {
     return ɵɵanimateEnterListener;
   }
   ngDevMode && assertAnimationTypes(value, "animate.enter");
@@ -18081,7 +17494,7 @@ function runEnterAnimationFunction(lView, tNode, value) {
 }
 function ɵɵanimateLeave(value) {
   performanceMarkFeature("NgAnimateLeave");
-  if (true) {
+  if (!areAnimationSupported) {
     return ɵɵanimateLeave;
   }
   ngDevMode && assertAnimationTypes(value, "animate.leave");
@@ -18169,7 +17582,7 @@ function animateLeaveClassRunner(el, tNode, lView, classList, renderer, ngZone) 
 }
 function ɵɵanimateLeaveListener(value) {
   performanceMarkFeature("NgAnimateLeave");
-  if (true) {
+  if (!areAnimationSupported) {
     return ɵɵanimateLeaveListener;
   }
   ngDevMode && assertAnimationTypes(value, "animate.leave");
@@ -21387,6 +20800,9 @@ var isIncrementalHydrationRuntimeActive = false;
 function createDehydratedBlockRegistry() {
   return _dehydratedBlockRegistryFactory();
 }
+function runIncrementalHydrationBootstrap(injector, doc) {
+  _runIncrementalHydrationBootstrap(injector, doc);
+}
 function ɵɵenableIncrementalHydrationRuntime() {
   if (isIncrementalHydrationRuntimeActive) {
     return;
@@ -22713,7 +22129,7 @@ var ChangeDetectionSchedulerImpl = class _ChangeDetectionSchedulerImpl {
       "__scheduler_tick__": true
     }
   }];
-  subscriptions = new import_rxjs2.Subscription();
+  subscriptions = new Subscription();
   angularZoneId = this.zoneIsDefined ? this.ngZone._inner?.get(angularZoneInstanceIdProperty) : null;
   scheduleInRootZone = !this.zonelessEnabled && this.zoneIsDefined && (inject2(SCHEDULE_IN_ROOT_ZONE, {
     optional: true
@@ -23702,7 +23118,7 @@ var ResourceImpl = class extends BaseWritableResource {
           stream
         });
         const result = untracked2(stream);
-        if (true) {
+        if (false) {
           saveToTransferState(result, this.transferCacheKey, this.transferState);
         }
       } else {
@@ -23717,7 +23133,7 @@ var ResourceImpl = class extends BaseWritableResource {
           stream: resolvedStream
         });
         const result = resolvedStream ? untracked2(resolvedStream) : void 0;
-        if (true) {
+        if (false) {
           saveToTransferState(result, this.transferCacheKey, this.transferState);
         }
       }
@@ -23746,11 +23162,6 @@ var ResourceImpl = class extends BaseWritableResource {
     this.resolvePendingTask = void 0;
   }
 };
-function saveToTransferState(result, transferCacheKey, transferState) {
-  if (transferCacheKey && transferState && result && isResolved(result)) {
-    transferState.set(transferCacheKey, result.value);
-  }
-}
 function wrapEqualityFn(equal) {
   return (a, b) => a === void 0 || b === void 0 ? a === b : equal(a, b);
 }
@@ -23845,10 +23256,24 @@ function rethrowFatalErrors(error) {
   }
 }
 
-// node_modules/@angular/core/fesm2022/core.mjs
-var import_rxjs3 = __toESM(require_cjs(), 1);
-
 // node_modules/@angular/core/fesm2022/primitives-event-dispatch.mjs
+var Property = {
+  JSACTION: "__jsaction",
+  OWNER: "__owner"
+};
+var parseCache = {};
+function get(element) {
+  return element[Property.JSACTION];
+}
+function set(element, actionMap) {
+  element[Property.JSACTION] = actionMap;
+}
+function getParsed(text) {
+  return parseCache[text];
+}
+function setParsed(text, parsed) {
+  parseCache[text] = parsed;
+}
 var EventType = {
   CLICK: "click",
   CLICKMOD: "clickmod",
@@ -23882,15 +23307,647 @@ var CAPTURE_EVENT_TYPES = [EventType.FOCUS, EventType.BLUR, EventType.ERROR, Eve
 var isCaptureEventType = (eventType) => CAPTURE_EVENT_TYPES.indexOf(eventType) >= 0;
 var EARLY_EVENT_TYPES = BUBBLE_EVENT_TYPES.concat(CAPTURE_EVENT_TYPES);
 var isEarlyEventType = (eventType) => EARLY_EVENT_TYPES.indexOf(eventType) >= 0;
+function getBrowserEventType(eventType) {
+  if (eventType === EventType.MOUSEENTER) {
+    return EventType.MOUSEOVER;
+  } else if (eventType === EventType.MOUSELEAVE) {
+    return EventType.MOUSEOUT;
+  } else if (eventType === EventType.POINTERENTER) {
+    return EventType.POINTEROVER;
+  } else if (eventType === EventType.POINTERLEAVE) {
+    return EventType.POINTEROUT;
+  }
+  return eventType;
+}
+function addEventListener(element, eventType, handler, passive) {
+  let capture = false;
+  if (isCaptureEventType(eventType)) {
+    capture = true;
+  }
+  const options = typeof passive === "boolean" ? {
+    capture,
+    passive
+  } : capture;
+  element.addEventListener(eventType, handler, options);
+  return {
+    eventType,
+    handler,
+    capture,
+    passive
+  };
+}
+function removeEventListener(element, info) {
+  if (element.removeEventListener) {
+    const options = typeof info.passive === "boolean" ? {
+      capture: info.capture
+    } : info.capture;
+    element.removeEventListener(info.eventType, info.handler, options);
+  } else if (element.detachEvent) {
+    element.detachEvent(`on${info.eventType}`, info.handler);
+  }
+}
+function preventDefault(e) {
+  e.preventDefault ? e.preventDefault() : e.returnValue = false;
+}
 var isMac = typeof navigator !== "undefined" && /Macintosh/.test(navigator.userAgent);
+function isMiddleClick(e) {
+  return e.which === 2 || e.which == null && e.button === 4;
+}
+function isModifiedClickEvent(e) {
+  return isMac && e.metaKey || !isMac && e.ctrlKey || isMiddleClick(e) || e.shiftKey;
+}
+function isMouseSpecialEvent(e, type, element) {
+  const related = e.relatedTarget;
+  return (e.type === EventType.MOUSEOVER && type === EventType.MOUSEENTER || e.type === EventType.MOUSEOUT && type === EventType.MOUSELEAVE || e.type === EventType.POINTEROVER && type === EventType.POINTERENTER || e.type === EventType.POINTEROUT && type === EventType.POINTERLEAVE) && (!related || related !== element && !element.contains(related));
+}
+function createMouseSpecialEvent(e, target) {
+  const copy = {};
+  for (const property in e) {
+    if (property === "srcElement" || property === "target") {
+      continue;
+    }
+    const key = property;
+    const value = e[key];
+    if (typeof value === "function") {
+      continue;
+    }
+    copy[key] = value;
+  }
+  if (e.type === EventType.MOUSEOVER) {
+    copy["type"] = EventType.MOUSEENTER;
+  } else if (e.type === EventType.MOUSEOUT) {
+    copy["type"] = EventType.MOUSELEAVE;
+  } else if (e.type === EventType.POINTEROVER) {
+    copy["type"] = EventType.POINTERENTER;
+  } else {
+    copy["type"] = EventType.POINTERLEAVE;
+  }
+  copy["target"] = copy["srcElement"] = target;
+  copy["bubbles"] = false;
+  copy["_originalEvent"] = e;
+  return copy;
+}
+var EventContractContainer = class {
+  element;
+  handlerInfos = [];
+  constructor(element) {
+    this.element = element;
+  }
+  addEventListener(eventType, getHandler, passive) {
+    this.handlerInfos.push(addEventListener(this.element, eventType, getHandler(this.element), passive));
+  }
+  cleanUp() {
+    for (let i = 0; i < this.handlerInfos.length; i++) {
+      removeEventListener(this.element, this.handlerInfos[i]);
+    }
+    this.handlerInfos = [];
+  }
+};
+var Char = {
+  EVENT_ACTION_SEPARATOR: ":"
+};
+function getEventType(eventInfo) {
+  return eventInfo.eventType;
+}
+function setEventType(eventInfo, eventType) {
+  eventInfo.eventType = eventType;
+}
+function getEvent(eventInfo) {
+  return eventInfo.event;
+}
+function setEvent(eventInfo, event) {
+  eventInfo.event = event;
+}
+function getTargetElement(eventInfo) {
+  return eventInfo.targetElement;
+}
+function setTargetElement(eventInfo, targetElement) {
+  eventInfo.targetElement = targetElement;
+}
+function getContainer(eventInfo) {
+  return eventInfo.eic;
+}
+function setContainer(eventInfo, container) {
+  eventInfo.eic = container;
+}
+function getTimestamp(eventInfo) {
+  return eventInfo.timeStamp;
+}
+function setTimestamp(eventInfo, timestamp) {
+  eventInfo.timeStamp = timestamp;
+}
+function getAction(eventInfo) {
+  return eventInfo.eia;
+}
+function setAction(eventInfo, actionName, actionElement) {
+  eventInfo.eia = [actionName, actionElement];
+}
+function unsetAction(eventInfo) {
+  eventInfo.eia = void 0;
+}
+function getActionElement(actionInfo) {
+  return actionInfo[1];
+}
+function getIsReplay(eventInfo) {
+  return eventInfo.eirp;
+}
+function setIsReplay(eventInfo, replay) {
+  eventInfo.eirp = replay;
+}
+function getResolved(eventInfo) {
+  return eventInfo.eir;
+}
+function setResolved(eventInfo, resolved) {
+  eventInfo.eir = resolved;
+}
+function cloneEventInfo(eventInfo) {
+  return {
+    eventType: eventInfo.eventType,
+    event: eventInfo.event,
+    targetElement: eventInfo.targetElement,
+    eic: eventInfo.eic,
+    eia: eventInfo.eia,
+    timeStamp: eventInfo.timeStamp,
+    eirp: eventInfo.eirp,
+    eiack: eventInfo.eiack,
+    eir: eventInfo.eir
+  };
+}
+function createEventInfoFromParameters(eventType, event, targetElement, container, timestamp, action, isReplay, a11yClickKey) {
+  return {
+    eventType,
+    event,
+    targetElement,
+    eic: container,
+    timeStamp: timestamp,
+    eia: action,
+    eirp: isReplay,
+    eiack: a11yClickKey
+  };
+}
+var EventInfoWrapper = class _EventInfoWrapper {
+  eventInfo;
+  constructor(eventInfo) {
+    this.eventInfo = eventInfo;
+  }
+  getEventType() {
+    return getEventType(this.eventInfo);
+  }
+  setEventType(eventType) {
+    setEventType(this.eventInfo, eventType);
+  }
+  getEvent() {
+    return getEvent(this.eventInfo);
+  }
+  setEvent(event) {
+    setEvent(this.eventInfo, event);
+  }
+  getTargetElement() {
+    return getTargetElement(this.eventInfo);
+  }
+  setTargetElement(targetElement) {
+    setTargetElement(this.eventInfo, targetElement);
+  }
+  getContainer() {
+    return getContainer(this.eventInfo);
+  }
+  setContainer(container) {
+    setContainer(this.eventInfo, container);
+  }
+  getTimestamp() {
+    return getTimestamp(this.eventInfo);
+  }
+  setTimestamp(timestamp) {
+    setTimestamp(this.eventInfo, timestamp);
+  }
+  getAction() {
+    const action = getAction(this.eventInfo);
+    if (!action) return void 0;
+    return {
+      name: action[0],
+      element: action[1]
+    };
+  }
+  setAction(action) {
+    if (!action) {
+      unsetAction(this.eventInfo);
+      return;
+    }
+    setAction(this.eventInfo, action.name, action.element);
+  }
+  getIsReplay() {
+    return getIsReplay(this.eventInfo);
+  }
+  setIsReplay(replay) {
+    setIsReplay(this.eventInfo, replay);
+  }
+  getResolved() {
+    return getResolved(this.eventInfo);
+  }
+  setResolved(resolved) {
+    setResolved(this.eventInfo, resolved);
+  }
+  clone() {
+    return new _EventInfoWrapper(cloneEventInfo(this.eventInfo));
+  }
+};
+var EMPTY_ACTION_MAP = {};
+var REGEXP_SEMICOLON = /\s*;\s*/;
 var DEFAULT_EVENT_TYPE = EventType.CLICK;
+var ActionResolver = class {
+  a11yClickSupport = false;
+  clickModSupport = true;
+  syntheticMouseEventSupport;
+  updateEventInfoForA11yClick = void 0;
+  preventDefaultForA11yClick = void 0;
+  populateClickOnlyAction = void 0;
+  constructor({
+    syntheticMouseEventSupport = false,
+    clickModSupport = true
+  } = {}) {
+    this.syntheticMouseEventSupport = syntheticMouseEventSupport;
+    this.clickModSupport = clickModSupport;
+  }
+  resolveEventType(eventInfo) {
+    if (this.clickModSupport && getEventType(eventInfo) === EventType.CLICK && isModifiedClickEvent(getEvent(eventInfo))) {
+      setEventType(eventInfo, EventType.CLICKMOD);
+    } else if (this.a11yClickSupport) {
+      this.updateEventInfoForA11yClick(eventInfo);
+    }
+  }
+  resolveAction(eventInfo) {
+    if (getResolved(eventInfo)) {
+      return;
+    }
+    this.populateAction(eventInfo, getTargetElement(eventInfo));
+    setResolved(eventInfo, true);
+  }
+  resolveParentAction(eventInfo) {
+    const action = getAction(eventInfo);
+    const actionElement = action && getActionElement(action);
+    unsetAction(eventInfo);
+    const parentNode = actionElement && this.getParentNode(actionElement);
+    if (!parentNode) {
+      return;
+    }
+    this.populateAction(eventInfo, parentNode);
+  }
+  populateAction(eventInfo, currentTarget) {
+    let actionElement = currentTarget;
+    while (actionElement && actionElement !== getContainer(eventInfo)) {
+      if (actionElement.nodeType === Node.ELEMENT_NODE) {
+        this.populateActionOnElement(actionElement, eventInfo);
+      }
+      if (getAction(eventInfo)) {
+        break;
+      }
+      actionElement = this.getParentNode(actionElement);
+    }
+    const action = getAction(eventInfo);
+    if (!action) {
+      return;
+    }
+    if (this.a11yClickSupport) {
+      this.preventDefaultForA11yClick(eventInfo);
+    }
+    if (this.syntheticMouseEventSupport) {
+      if (getEventType(eventInfo) === EventType.MOUSEENTER || getEventType(eventInfo) === EventType.MOUSELEAVE || getEventType(eventInfo) === EventType.POINTERENTER || getEventType(eventInfo) === EventType.POINTERLEAVE) {
+        if (isMouseSpecialEvent(getEvent(eventInfo), getEventType(eventInfo), getActionElement(action))) {
+          const copiedEvent = createMouseSpecialEvent(getEvent(eventInfo), getActionElement(action));
+          setEvent(eventInfo, copiedEvent);
+          setTargetElement(eventInfo, getActionElement(action));
+        } else {
+          unsetAction(eventInfo);
+        }
+      }
+    }
+  }
+  getParentNode(element) {
+    const owner = element[Property.OWNER];
+    if (owner) {
+      return owner;
+    }
+    const parentNode = element.parentNode;
+    if (parentNode?.nodeName === "#document-fragment") {
+      return parentNode?.host ?? null;
+    }
+    return parentNode;
+  }
+  populateActionOnElement(actionElement, eventInfo) {
+    const actionMap = this.parseActions(actionElement);
+    const actionName = actionMap[getEventType(eventInfo)];
+    if (actionName !== void 0) {
+      setAction(eventInfo, actionName, actionElement);
+    }
+    if (this.a11yClickSupport) {
+      this.populateClickOnlyAction(actionElement, eventInfo, actionMap);
+    }
+  }
+  parseActions(actionElement) {
+    let actionMap = get(actionElement);
+    if (!actionMap) {
+      const jsactionAttribute = actionElement.getAttribute(Attribute.JSACTION);
+      if (!jsactionAttribute) {
+        actionMap = EMPTY_ACTION_MAP;
+        set(actionElement, actionMap);
+      } else {
+        actionMap = getParsed(jsactionAttribute);
+        if (!actionMap) {
+          actionMap = {};
+          const values = jsactionAttribute.split(REGEXP_SEMICOLON);
+          for (let idx = 0; idx < values.length; idx++) {
+            const value = values[idx];
+            if (!value) {
+              continue;
+            }
+            const colon = value.indexOf(Char.EVENT_ACTION_SEPARATOR);
+            const hasColon = colon !== -1;
+            const type = hasColon ? value.substr(0, colon).trim() : DEFAULT_EVENT_TYPE;
+            const action = hasColon ? value.substr(colon + 1).trim() : value;
+            actionMap[type] = action;
+          }
+          setParsed(jsactionAttribute, actionMap);
+        }
+        set(actionElement, actionMap);
+      }
+    }
+    return actionMap;
+  }
+  addA11yClickSupport(updateEventInfoForA11yClick, preventDefaultForA11yClick, populateClickOnlyAction) {
+    this.a11yClickSupport = true;
+    this.updateEventInfoForA11yClick = updateEventInfoForA11yClick;
+    this.preventDefaultForA11yClick = preventDefaultForA11yClick;
+    this.populateClickOnlyAction = populateClickOnlyAction;
+  }
+};
 var Restriction;
 (function(Restriction2) {
   Restriction2[Restriction2["I_AM_THE_JSACTION_FRAMEWORK"] = 0] = "I_AM_THE_JSACTION_FRAMEWORK";
 })(Restriction || (Restriction = {}));
+var Dispatcher = class {
+  dispatchDelegate;
+  actionResolver;
+  eventReplayer;
+  eventReplayScheduled = false;
+  replayEventInfoWrappers = [];
+  constructor(dispatchDelegate, {
+    actionResolver,
+    eventReplayer
+  } = {}) {
+    this.dispatchDelegate = dispatchDelegate;
+    this.actionResolver = actionResolver;
+    this.eventReplayer = eventReplayer;
+  }
+  dispatch(eventInfo) {
+    const eventInfoWrapper = new EventInfoWrapper(eventInfo);
+    this.actionResolver?.resolveEventType(eventInfo);
+    this.actionResolver?.resolveAction(eventInfo);
+    const action = eventInfoWrapper.getAction();
+    if (action && shouldPreventDefaultBeforeDispatching(action.element, eventInfoWrapper)) {
+      preventDefault(eventInfoWrapper.getEvent());
+    }
+    if (this.eventReplayer && eventInfoWrapper.getIsReplay()) {
+      this.scheduleEventInfoWrapperReplay(eventInfoWrapper);
+      return;
+    }
+    this.dispatchDelegate(eventInfoWrapper);
+  }
+  scheduleEventInfoWrapperReplay(eventInfoWrapper) {
+    this.replayEventInfoWrappers.push(eventInfoWrapper);
+    if (this.eventReplayScheduled) {
+      return;
+    }
+    this.eventReplayScheduled = true;
+    Promise.resolve().then(() => {
+      this.eventReplayScheduled = false;
+      this.eventReplayer(this.replayEventInfoWrappers);
+    });
+  }
+};
+function shouldPreventDefaultBeforeDispatching(actionElement, eventInfoWrapper) {
+  return actionElement.tagName === "A" && (eventInfoWrapper.getEventType() === EventType.CLICK || eventInfoWrapper.getEventType() === EventType.CLICKMOD);
+}
+var PROPAGATION_STOPPED_SYMBOL = /* @__PURE__ */ Symbol.for("propagationStopped");
+var EventPhase = {
+  REPLAY: 101
+};
+var PREVENT_DEFAULT_ERROR_MESSAGE_DETAILS = " Because event replay occurs after browser dispatch, `preventDefault` would have no effect. You can check whether an event is being replayed by accessing the event phase: `event.eventPhase === EventPhase.REPLAY`.";
+var PREVENT_DEFAULT_ERROR_MESSAGE = `\`preventDefault\` called during event replay.`;
+var COMPOSED_PATH_ERROR_MESSAGE_DETAILS = " Because event replay occurs after browser dispatch, `composedPath()` will be empty. Iterate parent nodes from `event.target` or `event.currentTarget` if you need to check elements in the event path.";
+var COMPOSED_PATH_ERROR_MESSAGE = `\`composedPath\` called during event replay.`;
+var EventDispatcher = class {
+  dispatchDelegate;
+  clickModSupport;
+  actionResolver;
+  dispatcher;
+  constructor(dispatchDelegate, clickModSupport = true) {
+    this.dispatchDelegate = dispatchDelegate;
+    this.clickModSupport = clickModSupport;
+    this.actionResolver = new ActionResolver({
+      clickModSupport
+    });
+    this.dispatcher = new Dispatcher((eventInfoWrapper) => {
+      this.dispatchToDelegate(eventInfoWrapper);
+    }, {
+      actionResolver: this.actionResolver
+    });
+  }
+  dispatch(eventInfo) {
+    this.dispatcher.dispatch(eventInfo);
+  }
+  dispatchToDelegate(eventInfoWrapper) {
+    if (eventInfoWrapper.getIsReplay()) {
+      prepareEventForReplay(eventInfoWrapper);
+    }
+    prepareEventForBubbling(eventInfoWrapper);
+    while (eventInfoWrapper.getAction()) {
+      prepareEventForDispatch(eventInfoWrapper);
+      if (isCaptureEventType(eventInfoWrapper.getEventType()) && eventInfoWrapper.getAction().element !== eventInfoWrapper.getTargetElement()) {
+        return;
+      }
+      this.dispatchDelegate(eventInfoWrapper.getEvent(), eventInfoWrapper.getAction().name);
+      if (propagationStopped(eventInfoWrapper)) {
+        return;
+      }
+      this.actionResolver.resolveParentAction(eventInfoWrapper.eventInfo);
+    }
+  }
+};
+function prepareEventForBubbling(eventInfoWrapper) {
+  const event = eventInfoWrapper.getEvent();
+  const originalStopPropagation = eventInfoWrapper.getEvent().stopPropagation.bind(event);
+  const stopPropagation = () => {
+    event[PROPAGATION_STOPPED_SYMBOL] = true;
+    originalStopPropagation();
+  };
+  patchEventInstance(event, "stopPropagation", stopPropagation);
+  patchEventInstance(event, "stopImmediatePropagation", stopPropagation);
+}
+function propagationStopped(eventInfoWrapper) {
+  const event = eventInfoWrapper.getEvent();
+  return !!event[PROPAGATION_STOPPED_SYMBOL];
+}
+function prepareEventForReplay(eventInfoWrapper) {
+  const event = eventInfoWrapper.getEvent();
+  const target = eventInfoWrapper.getTargetElement();
+  const originalPreventDefault = event.preventDefault.bind(event);
+  patchEventInstance(event, "target", target);
+  patchEventInstance(event, "eventPhase", EventPhase.REPLAY);
+  patchEventInstance(event, "preventDefault", () => {
+    originalPreventDefault();
+    throw new Error(PREVENT_DEFAULT_ERROR_MESSAGE + (ngDevMode ? PREVENT_DEFAULT_ERROR_MESSAGE_DETAILS : ""));
+  });
+  patchEventInstance(event, "composedPath", () => {
+    throw new Error(COMPOSED_PATH_ERROR_MESSAGE + (ngDevMode ? COMPOSED_PATH_ERROR_MESSAGE_DETAILS : ""));
+  });
+}
+function prepareEventForDispatch(eventInfoWrapper) {
+  const event = eventInfoWrapper.getEvent();
+  const currentTarget = eventInfoWrapper.getAction()?.element;
+  if (currentTarget) {
+    patchEventInstance(event, "currentTarget", currentTarget, {
+      configurable: true
+    });
+  }
+}
+function patchEventInstance(event, property, value, {
+  configurable = false
+} = {}) {
+  Object.defineProperty(event, property, {
+    value,
+    configurable
+  });
+}
+function registerDispatcher$1(eventContract, dispatcher) {
+  eventContract.ecrd((eventInfo) => {
+    dispatcher.dispatch(eventInfo);
+  }, Restriction.I_AM_THE_JSACTION_FRAMEWORK);
+}
+function getQueuedEventInfos(earlyJsactionData) {
+  return earlyJsactionData?.q ?? [];
+}
+function removeAllEventListeners(earlyJsactionData) {
+  if (!earlyJsactionData) {
+    return;
+  }
+  removeEventListeners(earlyJsactionData.c, earlyJsactionData.et, earlyJsactionData.h);
+  removeEventListeners(earlyJsactionData.c, earlyJsactionData.etc, earlyJsactionData.h, true);
+}
+function removeEventListeners(container, eventTypes, earlyEventHandler, capture) {
+  for (let i = 0; i < eventTypes.length; i++) {
+    container.removeEventListener(eventTypes[i], earlyEventHandler, capture);
+  }
+}
+var MOUSE_SPECIAL_SUPPORT = false;
+var EventContract = class _EventContract {
+  static MOUSE_SPECIAL_SUPPORT = MOUSE_SPECIAL_SUPPORT;
+  containerManager;
+  eventHandlers = {};
+  browserEventTypeToExtraEventTypes = {};
+  dispatcher = null;
+  queuedEventInfos = [];
+  constructor(containerManager) {
+    this.containerManager = containerManager;
+  }
+  handleEvent(eventType, event, container) {
+    const eventInfo = createEventInfoFromParameters(eventType, event, event.target, container, Date.now());
+    this.handleEventInfo(eventInfo);
+  }
+  handleEventInfo(eventInfo) {
+    if (!this.dispatcher) {
+      setIsReplay(eventInfo, true);
+      this.queuedEventInfos?.push(eventInfo);
+      return;
+    }
+    this.dispatcher(eventInfo);
+  }
+  addEvent(eventType, prefixedEventType, passive) {
+    if (eventType in this.eventHandlers || !this.containerManager) {
+      return;
+    }
+    if (!_EventContract.MOUSE_SPECIAL_SUPPORT && MOUSE_SPECIAL_EVENT_TYPES.indexOf(eventType) >= 0) {
+      return;
+    }
+    const eventHandler = (eventType2, event, container) => {
+      this.handleEvent(eventType2, event, container);
+    };
+    this.eventHandlers[eventType] = eventHandler;
+    const browserEventType = getBrowserEventType(prefixedEventType || eventType);
+    if (browserEventType !== eventType) {
+      const eventTypes = this.browserEventTypeToExtraEventTypes[browserEventType] || [];
+      eventTypes.push(eventType);
+      this.browserEventTypeToExtraEventTypes[browserEventType] = eventTypes;
+    }
+    this.containerManager.addEventListener(browserEventType, (element) => {
+      return (event) => {
+        eventHandler(eventType, event, element);
+      };
+    }, passive);
+  }
+  replayEarlyEvents(earlyJsactionData = window._ejsa) {
+    if (!earlyJsactionData) {
+      return;
+    }
+    this.replayEarlyEventInfos(earlyJsactionData.q);
+    removeAllEventListeners(earlyJsactionData);
+    delete window._ejsa;
+  }
+  replayEarlyEventInfos(earlyEventInfos) {
+    for (let i = 0; i < earlyEventInfos.length; i++) {
+      const earlyEventInfo = earlyEventInfos[i];
+      const eventTypes = this.getEventTypesForBrowserEventType(earlyEventInfo.eventType);
+      for (let j = 0; j < eventTypes.length; j++) {
+        const eventInfo = cloneEventInfo(earlyEventInfo);
+        setEventType(eventInfo, eventTypes[j]);
+        this.handleEventInfo(eventInfo);
+      }
+    }
+  }
+  getEventTypesForBrowserEventType(browserEventType) {
+    const eventTypes = [];
+    if (this.eventHandlers[browserEventType]) {
+      eventTypes.push(browserEventType);
+    }
+    if (this.browserEventTypeToExtraEventTypes[browserEventType]) {
+      eventTypes.push(...this.browserEventTypeToExtraEventTypes[browserEventType]);
+    }
+    return eventTypes;
+  }
+  handler(eventType) {
+    return this.eventHandlers[eventType];
+  }
+  cleanUp() {
+    this.containerManager?.cleanUp();
+    this.containerManager = null;
+    this.eventHandlers = {};
+    this.browserEventTypeToExtraEventTypes = {};
+    this.dispatcher = null;
+    this.queuedEventInfos = [];
+  }
+  registerDispatcher(dispatcher, restriction) {
+    this.ecrd(dispatcher, restriction);
+  }
+  ecrd(dispatcher, restriction) {
+    this.dispatcher = dispatcher;
+    if (this.queuedEventInfos?.length) {
+      for (let i = 0; i < this.queuedEventInfos.length; i++) {
+        this.handleEventInfo(this.queuedEventInfos[i]);
+      }
+      this.queuedEventInfos = null;
+    }
+  }
+};
+function getAppScopedQueuedEventInfos(appId, dataContainer = window) {
+  return getQueuedEventInfos(dataContainer._ejsas?.[appId]);
+}
+function clearAppScopedEarlyEventContract(appId, dataContainer = window) {
+  if (!dataContainer._ejsas) {
+    return;
+  }
+  dataContainer._ejsas[appId] = void 0;
+}
 
 // node_modules/@angular/core/fesm2022/core.mjs
-var import_operators2 = __toESM(require_operators(), 1);
 var REQUIRED_UNSET_VALUE = /* @__PURE__ */ Symbol("InputSignalNode#UNSET");
 var INPUT_SIGNAL_NODE = (() => {
   return __spreadProps(__spreadValues({}, SIGNAL_NODE), {
@@ -24187,12 +24244,17 @@ var REQUEST_CONTEXT = new InjectionToken(typeof ngDevMode === "undefined" || ngD
   providedIn: "platform",
   factory: () => null
 });
+var appsWithEventReplay = /* @__PURE__ */ new WeakSet();
+var EAGER_CONTENT_LISTENERS_KEY = "";
+function shouldEnableEventReplay(injector) {
+  return injector.get(IS_EVENT_REPLAY_ENABLED, EVENT_REPLAY_ENABLED_DEFAULT);
+}
 function withEventReplay() {
   const providers = [{
     provide: IS_EVENT_REPLAY_ENABLED,
     useFactory: () => {
       let isEnabled = true;
-      if (false) {
+      if (true) {
         const appId = inject2(APP_ID);
         isEnabled = !!window._ejsas?.[appId];
       }
@@ -24202,7 +24264,7 @@ function withEventReplay() {
       return isEnabled;
     }
   }];
-  if (false) {
+  if (true) {
     providers.push({
       provide: ENVIRONMENT_INITIALIZER,
       useValue: () => {
@@ -24240,7 +24302,7 @@ function withEventReplay() {
           const appId = injector.get(APP_ID);
           appRef.onDestroy(() => {
             appsWithEventReplay.delete(appRef);
-            if (false) {
+            if (true) {
               clearAppScopedEarlyEventContract(appId);
             }
           });
@@ -24267,6 +24329,24 @@ function withEventReplay() {
   }
   return providers;
 }
+var initEventReplay = (eventDelegation, injector) => {
+  const appId = injector.get(APP_ID);
+  const earlyJsactionData = window._ejsas[appId];
+  const eventContract = eventDelegation.instance = new EventContract(new EventContractContainer(earlyJsactionData.c));
+  for (const et of earlyJsactionData.et) {
+    eventContract.addEvent(et);
+  }
+  for (const et of earlyJsactionData.etc) {
+    eventContract.addEvent(et);
+  }
+  const eventInfos = getAppScopedQueuedEventInfos(appId);
+  eventContract.replayEarlyEventInfos(eventInfos);
+  clearAppScopedEarlyEventContract(appId);
+  const dispatcher = new EventDispatcher((event) => {
+    invokeRegisteredReplayListeners(injector, event, event.currentTarget);
+  });
+  registerDispatcher$1(eventContract, dispatcher);
+};
 function collectDomEventsInfo(tView, lView, eventTypesToReplay) {
   const domEventsInfo = /* @__PURE__ */ new Map();
   const lCleanup = lView[CLEANUP];
@@ -24304,6 +24384,44 @@ function collectDomEventsInfo(tView, lView, eventTypesToReplay) {
   }
   return domEventsInfo;
 }
+function invokeRegisteredReplayListeners(injector, event, currentTarget) {
+  const blockName = (currentTarget && currentTarget.getAttribute(DEFER_BLOCK_SSR_ID_ATTRIBUTE)) ?? "";
+  if (/d\d+/.test(blockName)) {
+    hydrateAndInvokeBlockListeners(blockName, injector, event, currentTarget);
+  } else if (event.eventPhase === EventPhase.REPLAY) {
+    invokeListeners(event, currentTarget);
+  }
+}
+function hydrateAndInvokeBlockListeners(blockName, injector, event, currentTarget) {
+  const queue = injector.get(EVENT_REPLAY_QUEUE);
+  queue.push({
+    event,
+    currentTarget
+  });
+  triggerHydrationFromBlockName(injector, blockName, createReplayQueuedBlockEventsFn(queue));
+}
+function createReplayQueuedBlockEventsFn(queue) {
+  return (hydratedBlocks) => {
+    const hydrated = new Set(hydratedBlocks);
+    const newQueue = [];
+    for (let {
+      event,
+      currentTarget
+    } of queue) {
+      const blockName = currentTarget.getAttribute(DEFER_BLOCK_SSR_ID_ATTRIBUTE);
+      if (hydrated.has(blockName)) {
+        invokeListeners(event, currentTarget);
+      } else {
+        newQueue.push({
+          event,
+          currentTarget
+        });
+      }
+    }
+    queue.length = 0;
+    queue.push(...newQueue);
+  };
+}
 var isHydrationSupportEnabled = false;
 var isI18nHydrationRuntimeSupportEnabled = false;
 var APPLICATION_IS_STABLE_TIMEOUT = 1e4;
@@ -24328,16 +24446,34 @@ function enableI18nHydrationRuntimeSupport() {
     enableClaimDehydratedIcuCaseImpl();
   }
 }
+function printHydrationStats(injector) {
+  const console2 = injector.get(Console);
+  const message = `Angular hydrated ${ngDevMode.hydratedComponents} component(s) and ${ngDevMode.hydratedNodes} node(s), ${ngDevMode.componentsSkippedHydration} component(s) were skipped. ` + (isIncrementalHydrationEnabled(injector) ? `${ngDevMode.deferBlocksWithIncrementalHydration} defer block(s) were configured to use incremental hydration. ` : "") + `Learn more at ${DOC_PAGE_BASE_URL}/guide/hydration.`;
+  console2.log(message);
+}
+function whenStableWithTimeout(appRef) {
+  const whenStablePromise = appRef.whenStable();
+  if (typeof ngDevMode !== "undefined" && ngDevMode) {
+    const timeoutTime = APPLICATION_IS_STABLE_TIMEOUT;
+    const console2 = appRef.injector.get(Console);
+    const ngZone = appRef.injector.get(NgZone);
+    const timeoutId = ngZone.runOutsideAngular(() => {
+      return setTimeout(() => logWarningOnStableTimedout(timeoutTime, console2), timeoutTime);
+    });
+    whenStablePromise.finally(() => clearTimeout(timeoutId));
+  }
+  return whenStablePromise;
+}
 var CLIENT_RENDER_MODE_FLAG = "ngcm";
 function isClientRenderModeEnabled(doc) {
-  return false;
+  return doc.body.hasAttribute(CLIENT_RENDER_MODE_FLAG);
 }
 function withDomHydration() {
   const providers = [{
     provide: IS_HYDRATION_DOM_REUSE_ENABLED,
     useFactory: () => {
       let isEnabled = true;
-      if (false) {
+      if (true) {
         const transferState = inject2(TransferState, {
           optional: true
         });
@@ -24352,7 +24488,7 @@ function withDomHydration() {
     provide: ENVIRONMENT_INITIALIZER,
     useValue: () => {
       setIsI18nHydrationSupportEnabled(false);
-      if (true) {
+      if (false) {
         return;
       }
       const doc = inject2(DOCUMENT);
@@ -24367,7 +24503,7 @@ function withDomHydration() {
     },
     multi: true
   }];
-  if (false) {
+  if (true) {
     providers.push({
       provide: PRESERVE_HOST_CONTENT,
       useFactory: () => {
@@ -24425,7 +24561,7 @@ function withIncrementalHydration() {
     provide: DEHYDRATED_BLOCK_REGISTRY,
     useFactory: createDehydratedBlockRegistry
   }];
-  if (false) {
+  if (true) {
     providers.push({
       provide: APP_BOOTSTRAP_LISTENER,
       useFactory: () => {
@@ -24439,6 +24575,10 @@ function withIncrementalHydration() {
     });
   }
   return providers;
+}
+function logWarningOnStableTimedout(time, console2) {
+  const message = `Angular hydration expected the ApplicationRef.isStable() to emit \`true\`, but it didn't happen within ${time}ms. Angular hydration logic depends on the application becoming stable as a signal to complete hydration process.`;
+  console2.warn(formatRuntimeError(-506, message));
 }
 var STABILITY_WARNING_THRESHOLD = APPLICATION_IS_STABLE_TIMEOUT - 1e3;
 var DebugTaskTrackerImpl = class {
@@ -25405,7 +25545,7 @@ function getNgZoneOptions(options) {
   };
 }
 var ZoneStablePendingTask = class _ZoneStablePendingTask {
-  subscription = new import_rxjs3.Subscription();
+  subscription = new Subscription();
   initialized = false;
   zone = inject2(NgZone);
   pendingTasks = inject2(PendingTasksInternal);
@@ -25495,7 +25635,7 @@ var ImagePerformanceWarning = class _ImagePerformanceWarning {
   options = inject2(IMAGE_CONFIG);
   lcpImageUrl;
   start() {
-    if (true) {
+    if (typeof PerformanceObserver === "undefined" || this.options?.disableImageSizeWarning && this.options?.disableImageLazyLoadWarning) {
       return;
     }
     this.observer = this.initPerformanceObserver();
@@ -26074,7 +26214,7 @@ function createPlatform(injector) {
   if (typeof ngDevMode !== "undefined" && ngDevMode) {
     _unregisterAiTools = registerAiTools();
   }
-  _platformInjector = false ? injector : null;
+  _platformInjector = true ? injector : null;
   const platform = injector.get(PlatformRef);
   runPlatformInitializers(injector);
   return platform;
@@ -26091,7 +26231,7 @@ function createPlatformFactory(parentPlatformFactory, name, providers = []) {
       }];
       platform = parentPlatformFactory?.(platformProviders) ?? createPlatform(createPlatformInjector(platformProviders, desc));
     }
-    return true ? platform : assertPlatform(marker);
+    return false ? platform : assertPlatform(marker);
   };
 }
 function createPlatformInjector(providers = [], name) {
@@ -26117,7 +26257,7 @@ function assertPlatform(requiredToken) {
   return platform;
 }
 function getPlatform() {
-  if (true) {
+  if (false) {
     return null;
   }
   return _platformInjector?.get(PlatformRef) ?? null;
@@ -26136,7 +26276,7 @@ function createOrReusePlatformInjector(providers = []) {
     _unregisterAiTools = registerAiTools();
   }
   const injector = createPlatformInjector(providers);
-  if (false) {
+  if (true) {
     _platformInjector = injector;
   }
   publishSignalConfiguration();
@@ -26164,7 +26304,7 @@ function internalCreateApplication(config) {
     platformRef
   } = config;
   profiler(ProfilerEvent.BootstrapApplicationStart);
-  if (!platformRef) {
+  if (false) {
     throw new RuntimeError(-401, ngDevMode && "Missing Platform: This may be due to using `bootstrapApplication` on the server without passing a `BootstrapContext`. Please make sure that `bootstrapApplication` is called with a `context` argument.");
   }
   try {
@@ -26751,7 +26891,7 @@ function afterRenderEffect(callbackOrSpec, options) {
   if (ngDevMode && !options?.injector) {
     assertInInjectionContext(afterRenderEffect);
   }
-  if (true) {
+  if (false) {
     return NOOP_AFTER_RENDER_REF;
   }
   const injector = options?.injector ?? inject2(Injector);
@@ -27076,7 +27216,7 @@ function enableProdMode() {
   }
 }
 function declareExperimentalWebMcpTool(tool, injector) {
-  if (true) return;
+  if (false) return;
   const modelContext = globalThis.document.modelContext ?? globalThis.navigator.modelContext;
   if (!modelContext || typeof modelContext.registerTool !== "function") return;
   if (typeof ngDevMode !== "undefined" && ngDevMode) {
@@ -27186,7 +27326,6 @@ export {
   isSignal2 as isSignal,
   isWritableSignal,
   PendingTasks,
-  require_operators,
   noSideEffects,
   ProfilerEvent,
   SimpleChange,
@@ -27621,4 +27760,4 @@ export {
   declareExperimentalWebMcpTool,
   provideExperimentalWebMcpTools
 };
-//# sourceMappingURL=chunk-TJGBRGBM.js.map
+//# sourceMappingURL=chunk-JTQG5XYN.js.map

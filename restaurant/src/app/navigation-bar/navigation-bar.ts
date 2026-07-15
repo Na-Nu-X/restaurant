@@ -4,7 +4,7 @@ import {
   afterNextRender, 
   ViewChild, 
   ElementRef,
-  OnInit,
+  OnInit
 } from "@angular/core"
 
 import { 
@@ -13,10 +13,10 @@ import {
   CommonModule
 } from "@angular/common"
 
-import { Cart } from "../cart"
+import { Cart } from "../services/cart"
 import { Observable } from "rxjs"
 
-import type { CartItem } from "../cart"
+import type { CartItem } from "../services/cart"
 
 @Component({
   selector: "app-navigation-bar",
@@ -77,7 +77,7 @@ export class NavigationBar implements OnInit {
       const element:HTMLElement|null = document.querySelector(selector) as HTMLElement || null // Gets The Element
 
       if(element) {
-        const OFFSET:number = 60 + 20 // Defines The Offset (Navigation Bar + Padding)
+        const OFFSET:number = 60 + 20 + 45 + 20 // Defines The Offset (Navigation Bar + Padding + Search Bar)
         const element_position:number = element.getBoundingClientRect().top + window.scrollY // Gets The Element's Position
 
         window.scrollTo({ top: element_position - OFFSET, behavior: "smooth" }) // Starts The Scroll Animation
