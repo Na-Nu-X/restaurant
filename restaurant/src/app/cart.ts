@@ -25,4 +25,12 @@ export class Cart {
         this.cart_items$.push(dish) // Adds The Dish To The Cart Items
         this.cart_counter.next(this.cart_items$.length) // Sends The New Amount Of Cart Items
     }
+
+    // Method For Remove The Item From Cart
+    removeFromCart(index: number) {
+        if(index > -1 && index < this.cart_items$.length) {
+            this.cart_items$.splice(index, 1) // Removes The Item From Cart
+            this.cart_counter.next(this.cart_items$.length) // Sends The New Amount Of Cart Items
+        }
+    }
 }

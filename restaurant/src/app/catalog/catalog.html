@@ -11,7 +11,7 @@
 
         <div class="bottom">
             <p class="price">{{ (dish.price / 100) | currency:'EUR':'':'1.2-2':'sk-SK' }}<span>€</span></p>
-            <button class="add_to_cart" (click)="addToCart(dish)"><i class="fa-solid fa-basket-shopping"></i> Pridať</button> <!-- https://fontawesome.com/icons/basket-shopping -->
+            <button class="add_to_cart" title="Pridať do košíka" aria-label="Pridať do košíka" (click)="addToCart(dish)"><i class="fa-solid fa-basket-shopping"></i> Pridať</button> <!-- https://fontawesome.com/icons/basket-shopping -->
         </div>
     </article>
 </section>

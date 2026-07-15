@@ -30,6 +30,7 @@ export class NavigationBar implements OnInit {
   is_scrolled:boolean = false  // Stores The Information If The Page Is Scrolled
   cart_amount$!:Observable<number>
   cart_items!:CartItem[]
+  current_index:number = 0 // Stores The Current Index Of The Active Item
   
   constructor(private cartService:Cart) {
     afterNextRender(() => {
@@ -89,13 +90,34 @@ export class NavigationBar implements OnInit {
   // Method To Show The Cart Dialog
   showCart():void {
     this.cart_items = this.cartService.cart_items$ // Sets The Cart Items
+    this.current_index = 0 // Resets The Current Index Of The Active Item
     this.cart.nativeElement.showModal() // Shows The Cart Dialog
-
-    console.log(this.cart_items)
   }
 
   // Method To Close The Cart Dialog
   closeCart():void {
     this.cart.nativeElement.close() // Closes The Cart Dialog
+  }
+
+  // Method For Change The Cart Item
+  changeCartItem(index:number):void {
+    this.current_index = index // Changes The Current Index Of The Active Item
+  }
+
+  // Method For Remove The Item From Cart
+  removeFromCart(index:number):void {
+    this.cartService.removeFromCart(index) // Removes The Item From Cart
+    this.current_index = 0 // Resets The Current Index Of The Active Item
+  }
+
+  // Getter To Get The Total Price
+  get total_price(): number {
+    if(!this.cart_items || this.cart_items.length === 0) {
+      return 0 // Returns 0
+    }
+    
+    const total_in_cents:number = this.cart_items.reduce((sum, item) => sum + item.price, 0) // Calculates The Total Price In Cents
+    
+    return total_in_cents // Returns The Total Price In Cents
   }
 }

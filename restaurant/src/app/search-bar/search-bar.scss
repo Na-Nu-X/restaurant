@@ -48,10 +48,6 @@
     .delete {
         all: unset;
         margin-left: auto;
-    }
-
-    .delete {
-        all: unset;
         color: transparentize($main-color, 0.5);
         cursor: pointer;
     }
