@@ -2,8 +2,12 @@
     <div class="success">
         <div class="icon"><i class="fa-solid fa-check"></i></div> <!-- https://fontawesome.com/icons/check -->
         <h1>Platba prebehla úspešne!</h1>
+        <h2 class="tracking_code">Kód: {{ tracking_code }}</h2>
         <p>Ďakujeme za tvoju objednávku. Naši kuchári sa už pustili do práce a tvoje jedlo bude čoskoro na ceste.</p>
         
-        <a href="/" class="back">Späť domov</a>
+        <div class="buttons">
+            <a class="track_order" [routerLink]="['/objednavka', tracking_code]">Sledovať objednávku</a>
+            <a class="back" href="/">Späť domov</a>
+        </div>
     </div>
 </div>

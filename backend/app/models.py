@@ -1,4 +1,6 @@
 from django.db import models
+import string
+import random
 
 class Dish(models.Model):
     title = models.CharField(
@@ -32,6 +34,11 @@ class Dish(models.Model):
     def __str__(self):
         return self.title
 
+# Function For Generate The Order Tracking Code
+def generate_tracking_code():
+    characters = string.ascii_uppercase + string.digits
+    return ''.join(random.choices(characters, k=6))
+
 class Order(models.Model):
     STATUS_CHOICES = (
         ("PENDING", "Čaká na platbu"),
@@ -40,6 +47,15 @@ class Order(models.Model):
         ("DELIVERING", "Na ceste"),
         ("COMPLETED", "Doručená"),
         ("CANCELLED", "Zrušená")
+    )
+
+    tracking_code = models.CharField(
+        verbose_name="Tracking Code",
+        help_text="Order's First Name.",
+        max_length=6, 
+        unique=True, 
+        blank=True,
+        editable=False
     )
 
     first_name = models.CharField(
@@ -129,8 +145,20 @@ class Order(models.Model):
         null=False
     )
 
+    def save(self, *args, **kwargs):
+        if not self.tracking_code:
+            new_tracking_code = generate_tracking_code()
+            
+            # Generates The Unique Tracking Code
+            while Order.objects.filter(tracking_code=new_tracking_code).exists():
+                new_tracking_code = generate_tracking_code()
+                
+            self.tracking_code = new_tracking_code
+
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return f"Order #{self.id} - {self.last_name} ({self.get_status_display()})"
+        return f"Order #{self.tracking_code} - {self.last_name} ({self.get_status_display()})"
 
 class OrderItem(models.Model):
     order = models.ForeignKey(

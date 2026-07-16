@@ -1,0 +1,27 @@
+<div class="order_container">
+    <div class="order" *ngIf="order_details">
+        <div class="icon"><i class="fa-solid fa-check"></i></div> <!-- https://fontawesome.com/icons/check -->
+
+        <h1>Objednávka #{{ order_details.tracking_code }}</h1>
+
+        <h2 *ngIf="order_details.status === 'PENDING'">Čaká sa na platbu!</h2>
+        <h2 *ngIf="order_details.status === 'PAID'">Platba prebehla úspešne!</h2>
+        <h2 *ngIf="order_details.status === 'PREPARING'">Objednávku pripravujeme!</h2>
+        <h2 *ngIf="order_details.status === 'DELIVERING'">Objednávka je na ceste!</h2>
+        <h2 *ngIf="order_details.status === 'COMPLETED'">Objednávka bola doručená!</h2>
+        <h2 *ngIf="order_details.status === 'CANCELLED'">Objednávka bola zrušená!</h2>
+
+        <p>
+            Ďakujeme {{ order_details.first_name }} za tvoju objednávku. Naši kuchári sa už pustili do práce a tvoje jedlo bude čoskoro na ceste.
+            Objednávka bude doručená na {{ order_details.address }}, {{ order_details.city }}
+        </p>
+
+        <p class="total_price" *ngIf="order_details.cash_on_delivery">Dobierka je {{ (order_details.total_price / 100) | currency:'EUR':'':'1.2-2':'sk-SK' }}<span>€</span></p>
+        
+        <a href="/" class="back">Späť domov</a>
+    </div>
+
+    <div class="not_found_order" *ngIf="!order_details">
+        <h1>Objednávka nebola nájdená!</h1>
+    </div>
+</div>

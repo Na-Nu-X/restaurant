@@ -39,16 +39,34 @@
             font-family: $heading-font;
             font-size: 1.8em;
         }
+
+        .tracking_code {
+            margin-bottom: 10px;
+            font-family: $heading-font;
+            font-size: 1.8em;
+        }
         
         p {
             color: transparentize($main-color, 0.4);
             margin-bottom: 30px;
         }
 
-        .back {
-            @include orange_button;
-            display: block;
-            margin: 0px auto;
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+
+            .track_order {
+                @include yellow_button($width: auto);
+                max-width: 100%;
+            }
+
+            .back {
+                @include orange_button($width: auto);
+                max-width: 100%;
+                // display: block;
+                // margin: 0px auto;
+            }
         }
     }
 }

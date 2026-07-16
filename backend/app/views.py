@@ -114,7 +114,7 @@ def createCheckoutSession(request):
             return JsonResponse({
                 "success": True,
                 "message": "Platba prebehla úspešne.",
-                "url": checkout_session.url
+                "url": f"{checkout_session.url}?code={new_order.tracking_code}"
             }, status=200)
 
         except Exception:
@@ -209,7 +209,8 @@ def createOrder(request):
             return JsonResponse({
                 "success": True,
                 "message": "Objednávka bola prijatá.",
-                "url": f"{front_end_domain}success-order"
+                "tracking_code": new_order.tracking_code,
+                "url": f"{front_end_domain}success-order?code={new_order.tracking_code}"
             }, status=200)
 
         except Exception:
@@ -222,3 +223,33 @@ def createOrder(request):
         "success": False, 
         "message": "Objednávka sa dá uskutočniť len pomocou POST metódy."
     }, status=405)
+
+@csrf_exempt
+def getOrderStatus(request, tracking_code):
+    try:
+        order = Order.objects.get(tracking_code=tracking_code.upper())
+
+        order_details = {
+            "tracking_code": order.tracking_code,
+            "first_name": order.first_name,
+            "last_name": order.last_name,
+            "address": order.address,
+            "city": order.city,
+            "phone_number": order.phone_number,
+            "total_price": order.total_price,
+            "status": order.status,
+            "cash_on_delivery": order.cash_on_delivery,
+            "creation_time": order.creation_time.isoformat()
+        }
+        
+        return JsonResponse({
+            "success": True, 
+            "message": "Objednávka bola nájdená.",
+            "order_details": order_details
+        }, status=200)
+        
+    except Order.DoesNotExist:
+        return JsonResponse({
+            "success": False, 
+            "message": "Objednávka nebola nájdená."
+        }, status=404)
