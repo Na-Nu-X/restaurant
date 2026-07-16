@@ -35,32 +35,7 @@
         }
 
         .order {
-            all: unset;
-            width: 150px;
-            padding: 10px 0px;
-            text-align: center;
-            font-weight: 600;
-            border-radius: $small-border-radius;
-            transition: transform 0.2s ease, background-color 0.2s ease;
-            
-            &:hover {
-                transform: translateY(-2px);
-                cursor: pointer;
-            }
-            
-            &:active {
-                transform: translateY(1px);
-            }
-        }
-
-        .order {
-            background-color: $yellow-color;
-            color: $orange-color;
-            border: 1px solid $orange-color;
-
-            &:hover {
-                background-color: lighten($yellow-color, 2%);
-            }
+            @include yellow_button;
         }
     }
 

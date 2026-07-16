@@ -198,4 +198,46 @@ export class NavigationBar implements OnInit {
       }
     })
   }
+
+  // Method For Order All Items In Cart (Pay With Cash On Delivery)
+  orderAll():void {
+    // If The Cart Is Empty
+    if(!this.cart_items || this.cart_items.length === 0) {
+      alert("Košík je prázdny.") // Shows The Alert
+      return
+    }
+
+    // If The Customer's Delivery Details Isn't Filled
+    if (
+      !this.customer.first_name.trim() ||
+      !this.customer.last_name.trim() ||
+      !this.customer.address.trim() ||
+      !this.customer.city.trim() ||
+      !this.customer.phone_number.trim()
+    ) {
+      alert("Prosím, vyplňte všetky povinné kontaktné údaje pre doručenie.") // Shows The Alert
+      return
+    }
+
+    // Creates The Checkout Session
+    this.paymentService.orderAll(
+      this.cart_items, 
+      this.customer
+    ).subscribe({
+      next:(response) => {
+        if(response && response.success && response.url) {
+          window.location.href = response.url // Redirects To The Responded URL
+        } 
+        
+        else {
+          console.error(response.message) // Shows The Error Message
+        }
+      },
+
+      error:(error) => {
+        console.error(error) // Shows The Error
+        alert("Pri spracovávaní objednávky došlo k chybe.") // Shows The Alert
+      }
+    })
+  }
 }

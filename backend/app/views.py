@@ -21,7 +21,7 @@ def getDishes(request):
     )
 
 @csrf_exempt
-def create_checkout_session(request):
+def createCheckoutSession(request):
     if request.method == "POST":
         try:
             # Gets The Data
@@ -117,8 +117,7 @@ def create_checkout_session(request):
                 "url": checkout_session.url
             }, status=200)
 
-        except Exception as e:
-            print(e)
+        except Exception:
             return JsonResponse({
                 "success": False, 
                 "message": "Pri spracovávaní platby došlo k chybe."
@@ -160,3 +159,66 @@ def stripeWebhook(request):
             pass
 
     return HttpResponse(status=200)
+
+@csrf_exempt
+def createOrder(request):
+    if request.method == "POST":
+        try:
+            # Gets The Data
+
+            front_end_domain = os.environ.get("FRONT_END_DOMAIN_URL", "http://localhost:4200/") # Gets The Front-End Domain URL
+
+            data = json.loads(request.body) # Gets The Data
+            items = data.get("items", []) # Gets The Items
+            customer = data.get("customer", []) # Gets The Customer
+
+            # Calculates The Price
+
+            price = 0 # Stores The Price In Cents Without The Tip
+
+            for one_item in items:
+                if one_item.get("id"):
+                    price += int(one_item.get("price", "0")) * int(one_item.get("quantity", "1"))
+
+            # Processes The Order
+
+            # Saves The New Order
+            new_order = Order.objects.create(
+                first_name=customer.get("first_name", "Neznáme"),
+                last_name=customer.get("last_name", "Neznáme"),
+                address=customer.get("address", "Neznáma"),
+                city=customer.get("city", "Neznáme"),
+                phone_number=customer.get("phone_number", "Neznáme"),
+                message=customer.get("message", None),
+                price=price,
+                total_price=price,
+                status="PENDING",
+                cash_on_delivery=True
+            )
+
+            for one_item in items:
+                # Saves The New Order
+                OrderItem.objects.create(
+                    order=new_order,
+                    dish_id=int(one_item.get("id")) if one_item.get("id") and int(one_item.get("id")) != -1 else None,
+                    quantity=int(one_item.get("quantity", "1")),
+                    price_at_purchase=int(one_item.get("price", "0")),
+                    is_tip=False
+                )
+
+            return JsonResponse({
+                "success": True,
+                "message": "Objednávka bola prijatá.",
+                "url": f"{front_end_domain}success-order"
+            }, status=200)
+
+        except Exception:
+            return JsonResponse({
+                "success": False, 
+                "message": "Pri spracovávaní objednávky došlo k chybe."
+            }, status=500)
+            
+    return JsonResponse({
+        "success": False, 
+        "message": "Objednávka sa dá uskutočniť len pomocou POST metódy."
+    }, status=405)

@@ -96,7 +96,7 @@
     }
 }
 
-// Blue Button
+// Orange Button
 
 @mixin orange_button($width: 150px, $border-radius: $small-border-radius) {
     all: unset;
@@ -114,6 +114,31 @@
     &:focus-visible {
         transform: translateY(-2px);
         background-color: lighten($orange-color, 5%);
+        cursor: pointer;
+    }
+    
+    &:active {
+        transform: translateY(1px);
+    }
+}
+
+// Yellow Button
+
+@mixin yellow_button($width: 150px, $border-radius: $small-border-radius) {
+    all: unset;
+    width: $width;
+    padding: 10px 0px;
+    text-align: center;
+    font-weight: 600;
+    background-color: $yellow-color;
+    color: $orange-color;
+    border: 1px solid $orange-color;
+    border-radius: $border-radius;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+    
+    &:hover {
+        transform: translateY(-2px);
+        background-color: lighten($yellow-color, 2%);
         cursor: pointer;
     }
     
@@ -245,7 +270,7 @@
     }
 
     &::-webkit-scrollbar-thumb {
-        background-color: darken($secondary-color, 40%);
+        background: darken($secondary-color, 10%);
         border-radius: 2.5px;
 
         &:hover {
@@ -255,7 +280,7 @@
     }
 
     &::-webkit-scrollbar-track {
-        background-color: lighten($main-color, 20%);
+        background: darken($secondary-color, 5%);
         border-radius: 2.5px;
     }
 }

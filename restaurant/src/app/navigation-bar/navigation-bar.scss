@@ -96,7 +96,7 @@
     transform: translate(-50%, -50%);
     max-width: 500px;
     width: 100%;
-    padding: 20px;
+    padding: 5px 5px 5px 0px;
     background-color: $light-yellow-color;
     border: none;
     border-radius: $medium-border-radius;
@@ -106,102 +106,288 @@
         backdrop-filter: blur(5px); 
     }
 
-    .top {
-        display: flex;
-        justify-content: space-between;
-        gap: 10px;
-        margin: 0px 30px;
+    .cart_modal_container {
+        @include scrollbar;
+        max-height: 800px;
+        padding: 15px 15px 15px 20px;
 
-        h2 {
-            line-height: 1;
-            margin: 0px auto;
-            padding-left: 22.5px;
-            font-family: $heading-font;
-            font-size: 1.8em;
-            color: $main-color;
-        }
-
-        .close {
-            all: unset;
-            color: $orange-color;
-            font-size: 2em;
-            transition: color 0.2s ease;
-            
-            &:hover {
-                color: darken($orange-color, 10%);
-                cursor: pointer;
-            }
-
-            .fa-xmark {
-                display: block;
-            }
-        }
-    }
-
-    .middle {
-        width: 100%;
-        padding: 0px 50px;
-        overflow: hidden;
-
-        .empty_message {
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .all_items {
+        .top {
             display: flex;
-            gap: 20px;
+            justify-content: space-between;
+            gap: 10px;
+            margin: 0px 30px;
+    
+            h2 {
+                line-height: 1;
+                margin: 0px auto;
+                padding-left: 22.5px;
+                font-family: $heading-font;
+                font-size: 1.8em;
+                color: $main-color;
+            }
+    
+            .close {
+                all: unset;
+                color: $orange-color;
+                font-size: 2em;
+                transition: color 0.2s ease;
+                
+                &:hover {
+                    color: darken($orange-color, 10%);
+                    cursor: pointer;
+                }
+    
+                .fa-xmark {
+                    display: block;
+                }
+            }
+        }
+    
+        .middle {
             width: 100%;
-            padding: 20px 20px 30px;
-            transition: transform 0.3s ease;
-
-            .one_item {
+            padding: 0px 50px;
+            overflow: hidden;
+    
+            .empty_message {
+                margin-top: 20px;
+                text-align: center;
+            }
+    
+            .all_items {
+                display: flex;
+                gap: 20px;
+                width: 100%;
+                padding: 20px 20px 30px;
+                transition: transform 0.3s ease;
+    
+                .one_item {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+                    flex: 0 0 100%;
+                    transform: scale(1);
+                    transform-origin: center;
+                    width: 100%;
+                    padding: 15px;
+                    background-color: $secondary-color; 
+                    border-radius: $medium-border-radius;
+                    box-shadow: 0 4px 6px transparentize($main-color, 0.92), 0 2px 4px transparentize($main-color, 0.95);
+                    transition: transform 0.3s ease, box-shadow 0.3s ease;
+                
+                    &:hover {
+                        transform: scale(1.02);
+                        box-shadow: 0 10px 20px transparentize($main-color, 0.82), 0 4px 6px transparentize($main-color, 0.88);
+                        cursor: pointer;
+                    }
+    
+                    img {
+                        max-width: 100%;
+                        width: 100%;
+                        aspect-ratio: 1 / 1;
+                        object-fit: cover;
+                        object-position: center;
+                        border-radius: $medium-border-radius;
+                    }
+            
+                    .title {
+                        margin-bottom: 10px;
+                        text-align: center;
+                        font-family: $heading-font;
+                        font-size: 1.2em;
+                        font-weight: bold;
+                    }
+    
+                    .bottom {
+                        all: unset;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        width: 100%;
+                        padding-top: 10px;
+            
+                        .price {
+                            font-size: 1.2em;
+                            font-weight: bold;
+                            line-height: 1;
+                        
+                            span {
+                                font-size: 0.6em;
+                                vertical-align: super;
+                                margin-left: 2px;
+                            }
+                        }
+            
+                        .remove_from_cart {
+                            all: unset;
+                            display: flex;
+                            align-items: center;
+                            gap: 10px;
+                            padding: 10px 15px;
+                            background-color: lighten($main-color, 15%);
+                            color: $secondary-color; 
+                            border-radius: $small-border-radius;
+                            font-weight: bold;
+                            font-size: 0.9em;
+                            cursor: pointer;
+                            transition: background-color 0.2s ease, transform 0.1s ease;
+                    
+                            &:hover {
+                                background-color: $main-color;
+                            }
+                    
+                            &:active {
+                                transform: scale(0.95);
+                            }
+                        }
+                    }
+                }
+            }
+    
+            .bars {
+                display: flex;
+                justify-content: center;
+                gap: 10px;
+                margin-bottom: 20px;
+                padding: 0px 20px;
+            
+                .one_bar {
+                    flex: 1;
+                    height: 6px;
+                    background: darken($secondary-color, 5%);
+                    border-radius: $medium-border-radius;
+                    cursor: pointer;
+                    transition: background-color 0.3s ease, transform 0.2s ease;
+            
+                    &:hover {
+                        background: darken($secondary-color, 10%);
+                    }
+                    
+                    &.active {
+                        background: darken($secondary-color, 10%);
+                        transform: scaleY(1.2);
+                    }
+                }
+            }
+        }
+    
+        .bottom {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding-top: 20px;
+            border-top: 1px solid darken($secondary-color, 6%);
+    
+            .customer_form {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+                max-width: 500px;
+                margin: 0px auto;
+                padding: 20px;
+                background-color: $secondary-color;
+                border-radius: $medium-border-radius;
+                box-shadow: 0 4px 6px transparentize($main-color, 0.92), 0 2px 4px transparentize($main-color, 0.95);
+              
+                .name_container,
+                .address_container {
+                    display: flex;
+                    gap: 15px;
+              
+                    input {
+                        flex: 1;
+                    }
+    
+                    @media (max-width: 480px) {
+                        flex-direction: column;
+                        gap: 10px;
+                    }
+                }
+              
+                input[type="text"],
+                input[type="tel"],
+                textarea {
+                    @include form_input;
+                }
+              
+                textarea {
+                    resize: none;
+                    height: 80px;
+                }
+            }
+          
+            .tip_container {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 10px 20px;
+                background-color: darken($secondary-color, 3%);
+                border-radius: $small-border-radius;
+              
+                .tip_slider {
+                    flex: 1;
+                    width: 100%;
+                    height: 6px;
+                    margin-right: 20px;
+                    background: darken($secondary-color, 6%);
+                    border-radius: $medium-border-radius;
+                    outline: none;
+                    -webkit-appearance: none;
+                    appearance: none;
+                    
+                    &::-webkit-slider-thumb {
+                        width: 20px;
+                        height: 20px;
+                        background: $orange-color;
+                        box-shadow: 0 4px 6px transparentize($main-color, 0.92), 0 2px 4px transparentize($main-color, 0.95);
+                        border-radius: 50%;
+                        -webkit-appearance: none;
+                        appearance: none;
+                        transition: transform 0.2s ease;
+                        
+                        &:hover {
+                            transform: scale(1.1);
+                            cursor: pointer;
+                        }
+                    }
+                
+          
+                    &::-moz-range-thumb {
+                        width: 20px;
+                        height: 20px;
+                        background: $orange-color;
+                        box-shadow: 0 4px 6px transparentize($main-color, 0.92), 0 2px 4px transparentize($main-color, 0.95);
+                        border: none;
+                        border-radius: 50%;
+                        transition: transform 0.2s ease;
+                        
+                        &:hover {
+                            transform: scale(1.1);
+                            cursor: pointer;
+                        }
+                    }
+                }
+          
+                .tip_amount {
+                    font-weight: bold;
+                    color: transparentize($main-color, 0.4);
+                }
+            }
+          
+            .buttons {
                 display: flex;
                 flex-direction: column;
                 gap: 10px;
-                flex: 0 0 100%;
-                transform: scale(1);
-                transform-origin: center;
-                width: 100%;
-                padding: 15px;
-                background-color: $secondary-color; 
-                border-radius: $medium-border-radius;
-                box-shadow: 0 4px 6px transparentize($main-color, 0.92), 0 2px 4px transparentize($main-color, 0.95);
-                transition: transform 0.3s ease, box-shadow 0.3s ease;
-            
-                &:hover {
-                    transform: scale(1.02);
-                    box-shadow: 0 10px 20px transparentize($main-color, 0.82), 0 4px 6px transparentize($main-color, 0.88);
-                    cursor: pointer;
-                }
-
-                img {
-                    max-width: 100%;
-                    width: 100%;
-                    aspect-ratio: 1 / 1;
-                    object-fit: cover;
-                    object-position: center;
-                    border-radius: $medium-border-radius;
-                }
-        
-                .title {
-                    margin-bottom: 10px;
-                    text-align: center;
-                    font-family: $heading-font;
-                    font-size: 1.2em;
-                    font-weight: bold;
-                }
-
-                .bottom {
-                    all: unset;
+    
+                .checkout {
+                    @include orange_button($width: auto);
                     display: flex;
                     justify-content: space-between;
-                    align-items: center;
-                    width: 100%;
-                    padding-top: 10px;
+                    gap: 10px;
+                    max-width: 100%;
+                    padding: 10px 20px;
         
-                    .price {
-                        font-size: 1.2em;
+                    .total_price {
+                        font-size: 1.5em;
                         font-weight: bold;
                         line-height: 1;
                     
@@ -211,180 +397,27 @@
                             margin-left: 2px;
                         }
                     }
+                }
         
-                    .remove_from_cart {
-                        all: unset;
-                        display: flex;
-                        align-items: center;
-                        gap: 10px;
-                        padding: 10px 15px;
-                        background-color: lighten($main-color, 15%);
-                        color: $secondary-color; 
-                        border-radius: $small-border-radius;
-                        font-weight: bold;
-                        font-size: 0.9em;
-                        cursor: pointer;
-                        transition: background-color 0.2s ease, transform 0.1s ease;
-                
-                        &:hover {
-                            background-color: $main-color;
-                        }
-                
-                        &:active {
-                            transform: scale(0.95);
-                        }
-                    }
-                }
-            }
-        }
-
-        .bars {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            padding: 0px 20px;
-        
-            .one_bar {
-                flex: 1;
-                height: 6px;
-                background: darken($secondary-color, 5%);
-                border-radius: $medium-border-radius;
-                cursor: pointer;
-                transition: background-color 0.3s ease, transform 0.2s ease;
-        
-                &:hover {
-                    background: darken($secondary-color, 10%);
-                }
-                
-                &.active {
-                    background: darken($secondary-color, 10%);
-                    transform: scaleY(1.2);
-                }
-            }
-        }
-    }
-
-    .bottom {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        padding-top: 20px;
-        border-top: 1px solid darken($secondary-color, 6%);
-
-        .customer_form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            max-width: 500px;
-            margin: 0px auto;
-            padding: 20px;
-            background-color: $secondary-color;
-            border-radius: $medium-border-radius;
-            box-shadow: 0 4px 6px transparentize($main-color, 0.92), 0 2px 4px transparentize($main-color, 0.95);
-          
-            .name_container,
-            .address_container {
-                display: flex;
-                gap: 15px;
-          
-                input {
-                    flex: 1;
-                }
-
-                @media (max-width: 480px) {
-                    flex-direction: column;
+                .cash_on_delivery {
+                    @include yellow_button($width: auto);
+                    display: flex;
+                    justify-content: space-between;
                     gap: 10px;
-                }
-            }
-          
-            input[type="text"],
-            input[type="tel"],
-            textarea {
-                @include form_input;
-            }
-          
-            textarea {
-                resize: none;
-                height: 80px;
-            }
-        }
-      
-        .tip_container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 20px;
-            background-color: darken($secondary-color, 3%);
-            border-radius: $small-border-radius;
-          
-            .tip_slider {
-                flex: 1;
-                width: 100%;
-                height: 6px;
-                margin-right: 20px;
-                background: darken($secondary-color, 6%);
-                border-radius: $medium-border-radius;
-                outline: none;
-                -webkit-appearance: none;
-                appearance: none;
-                
-                &::-webkit-slider-thumb {
-                    width: 20px;
-                    height: 20px;
-                    background: $orange-color;
-                    box-shadow: 0 4px 6px transparentize($main-color, 0.92), 0 2px 4px transparentize($main-color, 0.95);
-                    border-radius: 50%;
-                    -webkit-appearance: none;
-                    appearance: none;
-                    transition: transform 0.2s ease;
+                    max-width: 100%;
+                    padding: 10px 20px;
+        
+                    .total_price {
+                        font-size: 1.5em;
+                        font-weight: bold;
+                        line-height: 1;
                     
-                    &:hover {
-                        transform: scale(1.1);
-                        cursor: pointer;
+                        span {
+                            font-size: 0.6em;
+                            vertical-align: super;
+                            margin-left: 2px;
+                        }
                     }
-                }
-            
-      
-                &::-moz-range-thumb {
-                    width: 20px;
-                    height: 20px;
-                    background: $orange-color;
-                    box-shadow: 0 4px 6px transparentize($main-color, 0.92), 0 2px 4px transparentize($main-color, 0.95);
-                    border: none;
-                    border-radius: 50%;
-                    transition: transform 0.2s ease;
-                    
-                    &:hover {
-                        transform: scale(1.1);
-                        cursor: pointer;
-                    }
-                }
-            }
-      
-            .tip_amount {
-                font-weight: bold;
-                color: transparentize($main-color, 0.4);
-            }
-        }
-      
-        .checkout {
-            @include orange_button($width: auto);
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            max-width: 100%;
-            padding: 10px 20px;
-
-            .total_price {
-                font-size: 1.5em;
-                font-weight: bold;
-                line-height: 1;
-            
-                span {
-                    font-size: 0.6em;
-                    vertical-align: super;
-                    margin-left: 2px;
                 }
             }
         }

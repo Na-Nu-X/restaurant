@@ -114,6 +114,13 @@ class Order(models.Model):
         unique=True, 
         null=True
     )
+
+    cash_on_delivery = models.BooleanField(
+        verbose_name="Cash On Delivery", 
+        help_text="Stores information on whether the order will be paid for via cash on delivery.",
+        default=False, 
+        null=False
+    )
     
     creation_time = models.DateTimeField(
         verbose_name="Creation Time",
