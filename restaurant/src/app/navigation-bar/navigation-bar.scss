@@ -1,4 +1,5 @@
 @import "../../partials/variables";
+@import "../../partials/mixins";
 
 .navigation_bar {
     position: fixed;
@@ -98,7 +99,7 @@
     padding: 20px;
     background-color: $light-yellow-color;
     border: none;
-    border-radius: $big-border-radius;
+    border-radius: $medium-border-radius;
 
     &::backdrop {
         background-color: transparentize($main-color, 0.8);
@@ -270,6 +271,44 @@
         gap: 20px;
         padding-top: 20px;
         border-top: 1px solid darken($secondary-color, 6%);
+
+        .customer_form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 500px;
+            margin: 0px auto;
+            padding: 20px;
+            background-color: $secondary-color;
+            border-radius: $medium-border-radius;
+            box-shadow: 0 4px 6px transparentize($main-color, 0.92), 0 2px 4px transparentize($main-color, 0.95);
+          
+            .name_container,
+            .address_container {
+                display: flex;
+                gap: 15px;
+          
+                input {
+                    flex: 1;
+                }
+
+                @media (max-width: 480px) {
+                    flex-direction: column;
+                    gap: 10px;
+                }
+            }
+          
+            input[type="text"],
+            input[type="tel"],
+            textarea {
+                @include form_input;
+            }
+          
+            textarea {
+                resize: none;
+                height: 80px;
+            }
+        }
       
         .tip_container {
             display: flex;
@@ -330,29 +369,12 @@
         }
       
         .checkout {
-            all: unset;
+            @include orange_button($width: auto);
             display: flex;
             justify-content: space-between;
             gap: 10px;
             max-width: 100%;
             padding: 10px 20px;
-            text-align: center;
-            font-weight: 600;
-            background-color: $orange-color;
-            color: $secondary-color;
-            border: 1px solid $light-yellow-color;
-            border-radius: $small-border-radius;
-            transition: transform 0.2s ease, background-color 0.2s ease;
-            cursor: pointer;
-
-            &:hover {
-                transform: translateY(-2px);
-                background-color: lighten($orange-color, 5%);
-            }
-            
-            &:active {
-                transform: translateY(1px);
-            }
 
             .total_price {
                 font-size: 1.5em;

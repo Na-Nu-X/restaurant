@@ -13,15 +13,25 @@ import {
   CommonModule
 } from "@angular/common"
 
+import { FormsModule } from "@angular/forms"
 import { Cart } from "../services/cart"
 import { Payment } from "../services/payment"
 import { Observable } from "rxjs"
 
 import type { CartItem } from "../services/cart"
 
+export interface Customer {
+  first_name:string,
+  last_name:string,
+  address:string,
+  city:string,
+  phone_number:string,
+  message:string|null
+}
+
 @Component({
   selector: "app-navigation-bar",
-  imports: [AsyncPipe, CurrencyPipe, CommonModule],
+  imports: [AsyncPipe, CurrencyPipe, CommonModule, FormsModule],
   templateUrl: "./navigation-bar.html",
   styleUrl: "./navigation-bar.scss",
 })
@@ -33,6 +43,16 @@ export class NavigationBar implements OnInit {
   cart_items!:CartItem[]
   current_index:number = 0 // Stores The Current Index Of The Active Item
   selected_tip:number = 10 // Stores The Selected Tip Percentage (10% By Default)
+
+  // Stores The Customer's Delivery Data
+  customer:Customer = {
+    first_name: "",
+    last_name: "",
+    address: "",
+    city: "",
+    phone_number: "",
+    message: null
+  }
   
   constructor(private cartService:Cart, private paymentService:Payment) {
     afterNextRender(() => {
@@ -141,10 +161,27 @@ export class NavigationBar implements OnInit {
       return
     }
 
+    // If The Customer's Delivery Details Isn't Filled
+    if (
+      !this.customer.first_name.trim() ||
+      !this.customer.last_name.trim() ||
+      !this.customer.address.trim() ||
+      !this.customer.city.trim() ||
+      !this.customer.phone_number.trim()
+    ) {
+      alert("Prosím, vyplňte všetky povinné kontaktné údaje pre doručenie.") // Shows The Alert
+      return
+    }
+
     const tip_in_cents:number = Math.round(this.total_price * (this.selected_tip / 100)) // Calculates The Tip Amount In Cents
 
     // Creates The Checkout Session
-    this.paymentService.createCheckoutSession(this.cart_items, tip_in_cents, this.selected_tip).subscribe({
+    this.paymentService.createCheckoutSession(
+      this.cart_items, 
+      tip_in_cents, 
+      this.selected_tip,
+      this.customer
+    ).subscribe({
       next:(response) => {
         if(response && response.success && response.url) {
           window.location.href = response.url // Redirects To The Responded URL

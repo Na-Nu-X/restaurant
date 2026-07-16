@@ -3,6 +3,7 @@ import { HttpClient } from "@angular/common/http"
 import { Observable } from "rxjs"
 
 import type { CartItem } from "./cart"
+import type { Customer } from "../navigation-bar/navigation-bar"
 
 @Injectable({
   providedIn: "root"
@@ -13,7 +14,7 @@ export class Payment {
   constructor(private http: HttpClient) {}
 
   // Method For Create The Checkout Session
-  createCheckoutSession(items:CartItem[], tip_in_cents:number, selected_tip:number):Observable<{ 
+  createCheckoutSession(items:CartItem[], tip_in_cents:number, selected_tip:number, customer:Customer):Observable<{ 
         success:string,
         message:string,
         url?:string 
@@ -28,14 +29,18 @@ export class Payment {
           title: `Tringelt (${selected_tip}%)`,
           description: "",
           price: tip_in_cents,
+          quantity: 1,
           image: "tip"
         })
       }
 
+    // Returns The Data
     return this.http.post<{ 
       success:string,
       message:string,
       url?:string 
-    }>(this.api_url, { items: items_to_send }) // Returns The Data
+    }>(this.api_url, { 
+      items: items_to_send, customer 
+    })
   }
 }

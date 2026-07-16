@@ -1,4 +1,5 @@
 @import "../../partials/variables";
+@import "../../partials/mixins";
 
 .banner {
     display: flex;
@@ -29,7 +30,10 @@
         gap: 15px;
         flex-wrap: wrap;
 
-        .book,
+        .book {
+            @include orange_button;
+        }
+
         .order {
             all: unset;
             width: 150px;
@@ -46,16 +50,6 @@
             
             &:active {
                 transform: translateY(1px);
-            }
-        }
-    
-        .book {
-            background-color: $orange-color;
-            color: $secondary-color;
-            border: 1px solid $light-yellow-color;
-
-            &:hover {
-                background-color: lighten($orange-color, 5%);
             }
         }
 

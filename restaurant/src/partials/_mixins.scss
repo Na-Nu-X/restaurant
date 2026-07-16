@@ -1,0 +1,278 @@
+@import "./variables";
+
+/***************
+ General Mixins
+***************/
+
+// Center Positioning
+
+@mixin position_center($position: absolute) {
+    position: $position;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@mixin flex_center($direction: row) {
+    display: flex;
+    flex-direction: $direction;
+    align-items: center;
+    justify-content: center;
+}
+
+@mixin loading($size: 10px) {
+    width: $size;
+    height: $size;
+    font-size: $size;
+    color: darken($secondary-color, 20%);
+    border-radius: 50%;
+    transition: opacity 1s ease, visibility 1s ease;
+    animation: preloaderSpin 1s infinite linear;
+    z-index: 3000;
+
+    &.hidden {
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    /***********
+     Key Frames
+    ***********/
+
+    @keyframes preloaderSpin {
+        0%,
+        100% {
+            box-shadow: 0 -3em 0 0.2em, 
+            2em -2em 0 0em, 3em 0 0 -1em, 
+            2em 2em 0 -1em, 0 3em 0 -1em, 
+            -2em 2em 0 -1em, -3em 0 0 -1em, 
+            -2em -2em 0 0;
+        }
+    
+        12.5% {
+            box-shadow: 0 -3em 0 0, 2em -2em 0 0.2em, 
+            3em 0 0 0, 2em 2em 0 -1em, 0 3em 0 -1em, 
+            -2em 2em 0 -1em, -3em 0 0 -1em, 
+            -2em -2em 0 -1em;
+        }
+    
+        25% {
+            box-shadow: 0 -3em 0 -0.5em, 
+            2em -2em 0 0, 3em 0 0 0.2em, 
+            2em 2em 0 0, 0 3em 0 -1em, 
+            -2em 2em 0 -1em, -3em 0 0 -1em, 
+            -2em -2em 0 -1em;
+        }
+    
+        37.5% {
+            box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em,
+            3em 0em 0 0, 2em 2em 0 0.2em, 0 3em 0 0em, 
+            -2em 2em 0 -1em, -3em 0em 0 -1em, -2em -2em 0 -1em;
+        }
+    
+        50% {
+            box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em,
+            3em 0 0 -1em, 2em 2em 0 0em, 0 3em 0 0.2em, 
+            -2em 2em 0 0, -3em 0em 0 -1em, -2em -2em 0 -1em;
+        }
+    
+        62.5% {
+            box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em,
+            3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 0, 
+            -2em 2em 0 0.2em, -3em 0 0 0, -2em -2em 0 -1em;
+        }
+    
+        75% {
+            box-shadow: 0em -3em 0 -1em, 2em -2em 0 -1em, 
+            3em 0em 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, 
+            -2em 2em 0 0, -3em 0em 0 0.2em, -2em -2em 0 0;
+        }
+        
+        87.5% {
+            box-shadow: 0em -3em 0 0, 2em -2em 0 -1em, 
+            3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, 
+            -2em 2em 0 0, -3em 0em 0 0, -2em -2em 0 0.2em;
+        }
+    }
+}
+
+// Blue Button
+
+@mixin orange_button($width: 150px, $border-radius: $small-border-radius) {
+    all: unset;
+    width: $width;
+    padding: 10px 0px;
+    text-align: center;
+    font-weight: 600;
+    background-color: $orange-color;
+    color: $secondary-color;
+    border: 1px solid $light-yellow-color;
+    border-radius: $border-radius;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+
+    &:hover,
+    &:focus-visible {
+        transform: translateY(-2px);
+        background-color: lighten($orange-color, 5%);
+        cursor: pointer;
+    }
+    
+    &:active {
+        transform: translateY(1px);
+    }
+}
+
+// Tooltip
+
+@mixin tooltip($top: 5px) {
+    &::before,
+    &::after {
+        --scale: 0;
+
+        position: absolute;
+        top: $top;
+        left: 50%;
+        transform: translateX(-50%) translateY(var(--translate-y, 0)) scale(var(--scale));
+        transform-origin: bottom center;
+        transition: 0.3s transform 0s;
+    }
+
+    &::before {
+        --translate-y: calc(-100% - 10px);
+
+        content: attr(data-tooltip);
+        width: fit-content;
+        max-width: 100%;
+        padding: 5px;
+        text-align: center;
+        border-radius: $small-border-radius;
+        font-size: 0.8em;
+        background-color: transparentize($secondary-color, 0.8);
+        color: $secondary-color;
+        text-shadow: 0px 0px 5px $main-color;
+    }
+
+    &::after {
+        --translate-y: calc(-1 * 10px);
+        
+        content: "";
+        border: 10px solid transparent;
+        border-top-color: transparentize($secondary-color, 0.8);
+        transform-origin: top center;
+    }
+
+    &:hover {
+        &::before,
+        &::after {
+            --scale: 1;
+            transition: 0.3s transform 1s;
+        }
+    }
+}
+
+// Form Input
+
+@mixin form_input {
+    width: 100%;
+    padding: 10px 15px;
+    background-color: darken($secondary-color, 3%);
+    color: transparentize($main-color, 0.4);
+    border: 1px solid darken($secondary-color, 10%);
+    border-radius: $small-border-radius;
+    font-family: inherit;
+    outline: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+
+    &::placeholder {
+        color: darken($secondary-color, 40%);
+    }
+
+    &:focus-visible {
+        background-color: $secondary-color;
+        border-color: $orange-color;
+        box-shadow: 0 0 0 3px transparentize($orange-color, 0.8);
+    }
+
+    &:-webkit-autofill {
+        -webkit-text-fill-color: transparentize($main-color, 0.4);
+        transition: width 0.3s ease, background-color 9999s ease;
+
+        &:hover,
+        &:focus {
+            -webkit-text-fill-color: transparentize($main-color, 0.4);
+            transition: width 0.3s ease, background-color 9999s ease;
+        }
+    }
+}
+
+// Circle Decoration
+
+@mixin circle_decoration($top: auto, $right: auto, $bottom: auto, $left: auto, $width: 100px, $height: 100px, $color: transparentize($blue-color, 0.95)) {
+    content: "";
+    position: absolute;
+    top: $top;
+    right: $right;
+    bottom: $bottom;
+    left: $left;
+    width: $width;
+    height: $height;
+    border-radius: 100%;
+    background-color: $color;
+    z-index: -1;
+}
+
+// Scrollbar
+
+@mixin scrollbar($direction: "vertical") {
+    // Vertical Scrollbar
+    @if $direction == "vertical" {
+        overflow-x: hidden;
+        overflow-y: auto;
+
+        &::-webkit-scrollbar {
+            width: 5px;
+        }
+    }
+
+    // Horizontal Scrollbar
+    @else if $direction == "horizontal" {
+        overflow-x: auto;
+        overflow-y: hidden;
+
+        &::-webkit-scrollbar {
+            height: 5px;
+        }
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: darken($secondary-color, 40%);
+        border-radius: 2.5px;
+
+        &:hover {
+            background-color: darken($secondary-color, 20%);
+            cursor: pointer;
+        }
+    }
+
+    &::-webkit-scrollbar-track {
+        background-color: lighten($main-color, 20%);
+        border-radius: 2.5px;
+    }
+}
+
+// Crop Text
+
+@mixin crop_text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+// Focus
+
+@mixin focus {
+    &:focus-visible {
+        outline: 2px solid $red-color !important;
+        outline-offset: 2px !important;
+    }
+}

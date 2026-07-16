@@ -56,6 +56,21 @@
     </div>
 
     <div class="bottom" title="Platba" aria-label="Platba" *ngIf="cart_items && cart_items.length > 0">
+        <form class="customer_form" action="">
+            <div class="name_container">
+                <input type="text" name="first_name" placeholder="Meno" maxlength="20" required [(ngModel)]="customer.first_name">
+                <input type="text" name="last_name" placeholder="Priezvisko" maxlength="50" required [(ngModel)]="customer.last_name">
+            </div>
+
+            <div class="address_container">
+                <input type="text" name="address" placeholder="Adresa" maxlength="100" required [(ngModel)]="customer.address">
+                <input type="text" name="city" placeholder="Mesto" maxlength="50" required [(ngModel)]="customer.city">
+            </div>
+        
+            <input type="tel" name="phone_number" placeholder="Telefón" maxlength="50" required [(ngModel)]="customer.phone_number">
+            <textarea name="message" placeholder="Správa..." rows="5" maxlength="100" [(ngModel)]="customer.message"></textarea>
+        </form>
+
         <div class="tip_container">
             <input 
                 #tip_slider 
