@@ -1,17 +1,19 @@
 <section class="all_dishes">
-    <article class="one_dish" *ngFor="let dish of filtered_dishes">
+    <article class="one_dish" *ngFor="let one_dish of filtered_dishes">
         <div class="rating">
-            <i class="fa-solid fa-star"></i> 4,3 <!-- https://fontawesome.com/icons/star -->
+            <span class="amount">({{ one_dish.rating_amount || 0 }})</span>
+            <i class="fa-solid fa-star"></i> <!-- https://fontawesome.com/icons/star -->
+            <span class="average">{{ one_dish.average_rating || 0 }}</span>
         </div>
 
-        <img src="images/{{ dish.image }}" alt="">
+        <img src="images/{{ one_dish.image }}" alt="">
 
-        <p class="title">{{ dish.title }}</p>
-        <p class="description">{{ dish.description }}</p>
+        <p class="title">{{ one_dish.title }}</p>
+        <p class="description">{{ one_dish.description }}</p>
 
         <div class="bottom">
-            <p class="price">{{ (dish.price / 100) | currency:'EUR':'':'1.2-2':'sk-SK' }}<span>€</span></p>
-            <button class="add_to_cart" title="Pridať do košíka" aria-label="Pridať do košíka" (click)="addToCart(dish)"><i class="fa-solid fa-basket-shopping"></i> Pridať</button> <!-- https://fontawesome.com/icons/basket-shopping -->
+            <p class="price">{{ (one_dish.price / 100) | currency:'EUR':'':'1.2-2':'sk-SK' }}<span>€</span></p>
+            <button class="add_to_cart" title="Pridať do košíka" aria-label="Pridať do košíka" (click)="addToCart(one_dish)"><i class="fa-solid fa-basket-shopping"></i> Pridať</button> <!-- https://fontawesome.com/icons/basket-shopping -->
         </div>
     </article>
 </section>

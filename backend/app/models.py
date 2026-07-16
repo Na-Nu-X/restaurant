@@ -1,6 +1,7 @@
 from django.db import models
 import string
 import random
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Dish(models.Model):
     title = models.CharField(
@@ -203,3 +204,51 @@ class OrderItem(models.Model):
     def __str__(self):
         dish_name = self.dish.title if self.dish else "Zmazané jedlo"
         return f"{self.quantity}x {dish_name} (Order #{self.order.id})"
+
+class Rating(models.Model):
+    order = models.ForeignKey(
+        Order, 
+        verbose_name="Order",
+        help_text="The order to which the rating belongs.", 
+        on_delete=models.CASCADE,
+        related_name="ratings", 
+        null=False
+    )
+    
+    dish = models.ForeignKey(
+        Dish, 
+        verbose_name="Dish",
+        help_text="The dish to which the rating belongs.", 
+        on_delete=models.CASCADE, 
+        related_name="ratings",
+        null=False
+    )
+
+    rating = models.PositiveIntegerField(
+        verbose_name="Rating", 
+        help_text="Rating from 1 to 5.", 
+        validators=[MinValueValidator(1), MaxValueValidator(5)],
+        default=1, 
+        null=False
+    )
+
+    # comment = models.TextField(
+    #     verbose_name="Comment", 
+    #     help_text="Comment content.", 
+    #     max_length=100, 
+    #     null=True,
+    #     blank=True
+    # )
+
+    creation_time = models.DateTimeField(
+        verbose_name="Creation Time",
+        help_text="Time of the rating submission.", 
+        auto_now_add=True,
+        null=False
+    )
+
+    class Meta:
+        unique_together = ("dish", "order")
+
+    def __str__(self):
+        return f"{self.dish.name} - {self.stars} stars" if self.stars > 1 else f"{self.dish.name} - {self.stars} star"

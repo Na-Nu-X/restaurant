@@ -7,7 +7,9 @@ export interface CartItem {
     description:string,
     price:number,
     quantity:number,
-    image:string
+    image:string,
+    average_rating?:number,
+    rating_amount?:number
 }
 
 @Injectable({

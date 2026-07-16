@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from .models import Dish, Order, OrderItem
+from .models import Dish, Order, OrderItem, Rating
 import stripe
 import json
 from django.conf import settings
@@ -8,17 +8,26 @@ from django.views.decorators.csrf import csrf_exempt
 import os
 import urllib.parse
 from django.http import HttpResponse
+from django.db.models import Avg, Count
+from django.db.models.functions import Round
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 def getDishes(request):
-    dishes = Dish.objects.all().values() # Gets All The Dishes
+    # Gets All The Dishes
+    dishes = Dish.objects.annotate(
+        average_rating=Round(Avg("ratings__rating"), 1),
+        rating_amount=Count("ratings")
+    ).values(
+        "id", "title", "description", "price", "image", "average_rating", "rating_amount"
+    )
 
     # Sends The Data As A JSON Response
-    return JsonResponse(
-        list(dishes), 
-        safe=False
-    )
+    return JsonResponse({
+        "success": True,
+        "message": "Položky boli nájdené.",
+        "dishes": list(dishes), 
+    }, status=200, safe=False)
 
 @csrf_exempt
 def createCheckoutSession(request):
@@ -192,7 +201,7 @@ def createOrder(request):
                 message=customer.get("message", None),
                 price=price,
                 total_price=price,
-                status="PENDING",
+                status="PREPARING",
                 cash_on_delivery=True
             )
 
@@ -230,6 +239,7 @@ def getOrderStatus(request, tracking_code):
         order = Order.objects.get(tracking_code=tracking_code.upper())
 
         order_details = {
+            "id": order.id,
             "tracking_code": order.tracking_code,
             "first_name": order.first_name,
             "last_name": order.last_name,
@@ -251,5 +261,73 @@ def getOrderStatus(request, tracking_code):
     except Order.DoesNotExist:
         return JsonResponse({
             "success": False, 
-            "message": "Objednávka nebola nájdená."
+            "message": "Objednávku sa nepodarilo nájsť."
         }, status=404)
+
+@csrf_exempt
+def getOrderedItems(request, id):
+    items = OrderItem.objects.filter(order_id=id)
+
+    # Creates Valid Format Of Ordered Items For JSON Response
+    ordered_items = [
+        {
+            "id": one_item.dish.id,
+            "title": one_item.dish.title,
+            "description": one_item.dish.description,
+            "price": one_item.price_at_purchase,
+            "quantity": one_item.quantity,
+            "image": one_item.dish.image
+        }
+
+        for one_item in items
+        if one_item.dish and not one_item.is_tip
+    ]
+    
+    return JsonResponse({
+        "success": True, 
+        "message": "Položky boli nájdené.",
+        "ordered_items": ordered_items
+    }, status=200)
+
+@csrf_exempt
+def sendRating(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body) # Gets The Data
+            tracking_code = data.get("tracking_code") # Gets The Tracking Code
+            all_ratings = data.get("all_ratings", []) # Gets All Ratings
+
+            order = Order.objects.get(tracking_code=tracking_code.upper(), status="COMPLETED") # Gets The Order
+
+            for one_item in all_ratings:
+                dish_id = one_item.get("dish_id") # Gets The Dish ID
+                rating = one_item.get("rating") # Gets The Rating
+
+                # Creates Or Updates The Rating
+                Rating.objects.update_or_create(
+                    order=order,
+                    dish_id=dish_id,
+                    defaults={"rating": rating}
+                )
+
+            return JsonResponse({
+                "success": True, 
+                "message": "Hodnotenia boli úspešne odoslané."
+            }, status=200)
+
+        except Order.DoesNotExist:
+            return JsonResponse({
+                "success": False, 
+                "message": "Objednávka neexistuje alebo ešte nebola doručená."
+            }, status=404)
+
+        except Exception:
+            return JsonResponse({
+                "success": False, 
+                "message": "Pri pridávaní hodnotenia došlo k chybe."
+            }, status=400)
+            
+    return JsonResponse({
+        "success": False, 
+        "message": "Hodnotenie sa dá pridať len pomocou POST metódy."
+    }, status=405)

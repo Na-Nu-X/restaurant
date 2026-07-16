@@ -31,10 +31,29 @@
         }
 
         .rating {
-            text-align: right;
-
+            display: inline-flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 5px; 
+            margin-left: auto; 
+            padding: 5px 10px;
+            background-color: transparentize($orange-color, 0.9);
+            border-radius: $big-border-radius;
+        
             .fa-star {
                 color: $orange-color;
+                font-size: 1.2em;
+            }
+        
+            .average {
+                color: $main-color;
+                font-weight: 700;
+            }
+        
+            .amount {
+                font-size: 0.8em;
+                font-weight: 500;
+                color: transparentize($main-color, 0.4);
             }
         }
 

@@ -3,6 +3,8 @@ import { HttpClient } from "@angular/common/http"
 import { BehaviorSubject, Observable } from "rxjs"
 import { debounceTime, distinctUntilChanged } from "rxjs/operators"
 
+import type { CartItem } from "./cart"
+
 @Injectable({
   providedIn: "root"
 })
@@ -19,8 +21,16 @@ export class Dish {
     constructor(private http: HttpClient) { }
 
     // Method For Get Dishes
-    getDishes():Observable<any[]> {
-        return this.http.get<any[]>(this.api_url) // Returns The Data
+    getDishes():Observable<{ 
+      success:string,
+      message:string,
+      dishes:CartItem[]
+    }> {
+      return this.http.get<{ 
+        success:string,
+        message:string,
+        dishes:CartItem[]
+      }>(this.api_url) // Returns The Data
     }
 
     // Method For Search The Dishes

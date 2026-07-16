@@ -26,7 +26,7 @@
             <h2>Môj košík</h2>
     
             <button class="close" title="Zavrieť" aria-label="Zavrieť" (click)="closeCart()">
-                <i class="fa-solid fa-xmark"></i>
+                <i class="fa-solid fa-xmark"></i> <!-- https://fontawesome.com/icons/xmark -->
             </button>
         </div>
     
@@ -48,8 +48,8 @@
     
             <div class="bars" *ngIf="cart_items && cart_items.length > 1">
                 <div 
-                    class="one_bar" 
-                    *ngFor="let item of cart_items; let i = index"
+                    class="one_bar"
+                    *ngFor="let one_item of cart_items; let i = index"
                     [class.active]="current_index === i"
                     (click)="changeCartItem(i)">
                 </div>

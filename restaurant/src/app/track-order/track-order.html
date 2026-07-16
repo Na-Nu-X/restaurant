@@ -1,27 +1,73 @@
 <div class="order_container">
     <div class="order" *ngIf="order_details">
-        <div class="icon"><i class="fa-solid fa-check"></i></div> <!-- https://fontawesome.com/icons/check -->
+        <div class="icon">
+            <i class="fa-solid" [class.fa-check]="order_details.status !== 'CANCELLED'" [class.fa-xmark]="order_details.status === 'CANCELLED'"></i> <!-- https://fontawesome.com/icons/check / https://fontawesome.com/icons/xmark -->
+        </div>
 
         <h1>Objednávka #{{ order_details.tracking_code }}</h1>
 
-        <h2 *ngIf="order_details.status === 'PENDING'">Čaká sa na platbu!</h2>
-        <h2 *ngIf="order_details.status === 'PAID'">Platba prebehla úspešne!</h2>
-        <h2 *ngIf="order_details.status === 'PREPARING'">Objednávku pripravujeme!</h2>
-        <h2 *ngIf="order_details.status === 'DELIVERING'">Objednávka je na ceste!</h2>
-        <h2 *ngIf="order_details.status === 'COMPLETED'">Objednávka bola doručená!</h2>
-        <h2 *ngIf="order_details.status === 'CANCELLED'">Objednávka bola zrušená!</h2>
+        <h2 class="subheading" *ngIf="order_details.status === 'PENDING'">Čaká sa na platbu!</h2>
+        <h2 class="subheading" *ngIf="order_details.status === 'PAID'">Platba prebehla úspešne!</h2>
+        <h2 class="subheading" *ngIf="order_details.status === 'PREPARING'">Objednávku pripravujeme!</h2>
+        <h2 class="subheading" *ngIf="order_details.status === 'DELIVERING'">Objednávka je na ceste!</h2>
+        <h2 class="subheading" *ngIf="order_details.status === 'COMPLETED'">Objednávka bola doručená!</h2>
+        <h2 class="subheading" *ngIf="order_details.status === 'CANCELLED'" style="color: #df3535;">Objednávka bola zrušená!</h2>
 
-        <p>
-            Ďakujeme {{ order_details.first_name }} za tvoju objednávku. Naši kuchári sa už pustili do práce a tvoje jedlo bude čoskoro na ceste.
-            Objednávka bude doručená na {{ order_details.address }}, {{ order_details.city }}
-        </p>
+        <p class="message" *ngIf="order_details.status !== 'COMPLETED' && order_details.status !== 'CANCELLED'">Ďakujeme {{ order_details.first_name }} za tvoju objednávku. Naši kuchári sa už pustili do práce a tvoje jedlo bude čoskoro na ceste. Objednávka bude doručená na {{ order_details.address }}, {{ order_details.city }}.</p>
 
-        <p class="total_price" *ngIf="order_details.cash_on_delivery">Dobierka je {{ (order_details.total_price / 100) | currency:'EUR':'':'1.2-2':'sk-SK' }}<span>€</span></p>
+        <p class="total_price" *ngIf="order_details.cash_on_delivery && order_details.status !== 'COMPLETED'" [style.text-decoration]="(order_details.status === 'CANCELLED') ? 'line-through' : 'none'">Dobierka je {{ (order_details.total_price / 100) | currency:'EUR':'':'1.2-2':'sk-SK' }}<span>€</span></p>
+
+        <div class="middle">
+            <h2 *ngIf="order_details.status === 'COMPLETED'">Ako Vám chutilo?</h2>
+
+            <div class="all_items" *ngIf="order_details.status === 'COMPLETED' && ordered_items && ordered_items.length > 0" [style.transform]="'translateX(calc(' + (-current_index * 100) + '% + ' + (current_index * 20) + 'px))'">
+                <div class="one_item" *ngFor="let one_item of ordered_items; let i = index" (click)="changeCartItem(i)">
+                    <img src="images/{{ one_item.image }}" alt="">
+    
+                    <p class="title">{{ one_item.title }}</p>
+    
+                    <div class="bottom">
+                        <p class="price">{{ (one_item.price / 100) | currency:'EUR':'':'1.2-2':'sk-SK' }}<span>€</span></p>
+
+                        <div class="rating" *ngIf="order_details.status === 'COMPLETED' && ordered_items && ordered_items.length > 0">
+                            <button 
+                                type="button" 
+                                *ngFor="let star of [1, 2, 3, 4, 5]"
+                                (mouseenter)="updateHoveredRating(one_item, star)"
+                                (mouseleave)="removeHoveredRating(one_item)"
+                                (click)="setRating(one_item, star)"
+                            >
+                                <i 
+                                    class="fa-solid fa-star"
+                                    [class.full]="star <= (one_item.hovered_rating || one_item.selected_rating || 0)"
+                                    [class.empty]="star > (one_item.hovered_rating || one_item.selected_rating || 0)"
+                                ></i> <!-- https://fontawesome.com/icons/star -->
+                            </button>
+                        
+                            <input type="hidden" name="rating" max_length="1" [value]="one_item.selected_rating || 0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bars" *ngIf="order_details.status === 'COMPLETED' && ordered_items && ordered_items.length > 0">
+                <div 
+                    class="one_bar" 
+                    *ngFor="let one_item of ordered_items; let i = index"
+                    [class.active]="current_index === i"
+                    (click)="changeCartItem(i)">
+                </div>
+            </div>
+        </div>
         
-        <a href="/" class="back">Späť domov</a>
+        <div class="buttons">
+            <button *ngIf="order_details.status === 'COMPLETED'" class="send_rating" title="Odoslať hodnotenie" aria-label="Odoslať hodnotenie" (click)="sendRating()">Odoslať</button>
+            <a href="/" class="back" title="Späť domov" aria-label="Späť domov">Späť</a>
+        </div>
     </div>
 
     <div class="not_found_order" *ngIf="!order_details">
-        <h1>Objednávka nebola nájdená!</h1>
+        <h1>Objednávku sa nepodarilo nájsť.</h1>
+        <button class="try_again" (click)="reloadPage()">Skúsiť znovu</button>
     </div>
 </div>

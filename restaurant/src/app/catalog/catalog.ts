@@ -29,10 +29,23 @@ export class Catalog implements OnInit {
 
   // Method Which Executes In Beginning
   ngOnInit():void {
-    this.dishService.getDishes().subscribe(data => {
-      this.dishes = data // Sets The Dishes Data
-      this.filtered_dishes = data // Sets The Filtered Dishes Data
-      this.listenToSearch() // Initializes The Listen To Search
+    this.dishService.getDishes().subscribe({
+      next:(response) => {
+        if(response && response.success) {
+          this.dishes = response.dishes // Sets The Dishes Data
+          this.filtered_dishes = response.dishes // Sets The Filtered Dishes Data
+          this.listenToSearch() // Initializes The Listen To Search
+        }
+        
+        else {
+          console.error(response.message) // Shows The Error Message
+        }
+      },
+
+      error:(error) => {
+        console.error(error) // Shows The Error
+        alert("Pri načítaní položiek došlo k chybe.") // Shows The Alert
+      }
     })
   }
 
