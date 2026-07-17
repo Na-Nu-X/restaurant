@@ -364,3 +364,101 @@ class Coupon(models.Model):
 
     def __str__(self):
         return f"{self.code} ({self.discount_percent}%)"
+
+class DailySoup(models.Model):
+    DAY_CHOICES = [
+        (1, "Pondelok"),
+        (2, "Utorok"),
+        (3, "Streda"),
+        (4, "Štvrtok"),
+        (5, "Piatok"),
+        (6, "Sobota"),
+        (7, "Nedeľa"),
+    ]
+
+    title = models.CharField(
+        verbose_name="Title", 
+        help_text="Title of the soup.",
+        max_length=250, 
+        null=False
+    )
+
+    day_of_week = models.IntegerField(
+        verbose_name="Day Of Week", 
+        help_text="The day to which the daily soup belongs.", 
+        max_length=1, 
+        choices=DAY_CHOICES, 
+        default=1, 
+        unique=True,
+        null=False
+    )
+
+    is_active = models.BooleanField(
+        verbose_name="Is Active", 
+        help_text="Stores the information if the soup is still available.",
+        default=True, 
+        null=False
+    )
+
+    class Meta:
+        verbose_name = "Denné menu - Polievka"
+        verbose_name_plural = "Denné menu - Polievky"
+
+    def __str__(self):
+        return f"{self.get_day_display()}: {self.name}"
+
+class DailyMeal(models.Model):
+    DAY_CHOICES = [
+        (1, "Pondelok"),
+        (2, "Utorok"),
+        (3, "Streda"),
+        (4, "Štvrtok"),
+        (5, "Piatok"),
+        (6, "Sobota"),
+        (7, "Nedeľa"),
+    ]
+
+    number = models.PositiveIntegerField(
+        verbose_name="Number", 
+        help_text="Number of meal.",
+        default=1, 
+        null=False
+    )
+
+    title = models.CharField(
+        verbose_name="Title", 
+        help_text="Title of the soup.",
+        max_length=250, 
+        null=False
+    )
+
+    price = models.PositiveIntegerField(
+        verbose_name="Price", 
+        help_text="Price in cents.",
+        default=0, 
+        null=False
+    )
+
+    day_of_week = models.IntegerField(
+        verbose_name="Day Of Week", 
+        help_text="The day to which the daily soup belongs.", 
+        max_length=1, 
+        choices=DAY_CHOICES, 
+        default=1, 
+        null=False
+    )
+
+    is_active = models.BooleanField(
+        verbose_name="Is Active", 
+        help_text="Stores the information if the soup is still available.",
+        default=True, 
+        null=False
+    )
+
+    class Meta:
+        verbose_name = "Denné menu - Hlavné jedlo"
+        verbose_name_plural = "Denné menu - Hlavné jedlá"
+        ordering = ["number"]
+
+    def __str__(self):
+        return f"{self.get_day_display()} - Menu {self.number}: {self.name}"

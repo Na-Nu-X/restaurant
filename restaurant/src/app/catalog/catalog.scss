@@ -2,6 +2,7 @@
 @import "../../partials/mixins";
 
 .all_dishes {
+    @include scrollbar;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     justify-content: center; 
@@ -10,9 +11,10 @@
     gap: 20px;
     max-width: $main-width;
     width: 100%; 
-    min-height: 100vh;
+    max-height: 80vh;
     margin: 0px auto;
-    padding: 0px 20px;
+    padding: 20px;
+    overflow-y: auto; 
 
     .one_dish {
         display: flex;

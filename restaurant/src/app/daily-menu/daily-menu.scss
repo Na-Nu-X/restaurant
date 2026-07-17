@@ -1,0 +1,81 @@
+@import "../../partials/variables";
+@import "../../partials/mixins";
+
+.daily_menu {
+    h2 {
+        font-size: 1.2em;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: transparentize($main-color, 0.2);
+    }
+
+    .soup {
+        display: flex;
+        gap: 10px;
+        background: linear-gradient(135deg, $yellow-color, darken($yellow-color, 5%));
+        color: darken($orange-color, 30%);
+        margin-bottom: 10px;
+        padding: 10px 15px;
+        border-left: 4px solid $orange-color;
+        border-radius: $medium-border-radius;
+        font-weight: 600;
+
+        &::before {
+            content: "🍲 ";
+        }
+    }
+
+    ul {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin: 0px;
+        padding: 0px;
+        list-style: none;
+    }
+
+    li {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 15px;
+        background-color: darken($secondary-color, 3%);
+        color: transparentize($main-color, 0.2);
+        border: 1px solid darken($secondary-color, 10%);
+        border-radius: $small-border-radius;
+        transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+
+        &::before {
+            content: "🍽️";
+        }
+
+        &:hover {
+            background-color: $secondary-color;
+            border-color: $orange-color;
+            box-shadow: 0 0 0 3px transparentize($orange-color, 0.8);
+        }
+
+        .meal {
+            @include crop_text;
+            
+            .number {
+                font-weight: bold;
+            }
+        }
+
+        .price {
+            margin-left: auto;
+            font-size: 1.2em;
+            font-weight: bold;
+            line-height: 1;
+        
+            span {
+                font-size: 0.6em;
+                vertical-align: super;
+                margin-left: 2px;
+            }
+        }
+    }
+
+}

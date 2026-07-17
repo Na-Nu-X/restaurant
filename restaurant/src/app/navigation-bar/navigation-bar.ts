@@ -67,7 +67,7 @@ export class NavigationBar implements OnInit {
   }
 
   // Method Which Executes In Beginning
-  ngOnInit() {
+  ngOnInit():void {
     this.cart_amount$ = this.cartService.cart_amount$ // Sets The Cart Amount
   }
 

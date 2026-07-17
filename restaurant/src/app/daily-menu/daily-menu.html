@@ -1,0 +1,19 @@
+<div class="daily_menu" *ngIf="!is_loading">
+    <h2>Denné menu (dnes)</h2>
+    
+    <p class="soup">{{ soup }}</p>
+    
+    <ul *ngIf="meals.length > 0">
+        <li *ngFor="let one_meal of meals">
+            <p class="meal"><span class="number">{{ one_meal.number }}.</span> {{ one_meal.title }}</p>
+            <p class="price">{{ (one_meal.price / 100) | currency:'EUR':'':'1.2-2':'sk-SK' }}<span>€</span></p>
+        </li>
+    </ul>
+
+    <p *ngIf="meals.length === 0" class="no-meals">Hlavné jedlá pre dnešný deň zatiaľ neboli pridané.</p>
+</div>
+
+<div class="daily_menu_loading" *ngIf="is_loading">
+    <h2>Denné menu (dnes)</h2>
+    <p class="soup">Načítavam obedové menu...</p>
+</div>

@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from .models import Dish, Order, OrderItem, Rating, ContactMessage, Coupon
+from .models import Dish, Order, OrderItem, Rating, ContactMessage, Coupon, DailySoup, DailyMeal
 import stripe
 import json
 from django.conf import settings
@@ -31,6 +31,42 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 #     mail_message = EmailMultiAlternatives(subject, text_content, sender, receiver)
 #     mail_message.attach_alternative(html_content, "text/html")
 #     mail_message.send()
+
+def getTodayMenu(request):
+    day = request.GET.get("day") # Gets The Day Number
+    
+    if day:
+        try:
+            day_number = int(day) # Gets The Day Number
+
+        except ValueError:
+            day_number = timezone.now().isoweekday() # Gets The Today's Day Number
+
+    else:
+        day_number = timezone.now().isoweekday() # Gets The Day Number
+
+    soup = DailySoup.objects.filter(day_of_week=day_number, is_active=True).first() # Gets The Soup
+    soup_data = soup.title if soup else "Polievka nebola zadaná." # Gets The Soup Data
+
+    meals = DailyMeal.objects.filter(day_of_week=day_number, is_active=True) # Gets The Meal
+    meals_data = [] # Stores The Meal Data
+    
+    for one_meal in meals:
+        # Gets The Meals Data
+        meals_data.append({
+            "id": one_meal.id,
+            "number": one_meal.number,
+            "title": one_meal.title,
+            "price": one_meal.price
+        })
+
+    return JsonResponse({
+        "success": True,
+        "message": "Dnešné menu bolo nájdené.",
+        "day_number": day_number,
+        "soup": soup_data,
+        "meals": meals_data
+    }, status=200)
 
 def getDishes(request):
     # Gets All The Dishes

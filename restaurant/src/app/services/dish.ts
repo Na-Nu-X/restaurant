@@ -4,12 +4,19 @@ import { BehaviorSubject, Observable } from "rxjs"
 import { debounceTime, distinctUntilChanged } from "rxjs/operators"
 
 import type { CartItem } from "./cart"
+import type { DailyMenuResponse } from "../daily-menu/daily-menu"
+
+export interface Meal {
+  id:number,
+  number:number,
+  title:string,
+  price:number
+}
 
 @Injectable({
   providedIn: "root"
 })
 export class Dish {
-    private api_url:string = "http://127.0.0.1:8001/api/dishes/" // Connection To The Back-End API
     private searched_text = new BehaviorSubject<string>("")
 
     // Reacts To Searched Text Only After 300MS Of Typing Delay
@@ -26,15 +33,24 @@ export class Dish {
       message:string,
       dishes:CartItem[]
     }> {
+      const api_url:string = "http://127.0.0.1:8001/api/dishes/" // Connection To The Back-End API
+      
+      // Returns The Data
       return this.http.get<{ 
         success:string,
         message:string,
         dishes:CartItem[]
-      }>(this.api_url) // Returns The Data
+      }>(api_url)
     }
 
     // Method For Search The Dishes
     searchDish(searched_text:string):void {
       this.searched_text.next(searched_text)
+    }
+
+    // Method For Get The Today's Menu
+    getTodayMenu():Observable<DailyMenuResponse> {
+      const api_url:string = "http://127.0.0.1:8001/api/today-menu/" // Connection To The Back-End API
+      return this.http.get<DailyMenuResponse>(api_url) // Returns The Data
     }
 }
