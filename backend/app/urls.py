@@ -9,5 +9,6 @@ urlpatterns = [
     path('api/order-status/<str:tracking_code>/', views.getOrderStatus, name='get_order_status_url'),
     path('api/ordered-items/<int:id>/', views.getOrderedItems, name='get_ordered_items_url'),
     path('api/send-rating/', views.sendRating, name='send_rating_url'),
-    path('api/contact/', views.sendMessage, name='send_message_url')
+    path('api/contact/', views.sendMessage, name='send_message_url'),
+    path('api/validate-coupon/', views.validateCoupon, name='validate_coupon_url')
 ]

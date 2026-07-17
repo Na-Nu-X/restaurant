@@ -71,6 +71,42 @@
                 <input type="tel" name="phone_number" placeholder="Telefón" maxlength="50" required [(ngModel)]="customer.phone_number">
                 <textarea name="message" placeholder="Správa..." rows="5" maxlength="100" [(ngModel)]="customer.message"></textarea>
             </form>
+
+            <div class="coupon_container">
+                <input 
+                    type="text" 
+                    name="coupon_code" 
+                    placeholder="Zľavový kupón" 
+                    maxlength="50" 
+                    [disabled]="!!applied_coupon" 
+                    [(ngModel)]="coupon_code"
+                >
+                
+                <button 
+                    class="validate_coupon" 
+                    title="Overiť kupón" 
+                    aria-label="Overiť kupón" 
+                    *ngIf="!applied_coupon"
+                    [disabled]="!coupon_code.trim()" 
+                    (click)="validateCoupon()"
+                >
+                    Overiť
+                </button>
+            
+                <button 
+                    class="remove_coupon" 
+                    title="Odstrániť kupón" 
+                    aria-label="Odstrániť kupón" 
+                    *ngIf="applied_coupon"
+                    (click)="removeCoupon()"
+                >
+                    Zrušiť
+                </button>
+            </div>
+            
+            <p class="coupon_message" [class.success]="!!applied_coupon" [class.error]="!applied_coupon" *ngIf="coupon_message">
+                {{ coupon_message }}
+            </p>
     
             <div class="tip_container">
                 <input 
@@ -93,7 +129,7 @@
                 </button>
     
                 <button class="cash_on_delivery" title="Zaplatiť na dobierku" aria-label="Zaplatiť na dobierku" (click)="orderAll()">
-                    Na dobierku <p class="total_price">{{ (total_price / 100) | currency:'EUR':'':'1.2-2':'sk-SK' }}<span>€</span></p>
+                    Na dobierku <p class="total_price">{{ (price_after_discount / 100) | currency:'EUR':'':'1.2-2':'sk-SK' }}<span>€</span></p>
                 </button>
             </div>
         </div>

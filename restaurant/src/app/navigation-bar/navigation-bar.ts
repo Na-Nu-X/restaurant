@@ -4,7 +4,8 @@ import {
   afterNextRender, 
   ViewChild, 
   ElementRef,
-  OnInit
+  OnInit,
+  ChangeDetectorRef
 } from "@angular/core"
 
 import { 
@@ -42,6 +43,10 @@ export class NavigationBar implements OnInit {
   cart_amount$!:Observable<number>
   cart_items!:CartItem[]
   current_index:number = 0 // Stores The Current Index Of The Active Item
+  coupon_code:string = "" // Stores The Entered Coupon Code
+  applied_coupon:string|null = null // Stores The Applied Coupon Code
+  applied_discount:number = 0 // Stores The Applied Discount
+  coupon_message:string = "" // Stores The Coupon Message
   selected_tip:number = 10 // Stores The Selected Tip Percentage (10% By Default)
 
   // Stores The Customer's Delivery Data
@@ -54,7 +59,7 @@ export class NavigationBar implements OnInit {
     message: null
   }
   
-  constructor(private cartService:Cart, private paymentService:Payment) {
+  constructor(private cartService:Cart, private paymentService:Payment, private cdr:ChangeDetectorRef) {
     afterNextRender(() => {
       this.checkWindowWidth(window.innerWidth)
       this.onWindowScroll()
@@ -132,25 +137,92 @@ export class NavigationBar implements OnInit {
     this.current_index = 0 // Resets The Current Index Of The Active Item
   }
 
+  // Method For Validate The Applied Coupon
+  validateCoupon():void {
+    if(!this.coupon_code) return // Do Nothing If The Coupon Wasn't Entered
+
+    // Sends The Rating
+    this.cartService.validateCoupon(this.coupon_code).subscribe({
+      next:(response) => {
+        if(response && response.success && response.code && response.discount_percent) {
+          this.applied_coupon = response.code // Sets The Applied Coupon Code
+          this.applied_discount = response.discount_percent // Sets The Applied Discount
+          this.coupon_message = `Kupón ${response.code} (${response.discount_percent}%) bol uplatnený!` // Sets The Coupon Message
+        }
+        
+        else {
+          this.applied_coupon = null // Removes The Applied Coupon Code
+          this.applied_discount = 0 // Removes The Applied Discount
+          this.coupon_message = response.message // Sets The Coupon Message
+        }
+
+        this.cdr.detectChanges() // Rerenders The HTML
+      },
+
+      error:(error) => {
+        this.coupon_message = error.error?.message || "Pri aktivácii kupónu došlo k chybe." // Sets The Coupon Message
+
+        this.cdr.detectChanges() // Rerenders The HTML
+      }
+    })
+  }
+
+  // Method For Remove The Coupon
+  removeCoupon():void {
+    this.coupon_code = ""
+    this.applied_coupon = null
+    this.applied_discount = 0
+    this.coupon_message = ""
+  }
+
   // Method For Change The Tip Amount
   changeTipAmount(value:string):void {
     this.selected_tip = parseInt(value, 10) // Sets The Selected Tip
   }
 
-  // Getter To Get The Total Price
-  get total_price(): number {
-    if(!this.cart_items || this.cart_items.length === 0) {
-      return 0 // Returns 0
-    }
-    
-    const total_in_cents:number = this.cart_items.reduce((sum, item) => sum + item.price, 0) // Calculates The Total Price In Cents
-    return total_in_cents // Returns The Total Price In Cents
+  // Getter To Get The Total Price In Cents (Subtotal Without Discount)
+  get total_price():number {
+    if(!this.cart_items || this.cart_items.length === 0) return 0 // Returns 0
+    return this.cart_items.reduce((sum, one_item) => sum + (one_item.price * (one_item.quantity || 1)), 0) // Returns The Total Price In Cents
   }
 
-  // Getter To Get The Grand Total Price (Price Of Items + Tip)
+  // Getter To Get The Discount Multiplier (10% = 0.9)
+  get discount_multiplier():number {
+    if(!this.applied_discount || this.applied_discount <= 0) return 1.0 // Returns 1x
+    return (100 - this.applied_discount) / 100 // Returns The Discount Multiplier
+  }
+
+  // Getter To Get The Price After Discount In Cents
+  get discounted_total_price():number {
+    if(!this.cart_items || this.cart_items.length === 0) return 0 // Returns 0
+    
+    // Returns The Discounted Total Price In Cents
+    return this.cart_items.reduce((sum, one_item) => {
+      const quantity:number = one_item.quantity || 1
+      const discounted_unit:number = Math.round(one_item.price * this.discount_multiplier)
+      return sum + (discounted_unit * quantity)
+    }, 0)
+  }
+
+  // Getter To Get The Discount Amount
+  get discount_amount():number {
+    return this.total_price - this.discounted_total_price // Returns The Discount Amount
+  }
+
+  // Getter To Get The Tip Amount In Cents
+  get tip_amount():number {
+    if(!this.selected_tip || this.selected_tip <= 0) return 0 // Returns 0
+    return Math.round(this.discounted_total_price * (this.selected_tip / 100)) // Returns The Tip In Cents
+  }
+
+  // Getter To Get The Grand Total Price (Price Of Items - Discount + Tip)
   get grand_total_price():number {
-    const tip_in_cents:number = Math.round(this.total_price * (this.selected_tip / 100)) // Calculates The Tip Amount In Cents
-    return this.total_price + tip_in_cents // Returns The Grand Total Price In Cents
+    return this.discounted_total_price + this.tip_amount // Returns The Grand Total Price
+  }
+
+  // Getter To Get The Total Price After Discount Without The Tip (For Cash On Delivery)
+  get price_after_discount():number {
+    return this.discounted_total_price // Returns The Total Price After Discount
   }
 
   // Method For Pay All Items In Cart
@@ -178,9 +250,10 @@ export class NavigationBar implements OnInit {
     // Creates The Checkout Session
     this.paymentService.createCheckoutSession(
       this.cart_items, 
-      tip_in_cents, 
+      this.tip_amount, 
       this.selected_tip,
-      this.customer
+      this.customer,
+      this.applied_coupon
     ).subscribe({
       next:(response) => {
         if(response && response.success && response.url) {
@@ -222,7 +295,8 @@ export class NavigationBar implements OnInit {
     // Creates The Checkout Session
     this.paymentService.orderAll(
       this.cart_items, 
-      this.customer
+      this.customer,
+      this.applied_coupon
     ).subscribe({
       next:(response) => {
         if(response && response.success && response.url) {

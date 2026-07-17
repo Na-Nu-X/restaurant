@@ -219,7 +219,7 @@ class OrderItem(models.Model):
     
     price_at_purchase = models.PositiveIntegerField(
         verbose_name="Price At Purchase", 
-        help_text="Price per item in cents at the time the order was created.",
+        help_text="Price per item in cents at the time the order was created (with discount).",
         default=0, 
         null=False
     )
@@ -323,3 +323,44 @@ class ContactMessage(models.Model):
 
     def __str__(self):
         return f"Správa od {self.first_name} {self.last_name}"
+
+class Coupon(models.Model):
+    code = models.CharField(
+        verbose_name="Code",
+        help_text="Coupon's code.",
+        max_length=50, 
+        unique=True, 
+        null=False
+    )
+
+    discount_percent = models.PositiveIntegerField(
+        verbose_name="Discount Percent", 
+        help_text="Discount in percent (1–100%).",
+        validators=[MinValueValidator(1), MaxValueValidator(100)],
+        default=5, 
+        null=False,
+    )
+
+    is_active = models.BooleanField(
+        verbose_name="Is Active", 
+        help_text="Stores the information if the coupon is still available.",
+        default=True, 
+        null=False
+    )
+
+    valid_until = models.DateTimeField(
+        verbose_name="Valid Until",
+        help_text="The time until which the coupon is valid.", 
+        null=True, 
+        blank=True
+    )
+
+    creation_time = models.DateTimeField(
+        verbose_name="Creation Time",
+        help_text="Time of the coupon activeness.", 
+        auto_now_add=True,
+        null=False
+    )
+
+    def __str__(self):
+        return f"{self.code} ({self.discount_percent}%)"

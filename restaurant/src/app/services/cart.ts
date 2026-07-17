@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core"
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { HttpClient } from "@angular/common/http"
 
 export interface CartItem {
     id:number,
@@ -18,6 +19,13 @@ export interface CartItem {
     rating_amount?:number
 }
 
+export interface ValidateCouponResponse {
+    success:string,
+    message:string,
+    code?:string,
+    discount_percent?:number
+}
+
 @Injectable({
     providedIn: "root"
 })
@@ -28,7 +36,7 @@ export class Cart {
     private cart_counter:BehaviorSubject<number> = new BehaviorSubject<number>(this.cart_items$.length) // Updates The Cart Counter
     cart_amount$ = this.cart_counter.asObservable() // Sends The Cart Amount To Other Components
 
-    constructor() { }
+    constructor(private http:HttpClient) {}
 
     // Method For Add To Cart
     addToCart(dish:CartItem) {
@@ -65,5 +73,10 @@ export class Cart {
         }
 
         return [] // Returns An Empty Array
+    }
+
+    // Method For Validate The Applied Coupon
+    validateCoupon(code:string):Observable<ValidateCouponResponse> {
+        return this.http.post<ValidateCouponResponse>("http://127.0.0.1:8001/api/validate-coupon/", { code }) // Returns The Data
     }
 }

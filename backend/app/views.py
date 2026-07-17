@@ -1,6 +1,5 @@
-from django.shortcuts import render
 from django.http import JsonResponse
-from .models import Dish, Order, OrderItem, Rating, ContactMessage
+from .models import Dish, Order, OrderItem, Rating, ContactMessage, Coupon
 import stripe
 import json
 from django.conf import settings
@@ -11,6 +10,7 @@ from django.http import HttpResponse
 from django.db.models import Avg, Count
 from django.db.models.functions import Round
 from django.core.mail import EmailMultiAlternatives
+from django.utils import timezone
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -73,17 +73,36 @@ def createCheckoutSession(request):
             data = json.loads(request.body) # Gets The Data
             items = data.get("items", []) # Gets The Items
             customer = data.get("customer", []) # Gets The Customer
+            coupon_code = data.get("coupon_code", None)  # Gets The Coupon Code
 
             # Calculates The Price
 
-            price = 0 # Stores The Price In Cents Without The Tip
-            total_price = 0 # Stores The Total Price In Cents With The Tip
+            discount_percent = 0 # Stores The Discount Percent
+
+            if coupon_code:
+                coupon = Coupon.objects.filter(code__iexact=coupon_code.strip(), is_active=True).first() # Gets The Active Coupon
+
+                if coupon and (not coupon.valid_until or coupon.valid_until > timezone.now()):
+                    discount_percent = coupon.discount_percent # Sets The Discount Percent
+
+            raw_items_price = 0 # Stores The Price In Cents Without The Discount
+            tip_amount = 0 # Stores The Tip Amount In Cents
 
             for one_item in items:
-                if one_item.get("id") and int(one_item.get("id")) != -1:
-                    price += int(one_item.get("price", "0")) * int(one_item.get("quantity", "1"))
+                item_id = one_item.get("id") # Gets The Item ID
+                item_price = int(one_item.get("price", "0")) # Gets The Item Price
+                item_quantity = int(one_item.get("quantity", "1")) # Gets The Item Quantity
 
-                total_price += int(one_item.get("price", "0")) * int(one_item.get("quantity", "1"))
+                if item_id and int(item_id) == -1:
+                    tip_amount += item_price * item_quantity # Saves The Tip Amount
+
+                else:
+                    raw_items_price += item_price * item_quantity # Calculates The Raw Items Price
+
+            discount_amount = int(raw_items_price * (discount_percent / 100)) if discount_percent > 0 else 0 # Stores The Discount Amount
+            discounted_items_price = raw_items_price - discount_amount # Stores The Discounted Items Price
+            
+            total_price = discounted_items_price + tip_amount # Gets The Total Price In Cents (Dishes After Discount + Tip)
 
             # Processes The Order
 
@@ -95,34 +114,44 @@ def createCheckoutSession(request):
                 city=customer.get("city", "Neznáme"),
                 phone_number=customer.get("phone_number", "Neznáme"),
                 message=customer.get("message", None),
-                price=price,
+                price=discounted_items_price,
                 total_price=total_price,
                 status="PENDING"
             )
 
             line_items = [] # Stores All Items
 
+            discount_multiplier = (100 - discount_percent) / 100 if discount_percent > 0 else 1.0 # Gets The Discount Multiplayer (10% = 0.9)
+
             for one_item in items:
                 image_name = one_item.get("image") # Gets THe Image Name
+                item_id = one_item.get("id") # Gets The Item ID
+                original_unit_price = int(one_item.get("price", "0")) # Gets The Original Price
 
                 if is_local:
                     title = one_item.get("title", "food") # Gets The Title
                     safe_title = urllib.parse.quote(title) # Creates The Clear Title
                     image_url = f"https://dummyimage.com/600x400/ff7f00/fff?text={safe_title}" # Generates Random Image
-
+                    
                 else:
                     domain = os.environ.get("DOMAIN_URL", "localhost") # Gets The Domain
                     image_url = f"https://{domain}/static/images/{image_name}" # Gets The Image URL
+
+                if item_id and int(item_id) == -1:
+                    final_unit_price = original_unit_price # Doesn't Apply The Discount On The Tip
+
+                else:
+                    final_unit_price = int(round(original_unit_price * discount_multiplier)) # Applies The Discount On The Dish
 
                 line_items.append({
                     "price_data": {
                         "currency": "eur",
                         "product_data": {
                             "name": one_item.get("title"),
-                            "images": [image_url], 
+                            "images": [image_url],
                         },
 
-                        "unit_amount": int(one_item.get("price")), 
+                        "unit_amount": final_unit_price,
                     },
 
                     "quantity": int(one_item.get("quantity", "1"))
@@ -131,19 +160,19 @@ def createCheckoutSession(request):
                 # Saves The New Order
                 OrderItem.objects.create(
                     order=new_order,
-                    dish_id=int(one_item.get("id")) if one_item.get("id") and int(one_item.get("id")) != -1 else None,
+                    dish_id=int(item_id) if item_id and int(item_id) != -1 else None,
                     quantity=int(one_item.get("quantity", "1")),
-                    price_at_purchase=int(one_item.get("price", "0")),
-                    is_tip=True if one_item.get("id") and int(one_item.get("id")) == -1 else False
+                    price_at_purchase=final_unit_price,
+                    is_tip=True if item_id and int(item_id) == -1 else False
                 )
 
             checkout_session = stripe.checkout.Session.create(
                 payment_method_types=["card"],
                 line_items=line_items,
                 mode="payment",
-                success_url=f"{front_end_domain}success", # Angular Success Page
-                cancel_url=front_end_domain, # Angular Cancel Page
-
+                success_url=f"{front_end_domain}success?code={new_order.tracking_code}",
+                cancel_url=front_end_domain,
+                
                 metadata={
                     "order_id": str(new_order.id)
                 }
@@ -155,17 +184,17 @@ def createCheckoutSession(request):
             return JsonResponse({
                 "success": True,
                 "message": "Platba prebehla úspešne.",
-                "url": f"{checkout_session.url}?code={new_order.tracking_code}"
+                "url": checkout_session.url
             }, status=200)
 
         except Exception:
             return JsonResponse({
-                "success": False, 
+                "success": False,
                 "message": "Pri spracovávaní platby došlo k chybe."
             }, status=500)
-            
+
     return JsonResponse({
-        "success": False, 
+        "success": False,
         "message": "Platba sa dá uskutočniť len pomocou POST metódy."
     }, status=405)
 
@@ -211,15 +240,30 @@ def createOrder(request):
 
             data = json.loads(request.body) # Gets The Data
             items = data.get("items", []) # Gets The Items
-            customer = data.get("customer", []) # Gets The Customer
+            customer = data.get("customer", {}) # Gets The Customer
+            coupon_code = data.get("coupon_code", None) # Gets The Coupon Code
 
             # Calculates The Price
 
-            price = 0 # Stores The Price In Cents Without The Tip
+            discount_percent = 0 # Stores The Discount Percent
+
+            if coupon_code:
+                coupon = Coupon.objects.filter(code__iexact=coupon_code.strip(), is_active=True).first() # Gets The Active Coupon
+
+                if coupon and (not coupon.valid_until or coupon.valid_until > timezone.now()):
+                    discount_percent = coupon.discount_percent # Sets The Discount Percent
+
+            raw_items_price = 0 # Stores The Price In Cents Without The Discount
 
             for one_item in items:
-                if one_item.get("id"):
-                    price += int(one_item.get("price", "0")) * int(one_item.get("quantity", "1"))
+                item_id = one_item.get("id") # Gets The Item ID
+
+                if item_id and int(item_id) != -1:
+                    raw_items_price += int(one_item.get("price", "0")) * int(one_item.get("quantity", "1")) # Calculates The Raw Items Price
+
+            discount_multiplier = (100 - discount_percent) / 100 if discount_percent > 0 else 1.0 # Gets The Discount Multiplayer (10% = 0.9)
+            discount_amount = int(raw_items_price * (discount_percent / 100)) if discount_percent > 0 else 0 # Gets The Discount Amount
+            discounted_items_price = raw_items_price - discount_amount # Stores The Discounted Items Price
 
             # Processes The Order
 
@@ -231,20 +275,29 @@ def createOrder(request):
                 city=customer.get("city", "Neznáme"),
                 phone_number=customer.get("phone_number", "Neznáme"),
                 message=customer.get("message", None),
-                price=price,
-                total_price=price,
+                price=discounted_items_price,
+                total_price=discounted_items_price,
                 status="PREPARING",
                 cash_on_delivery=True
             )
 
             for one_item in items:
+                item_id = one_item.get("id") # Gets The Item ID
+                original_unit_price = int(one_item.get("price", "0")) # Gets The Original Price
+                
+                if item_id and int(item_id) == -1:
+                    final_unit_price = original_unit_price # Doesn't Apply The Discount On The Tip
+
+                else:
+                    final_unit_price = int(round(original_unit_price * discount_multiplier)) # Applies The Discount On The Dish
+
                 # Saves The New Order
                 OrderItem.objects.create(
                     order=new_order,
-                    dish_id=int(one_item.get("id")) if one_item.get("id") and int(one_item.get("id")) != -1 else None,
+                    dish_id=int(item_id) if item_id and int(item_id) != -1 else None,
                     quantity=int(one_item.get("quantity", "1")),
-                    price_at_purchase=int(one_item.get("price", "0")),
-                    is_tip=False
+                    price_at_purchase=final_unit_price,
+                    is_tip=True if item_id and int(item_id) == -1 else False
                 )
 
             return JsonResponse({
@@ -416,4 +469,37 @@ def sendMessage(request):
     return JsonResponse({
         "success": False, 
         "message": "Správa sa dá odoslať len pomocou POST metódy."
+    }, status=405)
+
+@csrf_exempt
+def validateCoupon(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body) # Gets The Data
+            code = data.get("code", "").strip().upper() # Gets The Code
+
+            coupon = Coupon.objects.get(code__iexact=code, is_active=True) # Gets The Active Coupon
+
+            if coupon.valid_until and coupon.valid_until < timezone.now():
+                return JsonResponse({
+                    "success": False,
+                    "message": "Platnosť zadaného kupónu už vypršala."
+                }, status=400)
+
+            return JsonResponse({
+                "success": True,
+                "message": "Kupón bol úspešne uplatnený!",
+                "code": coupon.code,
+                "discount_percent": coupon.discount_percent
+            }, status=200)
+
+        except Coupon.DoesNotExist:
+            return JsonResponse({
+                "success": False,
+                "message": "Kupón nie je platný."
+            }, status=404)
+
+    return JsonResponse({
+        "success": False, 
+        "message": "Kupón sa dá uplatniť len pomocou POST metódy."
     }, status=405)

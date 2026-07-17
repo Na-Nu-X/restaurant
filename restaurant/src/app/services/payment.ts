@@ -12,7 +12,7 @@ export class Payment {
   constructor(private http: HttpClient) {}
 
   // Method For Create The Checkout Session
-  createCheckoutSession(items:CartItem[], tip_in_cents:number, selected_tip:number, customer:Customer):Observable<{ 
+  createCheckoutSession(items:CartItem[], tip_in_cents:number, selected_tip:number, customer:Customer, coupon_code:string|null):Observable<{ 
         success:string,
         message:string,
         url?:string 
@@ -40,12 +40,12 @@ export class Payment {
       message:string,
       url?:string 
     }>(api_url, { 
-      items: items_to_send, customer 
+      items: items_to_send, customer, coupon_code
     })
   }
 
   // Method For Order All Items In Cart (Pay With Cash On Delivery)
-  orderAll(items:CartItem[], customer:Customer):Observable<{ 
+  orderAll(items:CartItem[], customer:Customer, coupon_code:string|null):Observable<{ 
         success:string,
         message:string,
         url?:string 
@@ -59,7 +59,7 @@ export class Payment {
       message:string,
       url?:string 
     }>(api_url, { 
-      items: items_to_send, customer 
+      items: items_to_send, customer, coupon_code
     })
   }
 }
