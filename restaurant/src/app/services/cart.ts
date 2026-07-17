@@ -8,6 +8,12 @@ export interface CartItem {
     price:number,
     quantity:number,
     image:string,
+
+    allergens:{
+        number:number,
+        name:string
+    }[]
+
     average_rating?:number,
     rating_amount?:number
 }

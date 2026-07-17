@@ -65,4 +65,15 @@ export class Catalog implements OnInit {
   addToCart(dish:CartItem) {
     this.cartService.addToCart(dish) // Stores The Dish
   }
+
+  // Method For Get Allergens Tooltip Content
+  getAllergensTooltip(
+    allergens: { 
+      number:number,
+      name: string 
+    }[]
+  ):string {
+    if(allergens.length === 0) return "" // Returns The Empty Tooltip Content
+    return allergens.map(a => `${a.number}. ${a.name}`).join('\n\n') // Returns The Tooltip Content
+  }
 }

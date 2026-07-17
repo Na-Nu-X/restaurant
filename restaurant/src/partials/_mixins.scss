@@ -149,7 +149,7 @@
 
 // Tooltip
 
-@mixin tooltip($top: 5px) {
+@mixin tooltip($top: -5px) {
     &::before,
     &::after {
         --scale: 0;
@@ -159,6 +159,7 @@
         left: 50%;
         transform: translateX(-50%) translateY(var(--translate-y, 0)) scale(var(--scale));
         transform-origin: bottom center;
+        pointer-events: none;
         transition: 0.3s transform 0s;
     }
 
@@ -166,14 +167,16 @@
         --translate-y: calc(-100% - 10px);
 
         content: attr(data-tooltip);
-        width: fit-content;
-        max-width: 100%;
+        width: max-content;
+        max-width: 250px;
         padding: 5px;
-        text-align: center;
-        border-radius: $small-border-radius;
+        text-align: left;
+        white-space: pre-line;
         font-size: 0.8em;
-        background-color: transparentize($secondary-color, 0.8);
+        background-color: $main-color;
         color: $secondary-color;
+        border-color: $main-color;
+        border-radius: $small-border-radius;
         text-shadow: 0px 0px 5px $main-color;
     }
 
@@ -182,7 +185,7 @@
         
         content: "";
         border: 10px solid transparent;
-        border-top-color: transparentize($secondary-color, 0.8);
+        border-top-color: $main-color;
         transform-origin: top center;
     }
 

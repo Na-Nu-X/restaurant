@@ -14,20 +14,51 @@ from django.core.mail import EmailMultiAlternatives
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
+# def sendMail(user, subject, text_content, html_content, html_content_end, html_content_middle=""):
+#     # Send Mail
+#     subject = f"Wesiq - {subject}"
+#     text_content = f"Ahoj {user.username}" + f",\n{text_content}"
+#     sender = settings.EMAIL_HOST_USER
+#     receiver = [user.email_address]
+#     html_content = f"""
+#         <h1>{f'Ahoj {user.username}'},</h1>
+#         <p>{html_content}<p>
+#         <h1>{html_content_middle}</h1>
+#         <p>{html_content_end}<br>
+#         Vaša reštaurácia.</p>
+#     """
+
+#     mail_message = EmailMultiAlternatives(subject, text_content, sender, receiver)
+#     mail_message.attach_alternative(html_content, "text/html")
+#     mail_message.send()
+
 def getDishes(request):
     # Gets All The Dishes
     dishes = Dish.objects.annotate(
         average_rating=Round(Avg("ratings__rating"), 1),
         rating_amount=Count("ratings")
-    ).values(
-        "id", "title", "description", "price", "image", "average_rating", "rating_amount"
-    )
+    ).prefetch_related("allergens")
+
+    # Creates Valid Format Of Dishes For JSON Response
+    dishes_data = []
+
+    for one_dish in dishes:
+        dishes_data.append({
+            "id": one_dish.id,
+            "title": one_dish.title,
+            "description": one_dish.description,
+            "price": one_dish.price,
+            "image": one_dish.image,
+            "allergens": list(one_dish.allergens.values("number", "name")),
+            "average_rating": one_dish.average_rating or 0.0,
+            "rating_amount": one_dish.rating_amount
+        })
 
     # Sends The Data As A JSON Response
     return JsonResponse({
         "success": True,
         "message": "Položky boli nájdené.",
-        "dishes": list(dishes), 
+        "dishes": list(dishes_data), 
     }, status=200, safe=False)
 
 @csrf_exempt
@@ -237,8 +268,9 @@ def createOrder(request):
 @csrf_exempt
 def getOrderStatus(request, tracking_code):
     try:
-        order = Order.objects.get(tracking_code=tracking_code.upper())
+        order = Order.objects.get(tracking_code=tracking_code.upper()) # Gets The Order
 
+        # Creates Valid Format Of Order Details For JSON Response
         order_details = {
             "id": order.id,
             "tracking_code": order.tracking_code,
@@ -332,24 +364,6 @@ def sendRating(request):
         "success": False, 
         "message": "Hodnotenie sa dá pridať len pomocou POST metódy."
     }, status=405)
-
-# def sendMail(user, subject, text_content, html_content, html_content_end, html_content_middle=""):
-#     # Send Mail
-#     subject = f"Wesiq - {subject}"
-#     text_content = f"Ahoj {user.username}" + f",\n{text_content}"
-#     sender = settings.EMAIL_HOST_USER
-#     receiver = [user.email_address]
-#     html_content = f"""
-#         <h1>{f'Ahoj {user.username}'},</h1>
-#         <p>{html_content}<p>
-#         <h1>{html_content_middle}</h1>
-#         <p>{html_content_end}<br>
-#         Vaša reštaurácia.</p>
-#     """
-
-#     mail_message = EmailMultiAlternatives(subject, text_content, sender, receiver)
-#     mail_message.attach_alternative(html_content, "text/html")
-#     mail_message.send()
 
 @csrf_exempt
 def sendMessage(request):

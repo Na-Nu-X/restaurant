@@ -11,6 +11,28 @@
         <p class="title">{{ one_dish.title }}</p>
         <p class="description">{{ one_dish.description }}</p>
 
+        <div class="allergens_container">
+            <p>Alergény: </p>
+
+            <div class="allergens" *ngIf="one_dish.allergens && one_dish.allergens.length > 0">
+                <span class="numbers">
+                    <span *ngFor="let one_allergen of one_dish.allergens; let is_last = last">
+                        {{ one_allergen.number }}{{ is_last ? '' : ', ' }}
+                    </span>
+                </span>
+
+                <div 
+                    class="tooltip"
+                    *ngIf="one_dish.allergens && one_dish.allergens.length > 0"
+                    [attr.data-tooltip]="getAllergensTooltip(one_dish.allergens)"
+                >
+                    <i class="fa-solid fa-circle-info"></i> <!-- https://fontawesome.com/icons/circle-info -->
+                </div>
+            </div>
+
+            <p *ngIf="one_dish.allergens.length === 0">žiadne</p>
+        </div>
+
         <div class="bottom">
             <p class="price">{{ (one_dish.price / 100) | currency:'EUR':'':'1.2-2':'sk-SK' }}<span>€</span></p>
             <button class="add_to_cart" title="Pridať do košíka" aria-label="Pridať do košíka" (click)="addToCart(one_dish)"><i class="fa-solid fa-basket-shopping"></i> Pridať</button> <!-- https://fontawesome.com/icons/basket-shopping -->

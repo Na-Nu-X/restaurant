@@ -1,4 +1,5 @@
 @import "../../partials/variables";
+@import "../../partials/mixins";
 
 .all_dishes {
     display: grid;
@@ -86,6 +87,46 @@
                 margin-right: 10px;
                 initial-letter: 2;
                 font-weight: bold;
+            }
+        }
+
+        .allergens_container {
+            display: flex;
+            gap: 5px;
+
+            p {
+                color: transparentize($main-color, 0.4);
+            }
+
+            .allergens {
+                display: flex;
+                align-items: center;
+                width: 100%;
+
+                .numbers {
+                    color: transparentize($main-color, 0.4);
+                }
+
+                // Tooltip
+    
+                .tooltip {
+                    @include tooltip;
+                    position: relative;
+                    display: inline-block;
+                    margin-left: auto;
+
+                    &:hover {
+                        .fa-circle-info {
+                            color: transparentize($main-color, 0.5);
+                        }
+                    }
+
+                    .fa-circle-info {
+                        display: block;
+                        color: transparentize($main-color, 0.8);
+                        transition: color 0.2s ease;
+                    }
+                }
             }
         }
 

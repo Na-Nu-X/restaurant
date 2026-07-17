@@ -29,7 +29,8 @@ export class Payment {
           description: "",
           price: tip_in_cents,
           quantity: 1,
-          image: "tip"
+          image: "tip",
+          allergens: []
         })
       }
 

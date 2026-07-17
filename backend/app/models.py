@@ -4,6 +4,14 @@ import random
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Dish(models.Model):
+    allergens = models.ManyToManyField(
+        "Allergen", 
+        verbose_name="Allergens", 
+        help_text="Food allergens.", 
+        related_name="dishes", 
+        blank=True
+    )
+
     title = models.CharField(
         verbose_name="Title", 
         help_text="Title of the dish.",
@@ -34,6 +42,27 @@ class Dish(models.Model):
 
     def __str__(self):
         return self.title
+
+class Allergen(models.Model):
+    number = models.PositiveIntegerField(
+        verbose_name="Number", 
+        help_text="Numerical designation of the allergen.",
+        unique=True,
+        null=False
+    )
+
+    name = models.CharField(
+        verbose_name="Name", 
+        help_text="Name or title of the allergen.",
+        max_length=200, 
+        null=False
+    )
+
+    class Meta:
+        ordering = ["number"]
+
+    def __str__(self):
+        return f"{self.number}. {self.name}"
 
 # Function For Generate The Order Tracking Code
 def generate_tracking_code():
