@@ -41,6 +41,11 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # Unfold Admin Page
+    "unfold",
+    "unfold.contrib.filters",
+    "unfold.contrib.forms",
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -160,3 +165,21 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+# Unfold Admin Page
+
+UNFOLD = {
+    "SITE_TITLE": "Reštaurácia Admin",
+    "SITE_HEADER": "Správa reštaurácie",
+    "SITE_URL": "/",
+    
+    "COLORS": {
+        "primary": {
+            "50": "250 245 255",
+            "100": "243 232 255",
+            "500": "168 85 247",
+            "600": "147 51 234",
+            "700": "126 34 206"
+        }
+    }
+}

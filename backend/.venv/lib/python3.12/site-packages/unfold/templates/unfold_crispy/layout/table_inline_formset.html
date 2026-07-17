@@ -1,0 +1,91 @@
+{% load crispy_forms_tags crispy_forms_utils crispy_forms_field i18n unfold %}
+{% specialspaceless %}
+    {% if formset_tag %}
+        <form {{ flat_attrs }} method="{{ form_method }}" {% if formset.is_multipart %} enctype="multipart/form-data"{% endif %}>
+    {% endif %}
+
+    {% if formset_method|lower == 'post' and not disable_csrf %}
+        {% csrf_token %}
+    {% endif %}
+
+    {% include "unfold_crispy/errors_formset.html" %}
+
+    <div class="overflow-x-auto border border-base-200 rounded-default shadow-xs dark:border-base-800" {% if form_id %} id="{{ form_id }}"{% endif %}>
+        {{ formset.management_form|crispy }}
+
+        <table class="w-full">
+            {% if not form_show_labels %}
+                <thead>
+                    {% if formset.readonly and not formset.queryset.exists %}
+                    {% else %}
+                        <tr>
+                            {% for field in formset.forms.0 %}
+                                {% if field.label and not field.is_hidden %}
+                                    <th for="{{ field.auto_id }}" class="align-middle font-semibold py-2 text-left text-font-important-light dark:text-font-important-dark whitespace-nowrap px-3 {% if field.name == "DELETE" %}w-0{% endif %}">
+                                        {{ field.label }}{% if field.field.required and not field|is_checkbox %} <span class="asteriskField">*</span>{% endif %}
+                                    </th>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                    {% endif %}
+                </thead>
+            {% endif %}
+
+            <tbody {% if formset_id %}id="{{ formset_id }}-rows"{% endif %}>
+                {% for form in formset %}
+                    {% if form_show_errors and form.non_field_errors and not form.is_extra %}
+                        <tr>
+                            <td colspan="100%" class="border-t border-base-200 px-3 pt-3 dark:border-base-800">
+                                {% include "unfold_crispy/errors.html" %}
+                            </td>
+                        </tr>
+                    {% endif %}
+
+                    <tr class="{% if form.instance.pk %}original-form{% else %}dynamic-form{% endif %}">
+                        {% for field in form %}
+                            {% if form.instance.pk %}
+                                {% include 'unfold_crispy/field.html' with tag="td" formset=1 %}
+                            {% else %}
+                                {% include 'unfold_crispy/field.html' with tag="td" formset=1 dynamic=1 %}
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+
+            {% if form_add and formset_id %}
+                <tbody>
+                    <tr class="hidden empty-form">
+                        {% for field in formset.empty_form %}
+                            {% include 'unfold_crispy/field.html' with tag="td" formset=1 dynamic=1 %}
+                        {% endfor %}
+                    </tr>
+
+                    <tr id="{{ formset_id }}-add-row-wrapper">
+                        <td colspan="100%" class="border-t border-base-200 p-3 dark:border-base-800">
+                            <button type="button" id="{{ formset_id }}-add-row-button" data-formset-id="{{ formset_id }}" class="crispy-formset-add cursor-pointer flex items-center font-medium -ml-1.5 -my-1.5 select-none text-primary-600 dark:text-primary-500">
+                                <span class="flex items-center justify-center h-[38px] w-[38px]">
+                                    <span class="material-symbols-outlined bg-primary-600 flex items-center justify-center rounded-full text-base text-white h-[18px] w-[18px]">add</span>
+                                </span>
+
+                                <span>
+                                    {% if formset.model %}
+                                        {% trans "Add" %} {{ formset.model|model_verbose_name }}
+                                    {% else %}
+                                        {% trans "Add row" %}
+                                    {% endif %}
+                                </span>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            {% endif %}
+        </table>
+    </div>
+
+    {% include "unfold_crispy/inputs.html" %}
+
+    {% if formset_tag %}
+        </form>
+    {% endif %}
+{% endspecialspaceless %}
