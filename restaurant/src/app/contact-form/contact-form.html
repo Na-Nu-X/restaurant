@@ -1,11 +1,11 @@
 <form class="contact_form" action="">
     <div class="name_container">
-        <input type="text" name="first_name" placeholder="Meno" required>
-        <input type="text" name="last_name" placeholder="Priezvisko" required>
+        <input type="text" name="first_name" placeholder="Meno" maxlength="20" required [(ngModel)]="contact_form.first_name">
+        <input type="text" name="last_name" placeholder="Priezvisko" maxlength="50" required [(ngModel)]="contact_form.last_name">
     </div>
 
-    <input type="email" name="email" placeholder="E-mail" required>
-    <textarea name="message" placeholder="Správa..." rows="5" required></textarea>
+    <input type="email" name="email_address" placeholder="E-mail" maxlength="50" required [(ngModel)]="contact_form.email_address">
+    <textarea name="message" placeholder="Správa..." rows="5" maxlength="250" required [(ngModel)]="contact_form.message"></textarea>
 
-    <button type="submit" class="send">Odoslať správu</button>
+    <button type="submit" class="send" (click)="sendMessage()">Odoslať správu</button>
 </form>

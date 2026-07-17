@@ -52,7 +52,7 @@ class Order(models.Model):
 
     tracking_code = models.CharField(
         verbose_name="Tracking Code",
-        help_text="Order's First Name.",
+        help_text="Order's tracking code.",
         max_length=6, 
         unique=True, 
         blank=True,
@@ -61,41 +61,42 @@ class Order(models.Model):
 
     first_name = models.CharField(
         verbose_name="First Name", 
-        help_text="Customer's First Name.",
+        help_text="Customer's first name.",
         max_length=20, 
         null=False
     )
 
     last_name = models.CharField(
         verbose_name="Last Name", 
-        help_text="Customer's Last Name.",
+        help_text="Customer's last name.",
         max_length=50, 
         null=False
     )
 
     address = models.CharField(
         verbose_name="Address", 
-        help_text="Customer's Address.",
+        help_text="Customer's address.",
         max_length=100, 
         null=False
     )
 
     city = models.CharField(
         verbose_name="City", 
-        help_text="Customer's City.",
+        help_text="Customer's city.",
         max_length=50, 
         null=False
     )
 
     phone_number = models.CharField(
         verbose_name="Phone Number", 
-        help_text="Customer's Phone Number.",
+        help_text="Customer's phone number.",
         max_length=50, 
         null=False
     )
 
     message = models.TextField(
-        verbose_name="Bio", 
+        verbose_name="Message", 
+        help_text="Additional message or note.",
         max_length=100, 
         null=True, 
         blank=True
@@ -103,14 +104,14 @@ class Order(models.Model):
 
     price = models.PositiveIntegerField(
         verbose_name="Price", 
-        help_text="Price Of The Order In Cents (Without The Tip).",
+        help_text="Price of the order in cents (without the tip).",
         default=0, 
         null=False
     )
 
     total_price = models.PositiveIntegerField(
         verbose_name="Total Price", 
-        help_text="Total Price Of The Order In Cents (With The Tip).",
+        help_text="Total price of the order in cents (with the tip).",
         default=0, 
         null=False
     )
@@ -252,3 +253,44 @@ class Rating(models.Model):
 
     def __str__(self):
         return f"{self.dish.name} - {self.stars} stars" if self.stars > 1 else f"{self.dish.name} - {self.stars} star"
+
+class ContactMessage(models.Model):
+    first_name = models.CharField(
+        verbose_name="First Name", 
+        help_text="Customer's first name.",
+        max_length=20, 
+        null=False
+    )
+
+    last_name = models.CharField(
+        verbose_name="Last Name", 
+        help_text="Customer's last name.",
+        max_length=50, 
+        null=False
+    )
+
+    email_address = models.CharField(
+        verbose_name="E-mail Address", 
+        help_text="Customer's e-mail address.",
+        max_length=50,
+        null=False
+    )
+
+
+    message = models.TextField(
+        verbose_name="Message", 
+        help_text="Message content.",
+        max_length=250, 
+        null=True, 
+        blank=True
+    )
+
+    creation_time = models.DateTimeField(
+        verbose_name="Creation Time",
+        help_text="Time of the message submission.", 
+        auto_now_add=True,
+        null=False
+    )
+
+    def __str__(self):
+        return f"Správa od {self.first_name} {self.last_name}"

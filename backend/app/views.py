@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from .models import Dish, Order, OrderItem, Rating
+from .models import Dish, Order, OrderItem, Rating, ContactMessage
 import stripe
 import json
 from django.conf import settings
@@ -10,6 +10,7 @@ import urllib.parse
 from django.http import HttpResponse
 from django.db.models import Avg, Count
 from django.db.models.functions import Round
+from django.core.mail import EmailMultiAlternatives
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -325,9 +326,80 @@ def sendRating(request):
             return JsonResponse({
                 "success": False, 
                 "message": "Pri pridávaní hodnotenia došlo k chybe."
-            }, status=400)
+            }, status=500)
             
     return JsonResponse({
         "success": False, 
         "message": "Hodnotenie sa dá pridať len pomocou POST metódy."
+    }, status=405)
+
+# def sendMail(user, subject, text_content, html_content, html_content_end, html_content_middle=""):
+#     # Send Mail
+#     subject = f"Wesiq - {subject}"
+#     text_content = f"Ahoj {user.username}" + f",\n{text_content}"
+#     sender = settings.EMAIL_HOST_USER
+#     receiver = [user.email_address]
+#     html_content = f"""
+#         <h1>{f'Ahoj {user.username}'},</h1>
+#         <p>{html_content}<p>
+#         <h1>{html_content_middle}</h1>
+#         <p>{html_content_end}<br>
+#         Vaša reštaurácia.</p>
+#     """
+
+#     mail_message = EmailMultiAlternatives(subject, text_content, sender, receiver)
+#     mail_message.attach_alternative(html_content, "text/html")
+#     mail_message.send()
+
+@csrf_exempt
+def sendMessage(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body) # Gets The Data
+
+            first_name = data.get("first_name") # Gets The First Name
+            last_name = data.get("last_name") # Gets The Last Name
+            email_address = data.get("email_address") # Gets The E-mail Address
+            message = data.get("message") # Gets The Message
+            
+            # Saves The New Message
+            ContactMessage.objects.create(
+                first_name=first_name,
+                last_name=last_name,
+                email_address=email_address,
+                message=message
+            )
+
+            # Sends Mail
+            subject = f"Reštaurácia - správa od zákazníka"
+            text_content = f"{first_name} {last_name} - {email_address}\n\n{message}"
+            sender = email_address
+            receiver = [settings.EMAIL_HOST_USER]
+            html_content = f"""
+                <p>
+                    <b>{first_name} {last_name} - {email_address}</b><br><br>
+                    {message}
+                </p>
+            """
+
+            mail_message = EmailMultiAlternatives(subject, text_content, sender, receiver)
+            mail_message.attach_alternative(html_content, "text/html")
+
+            mail_message.send()
+            
+            return JsonResponse({
+                "success": True, 
+                "message": "Správa bola odoslaná."
+            }, status=200)
+
+        except Exception as e:
+            print(e)
+            return JsonResponse({
+                "success": False, 
+                "message": "Pri odosielaní správy došlo k chybe."
+            }, status=500)
+            
+    return JsonResponse({
+        "success": False, 
+        "message": "Správa sa dá odoslať len pomocou POST metódy."
     }, status=405)
