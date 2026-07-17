@@ -6,59 +6,65 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 class Dish(models.Model):
     allergens = models.ManyToManyField(
         "Allergen", 
-        verbose_name="Allergens", 
-        help_text="Food allergens.", 
+        verbose_name="Alergény", 
+        help_text="Potravinové alergény.", 
         related_name="dishes", 
         blank=True
     )
 
     title = models.CharField(
-        verbose_name="Title", 
-        help_text="Title of the dish.",
+        verbose_name="Názov", 
+        help_text="Názov jedla.",
         max_length=20, 
         null=False
     )
 
     description = models.CharField(
-        verbose_name="Description", 
-        help_text="Description of the dish.",
+        verbose_name="Popis", 
+        help_text="Popis jedla.",
         max_length=200, 
         null=False
     )
 
     price = models.PositiveIntegerField(
-        verbose_name="Price", 
-        help_text="Price in cents.",
+        verbose_name="Cena", 
+        help_text="Cena v centoch.",
         default=0, 
         null=False
     )
 
     image = models.CharField(
-        verbose_name="Image", 
-        help_text="Image of the dish.",
+        verbose_name="Obrázok", 
+        help_text="Obrázok jedla (názov súboru).",
         max_length=200, 
         null=False
     )
+
+    class Meta:
+        verbose_name = "Jedlo"
+        verbose_name_plural = "Jedlá"
 
     def __str__(self):
         return self.title
 
 class Allergen(models.Model):
     number = models.PositiveIntegerField(
-        verbose_name="Number", 
-        help_text="Numerical designation of the allergen.",
+        verbose_name="Číslo", 
+        help_text="Číselné označenie alergénu.",
         unique=True,
         null=False
     )
 
     name = models.CharField(
-        verbose_name="Name", 
-        help_text="Name or title of the allergen.",
+        verbose_name="Názov", 
+        help_text="Názov alebo označenie alergénu.",
         max_length=200, 
         null=False
     )
 
     class Meta:
+        verbose_name = "Alergén"
+        verbose_name_plural = "Alergény"
         ordering = ["number"]
 
     def __str__(self):
@@ -67,7 +73,7 @@ class Allergen(models.Model):
 # Function For Generate The Order Tracking Code
 def generate_tracking_code():
     characters = string.ascii_uppercase + string.digits
-    return ''.join(random.choices(characters, k=6))
+    return "".join(random.choices(characters, k=6))
 
 class Order(models.Model):
     STATUS_CHOICES = (
@@ -80,8 +86,8 @@ class Order(models.Model):
     )
 
     tracking_code = models.CharField(
-        verbose_name="Tracking Code",
-        help_text="Order's tracking code.",
+        verbose_name="Sledovací kód",
+        help_text="Sledovací kód objednávky.",
         max_length=6, 
         unique=True, 
         blank=True,
@@ -89,65 +95,65 @@ class Order(models.Model):
     )
 
     first_name = models.CharField(
-        verbose_name="First Name", 
-        help_text="Customer's first name.",
+        verbose_name="Meno", 
+        help_text="Meno zákazníka.",
         max_length=20, 
         null=False
     )
 
     last_name = models.CharField(
-        verbose_name="Last Name", 
-        help_text="Customer's last name.",
+        verbose_name="Priezvisko", 
+        help_text="Priezvisko zákazníka.",
         max_length=50, 
         null=False
     )
 
     address = models.CharField(
-        verbose_name="Address", 
-        help_text="Customer's address.",
+        verbose_name="Adresa", 
+        help_text="Adresa doručenia.",
         max_length=100, 
         null=False
     )
 
     city = models.CharField(
-        verbose_name="City", 
-        help_text="Customer's city.",
+        verbose_name="Mesto", 
+        help_text="Mesto adresy doručenia.",
         max_length=50, 
         null=False
     )
 
     phone_number = models.CharField(
-        verbose_name="Phone Number", 
-        help_text="Customer's phone number.",
+        verbose_name="Telefónne číslo", 
+        help_text="Telefónne číslo zákazníka.",
         max_length=50, 
         null=False
     )
 
     message = models.TextField(
-        verbose_name="Message", 
-        help_text="Additional message or note.",
+        verbose_name="Správa", 
+        help_text="Dodatočná správa / poznámka.",
         max_length=100, 
         null=True, 
         blank=True
     )
 
     price = models.PositiveIntegerField(
-        verbose_name="Price", 
-        help_text="Price of the order in cents (without the tip).",
+        verbose_name="Cena", 
+        help_text="Cena objednávky v centoch (bez prepitného).",
         default=0, 
         null=False
     )
 
     total_price = models.PositiveIntegerField(
-        verbose_name="Total Price", 
-        help_text="Total price of the order in cents (with the tip).",
+        verbose_name="Celková cena", 
+        help_text="Celková cena objednávky v centoch (vrátane prepitného).",
         default=0, 
         null=False
     )
 
     status = models.CharField(
-        verbose_name="Order Status", 
-        help_text="Order's status.", 
+        verbose_name="Stav objednávky", 
+        help_text="Aktuálny stav objednávky.", 
         max_length=20, 
         choices=STATUS_CHOICES, 
         default="PENDING", 
@@ -156,25 +162,29 @@ class Order(models.Model):
 
     stripe_intent_id = models.CharField(
         verbose_name="Stripe ID", 
-        help_text="Transaction ID in the Stripe service.",
+        help_text="ID transakcie v službe Stripe.",
         max_length=255, 
         unique=True, 
         null=True
     )
 
     cash_on_delivery = models.BooleanField(
-        verbose_name="Cash On Delivery", 
-        help_text="Stores information on whether the order will be paid for via cash on delivery.",
+        verbose_name="Na dobierku", 
+        help_text="Informácia o tom, či vybraná objednávka bude vyplatená na dobierku alebo kartou.",
         default=False, 
         null=False
     )
     
     creation_time = models.DateTimeField(
-        verbose_name="Creation Time",
-        help_text="Time of the order submission.", 
+        verbose_name="Čas vytvorenia",
+        help_text="Čas vytvorenia objednávky.", 
         auto_now_add=True,
         null=False
     )
+
+    class Meta:
+        verbose_name = "Objednávka"
+        verbose_name_plural = "Objednávky"
 
     def save(self, *args, **kwargs):
         if not self.tracking_code:
@@ -189,13 +199,13 @@ class Order(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Order #{self.tracking_code} - {self.last_name} ({self.get_status_display()})"
+        return f"Objednávka #{self.tracking_code} - {self.last_name} ({self.get_status_display()})"
 
 class OrderItem(models.Model):
     order = models.ForeignKey(
         Order, 
-        verbose_name="Order",
-        help_text="The order to which the item belongs.", 
+        verbose_name="Objednávka",
+        help_text="Objednávka ktorej patrí daná položka.", 
         on_delete=models.CASCADE,
         related_name="items", 
         null=False
@@ -203,43 +213,47 @@ class OrderItem(models.Model):
     
     dish = models.ForeignKey(
         Dish, 
-        verbose_name="Dish",
-        help_text="The dish to which the item belongs.", 
+        verbose_name="Jedlo",
+        help_text="Jedlo ktorému zodpovedá vybraná položka.", 
         on_delete=models.SET_NULL, 
         null=True,
         blank=True
     )
 
     quantity = models.PositiveIntegerField(
-        verbose_name="Quantity", 
-        help_text="Quantity of items.",
+        verbose_name="Množstvo", 
+        help_text="Množstvo položiek.",
         default=1, 
         null=False
     )
     
     price_at_purchase = models.PositiveIntegerField(
-        verbose_name="Price At Purchase", 
-        help_text="Price per item in cents at the time the order was created (with discount).",
+        verbose_name="Cena pri objednaní", 
+        help_text="Cena za položku v centoch v čase vytvorenia objednávky (vrátane zľavy).",
         default=0, 
         null=False
     )
 
     is_tip = models.BooleanField(
-        verbose_name="Is Tip", 
-        help_text="Stores the information if the item is tip.",
+        verbose_name="Je prepitné", 
+        help_text="Informácia o tom, či vybraná položka je prepitné (inak je produkt).",
         default=False, 
         null=False
     )
 
+    class Meta:
+        verbose_name = "Položka objednávky"
+        verbose_name_plural = "Položky objednávky"
+
     def __str__(self):
         dish_name = self.dish.title if self.dish else "Zmazané jedlo"
-        return f"{self.quantity}x {dish_name} (Order #{self.order.id})"
+        return f"{self.quantity}x {dish_name} (Objednávka #{self.order.id})"
 
 class Rating(models.Model):
     order = models.ForeignKey(
         Order, 
-        verbose_name="Order",
-        help_text="The order to which the rating belongs.", 
+        verbose_name="Objednávka",
+        help_text="Objednávka ktorej vybrané hodnotenie patrí.", 
         on_delete=models.CASCADE,
         related_name="ratings", 
         null=False
@@ -247,16 +261,16 @@ class Rating(models.Model):
     
     dish = models.ForeignKey(
         Dish, 
-        verbose_name="Dish",
-        help_text="The dish to which the rating belongs.", 
+        verbose_name="Jedlo",
+        help_text="Jedlo ktorému vybrané hodnotenie patrí.", 
         on_delete=models.CASCADE, 
         related_name="ratings",
         null=False
     )
 
     rating = models.PositiveIntegerField(
-        verbose_name="Rating", 
-        help_text="Rating from 1 to 5.", 
+        verbose_name="Hodnotenie", 
+        help_text="Hodnotenie od 1 do 5.", 
         validators=[MinValueValidator(1), MaxValueValidator(5)],
         default=1, 
         null=False
@@ -271,96 +285,106 @@ class Rating(models.Model):
     # )
 
     creation_time = models.DateTimeField(
-        verbose_name="Creation Time",
-        help_text="Time of the rating submission.", 
+        verbose_name="Čas pridania",
+        help_text="Čas pridania hodnotenia.", 
         auto_now_add=True,
         null=False
     )
 
     class Meta:
+        verbose_name = "Hodnotenie jedla"
+        verbose_name_plural = "Hodnotenie jedál"
         unique_together = ("dish", "order")
 
     def __str__(self):
-        return f"{self.dish.name} - {self.stars} stars" if self.stars > 1 else f"{self.dish.name} - {self.stars} star"
+        return f"{self.dish.name} - {self.stars} hviezdičiek" if self.stars > 1 else f"{self.dish.name} - {self.stars} hviezdička"
 
 class ContactMessage(models.Model):
     first_name = models.CharField(
-        verbose_name="First Name", 
-        help_text="Customer's first name.",
+        verbose_name="Meno", 
+        help_text="Meno zákazníka.",
         max_length=20, 
         null=False
     )
 
     last_name = models.CharField(
-        verbose_name="Last Name", 
-        help_text="Customer's last name.",
+        verbose_name="Priezvisko", 
+        help_text="Priezvisko zákazníka.",
         max_length=50, 
         null=False
     )
 
     email_address = models.CharField(
-        verbose_name="E-mail Address", 
-        help_text="Customer's e-mail address.",
+        verbose_name="E-mailová adresa", 
+        help_text="E-mailová adresa zákazníka.",
         max_length=50,
         null=False
     )
 
 
     message = models.TextField(
-        verbose_name="Message", 
-        help_text="Message content.",
+        verbose_name="Správa", 
+        help_text="Obsah správy.",
         max_length=250, 
         null=True, 
         blank=True
     )
 
     creation_time = models.DateTimeField(
-        verbose_name="Creation Time",
-        help_text="Time of the message submission.", 
+        verbose_name="Čas odoslania",
+        help_text="Čas odoslania správy.", 
         auto_now_add=True,
         null=False
     )
+
+    class Meta:
+        verbose_name = "Správa"
+        verbose_name_plural = "Správy"
 
     def __str__(self):
         return f"Správa od {self.first_name} {self.last_name}"
 
 class Coupon(models.Model):
     code = models.CharField(
-        verbose_name="Code",
-        help_text="Coupon's code.",
+        verbose_name="Kód",
+        help_text="Kód kupónu.",
         max_length=50, 
         unique=True, 
         null=False
     )
 
     discount_percent = models.PositiveIntegerField(
-        verbose_name="Discount Percent", 
-        help_text="Discount in percent (1–100%).",
+        verbose_name="Zľava v percentách", 
+        help_text="Zľava v percentách (1–100%).",
         validators=[MinValueValidator(1), MaxValueValidator(100)],
         default=5, 
         null=False,
     )
 
     is_active = models.BooleanField(
-        verbose_name="Is Active", 
-        help_text="Stores the information if the coupon is still available.",
+        verbose_name="Je aktívny", 
+        help_text="Informácia o tom, či vybraný kupón je stále dostupný.",
         default=True, 
         null=False
     )
 
     valid_until = models.DateTimeField(
-        verbose_name="Valid Until",
-        help_text="The time until which the coupon is valid.", 
+        verbose_name="Platí do",
+        help_text="Čas do kedy je vybraný kupón platný.", 
         null=True, 
         blank=True
     )
 
     creation_time = models.DateTimeField(
-        verbose_name="Creation Time",
-        help_text="Time of the coupon activeness.", 
+        verbose_name="Čas vytvorenia",
+        help_text="Čas vytvorenia kupónu.", 
         auto_now_add=True,
         null=False
     )
+
+    class Meta:
+        verbose_name = "Kupón"
+        verbose_name_plural = "Kupóny"
 
     def __str__(self):
         return f"{self.code} ({self.discount_percent}%)"
@@ -373,19 +397,19 @@ class DailySoup(models.Model):
         (4, "Štvrtok"),
         (5, "Piatok"),
         (6, "Sobota"),
-        (7, "Nedeľa"),
+        (7, "Nedeľa")
     ]
 
     title = models.CharField(
-        verbose_name="Title", 
-        help_text="Title of the soup.",
+        verbose_name="Názov", 
+        help_text="Názov polievky (celý popis, gramáž, alergény).",
         max_length=250, 
         null=False
     )
 
     day_of_week = models.IntegerField(
-        verbose_name="Day Of Week", 
-        help_text="The day to which the daily soup belongs.", 
+        verbose_name="Deň v týždni", 
+        help_text="Deň, ku ktorému patrí dená polievka.", 
         max_length=1, 
         choices=DAY_CHOICES, 
         default=1, 
@@ -394,8 +418,8 @@ class DailySoup(models.Model):
     )
 
     is_active = models.BooleanField(
-        verbose_name="Is Active", 
-        help_text="Stores the information if the soup is still available.",
+        verbose_name="Je aktívna", 
+        help_text="Informácia o tom, či vybraná polievka je dostupná pre tento týždeň.",
         default=True, 
         null=False
     )
@@ -419,29 +443,29 @@ class DailyMeal(models.Model):
     ]
 
     number = models.PositiveIntegerField(
-        verbose_name="Number", 
-        help_text="Number of meal.",
+        verbose_name="Číslo", 
+        help_text="Číslo jedla (v danom poradí sa zobrazí ponuka).",
         default=1, 
         null=False
     )
 
     title = models.CharField(
-        verbose_name="Title", 
-        help_text="Title of the soup.",
+        verbose_name="Názov", 
+        help_text="Názov jedla (celý popis, gramáž, alergény).",
         max_length=250, 
         null=False
     )
 
     price = models.PositiveIntegerField(
-        verbose_name="Price", 
-        help_text="Price in cents.",
+        verbose_name="Cena", 
+        help_text="Cena v centoch.",
         default=0, 
         null=False
     )
 
     day_of_week = models.IntegerField(
-        verbose_name="Day Of Week", 
-        help_text="The day to which the daily soup belongs.", 
+        verbose_name="Deň v týždni", 
+        help_text="Deň, ku ktorému patrí dené jedlo.", 
         max_length=1, 
         choices=DAY_CHOICES, 
         default=1, 
@@ -449,8 +473,8 @@ class DailyMeal(models.Model):
     )
 
     is_active = models.BooleanField(
-        verbose_name="Is Active", 
-        help_text="Stores the information if the soup is still available.",
+        verbose_name="Je aktívne", 
+        help_text="Informácia o tom, či vybrané jedlo je dostupné pre tento týždeň.",
         default=True, 
         null=False
     )
@@ -462,3 +486,76 @@ class DailyMeal(models.Model):
 
     def __str__(self):
         return f"{self.get_day_display()} - Menu {self.number}: {self.name}"
+
+class RestaurantConfig(models.Model):
+    is_force_closed = models.BooleanField(
+        verbose_name="Je mimoriadne zatvorené", 
+        help_text="Informácia o tom, či je prevádzka mimoriadne zatvorená (napr. sviatok).",
+        default=False, 
+        null=False
+    )
+
+    closure_reason = models.CharField(
+        verbose_name="Dôvod zatvorenia", 
+        help_text="Dôvod zatvorenia (zobrazené na stránke).",
+        max_length=250, 
+        blank=True, 
+        null=True, 
+    )
+
+    class Meta:
+        verbose_name = "Globálne nastavenie"
+        verbose_name_plural = "Globálne nastavenia"
+
+    def __str__(self):
+        return f"Status: {'ZATVORENÉ' if self.is_force_closed else 'OTVORENÉ'}"
+
+class OpeningHour(models.Model):
+    DAY_CHOICES = [
+        (1, "Pondelok"),
+        (2, "Utorok"),
+        (3, "Streda"),
+        (4, "Štvrtok"),
+        (5, "Piatok"),
+        (6, "Sobota"),
+        (7, "Nedeľa")
+    ]
+
+    day_of_week = models.IntegerField(
+        verbose_name="Deň v týždni", 
+        help_text="Deň v týždni.", 
+        choices=DAY_CHOICES, 
+        default=1, 
+        unique=True,
+        null=False
+    )
+
+    open_time = models.TimeField(
+        verbose_name="Otvárame o",
+        help_text="Čas otvárania.",
+        null=False
+    )
+
+    close_time = models.TimeField(
+        verbose_name="Zatvárame o",
+        help_text="Čas zatvárania.",
+        null=False
+    )
+
+    is_closed_all_day = models.BooleanField(
+        verbose_name="Zatvorené celý deň", 
+        help_text="Informácia o tom, či je prevádzka zatvorená celý deň.",
+        default=False, 
+        null=False
+    )
+
+    class Meta:
+        verbose_name = "Otváracia hodina"
+        verbose_name_plural = "Otváracie hodiny"
+        ordering = ["day_of_week"]
+
+    def __str__(self):
+        if self.is_closed_all_day:
+            return f"{self.get_day_display()}: Zatvorené"
+
+        return f"{self.get_day_display()}: {self.open_time.strftime('%H:%M')} - {self.close_time.strftime('%H:%M')}"
