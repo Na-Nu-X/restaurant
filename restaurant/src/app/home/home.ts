@@ -19,4 +19,4 @@ import { Map } from "../map/map"
   templateUrl: "./home.html",
   styleUrl: "./home.scss"
 })
-export class Home {}
+export class Home { }

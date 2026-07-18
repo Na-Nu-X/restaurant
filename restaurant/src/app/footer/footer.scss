@@ -19,6 +19,12 @@ footer {
         font-size: clamp(2.5em, 5vw, 4em);
     }
 
+    .address {
+        p {
+            color: darken($secondary-color, 40%);
+        }
+    }
+
     .contact_us {
         p {
             display: flex;
@@ -84,42 +90,12 @@ footer {
     .other {
         color: darken($secondary-color, 40%);
 
-        .privacy_policy_again {
-            all: unset;
-            display: inline;
-            font-size: 0.9em;
-
-            &:hover,
-            &:active {
-                text-decoration: underline;
-                cursor: pointer;
-            }
-        }
-
-        .nominatim_api,
         .copywrite {
             color: darken($secondary-color, 40%);
 
             font: {
-                // family: $copywrite-font;
+                family: $copywrite-font;
                 size: 0.8em;
-            }
-        }
-
-        .nominatim_api {
-            a {
-                text-decoration: none;
-                color: inherit;
-
-                font: {
-                    family: inherit;
-                    size: inherit;
-                }
-
-                &:hover,
-                &:active {
-                    text-decoration: underline;
-                }
             }
         }
     }

@@ -97,17 +97,19 @@ export class NavigationBar implements OnInit {
     }
   }
 
-  @ViewChild("all_dishes", { static: false }) all_dishes!:ElementRef<HTMLElement> // Gets The All Dishes Section
-
   scrollTo(selector:string):void {
     if(typeof document !== "undefined") {
       const element:HTMLElement|null = document.querySelector(selector) as HTMLElement || null // Gets The Element
 
       if(element) {
-        const OFFSET:number = 60 + 20 + 45 + 20 // Defines The Offset (Navigation Bar + Padding + Search Bar)
+        let offset:number = 60 // Stores The Offset
+        
+        if(element.classList.contains("all_dishes")) offset = 60 + 20 + 45 + 20 // Sets The Offset (Navigation Bar + Padding + Search Bar)
+        if(element.classList.contains("contact_form")) offset = 60 + 20 // Sets The Offset (Navigation Bar + Padding + Search Bar)
+
         const element_position:number = element.getBoundingClientRect().top + window.scrollY // Gets The Element's Position
 
-        window.scrollTo({ top: element_position - OFFSET, behavior: "smooth" }) // Starts The Scroll Animation
+        window.scrollTo({ top: element_position - offset, behavior: "smooth" }) // Starts The Scroll Animation
       }
     }
   }
@@ -119,6 +121,12 @@ export class NavigationBar implements OnInit {
     this.cart_items = this.cartService.cart_items$ // Sets The Cart Items
     this.current_index = 0 // Resets The Current Index Of The Active Item
     this.cart.nativeElement.showModal() // Shows The Cart Dialog
+  }
+
+  // Method For Close The Cart Dialog By Clicking Outside
+  closeCartOutside(event:MouseEvent):void {
+    const cart_dialog:HTMLDialogElement = this.cart.nativeElement // Gets The Cart Dialog
+    if(event.target === cart_dialog) cart_dialog.close() // Closes The Cart Dialog
   }
 
   // Method To Close The Cart Dialog

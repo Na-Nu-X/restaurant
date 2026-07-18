@@ -1,4 +1,5 @@
 @import "./partials/variables";
+@import "./partials/mixins";
 
 *, &::before, &::after {
     margin: 0;
@@ -7,6 +8,7 @@
 }
 
 body {
+    @include scrollbar;
     background-color: $light-yellow-color;
     font-family: $main-font;
     font-size: 15px;

@@ -5,8 +5,8 @@
         </button>
     
         <ul [class.open]="is_open">
-            <li><a href="#">Domov</a></li>
-            <li><a href="#">Rezervácia</a></li>
+            <li><a href="/">Domov</a></li>
+            <li (click)="scrollTo('.contact_form')"><a>Rezervácia</a></li>
             <li (click)="scrollTo('.all_dishes')"><a>Ponuka</a></li>
         </ul>
 
@@ -20,8 +20,8 @@
     </div>
 </nav>
 
-<dialog #cart class="cart_modal">
-    <div class="cart_modal_container">
+<dialog #cart class="cart_modal" (click)="closeCartOutside($event)">
+    <div class="cart_modal_container" (click)="$event.stopPropagation()">
         <div class="top">
             <h2>Môj košík</h2>
     

@@ -1,0 +1,8 @@
+@import "../partials/mixins";
+
+// Preloader
+
+.preloader {
+    @include loading;
+    @include position_center($position: fixed);
+}
