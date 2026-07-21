@@ -10,5 +10,10 @@
         <button class="order" (click)="scrollTo('.all_dishes')">Objednať</button>
     </div>
 
-    <p class="status">Otvorené</p>
+    <p class="status" [class.open]="is_open" [class.closed]="!is_open">
+        {{ status }}
+        <span *ngIf="is_open && open_till">(do {{ open_till }})</span>
+        <span *ngIf="!is_open && next_open">(otvárame o {{ next_open }})</span>
+        <span *ngIf="reason && reason !== '' && !next_open">({{ reason }})</span>
+    </p>
 </div>

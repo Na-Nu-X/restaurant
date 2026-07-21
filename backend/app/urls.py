@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('api/get-status/', views.getStatus, name='get_status_url'),
     path('api/dishes/', views.getDishes, name='get_dishes_url'),
     path('api/today-menu/', views.getTodayMenu, name='get_today_menu_url'),
     path('api/create-checkout-session/', views.createCheckoutSession, name='create_checkout_session_url'),

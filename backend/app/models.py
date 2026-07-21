@@ -3,6 +3,79 @@ import string
 import random
 from django.core.validators import MinValueValidator, MaxValueValidator
 
+class RestaurantConfig(models.Model):
+    is_force_closed = models.BooleanField(
+        verbose_name="Je mimoriadne zatvorené", 
+        help_text="Informácia o tom, či je prevádzka mimoriadne zatvorená (napr. sviatok).",
+        default=False, 
+        null=False
+    )
+
+    closure_reason = models.CharField(
+        verbose_name="Dôvod zatvorenia", 
+        help_text="Dôvod zatvorenia (zobrazené na stránke).",
+        max_length=250, 
+        blank=True, 
+        null=True, 
+    )
+
+    class Meta:
+        verbose_name = "Globálne nastavenie"
+        verbose_name_plural = "Globálne nastavenia"
+
+    def __str__(self):
+        return f"Status: {'ZATVORENÉ' if self.is_force_closed else 'OTVORENÉ'}"
+
+class OpeningHour(models.Model):
+    DAY_CHOICES = [
+        (1, "Pondelok"),
+        (2, "Utorok"),
+        (3, "Streda"),
+        (4, "Štvrtok"),
+        (5, "Piatok"),
+        (6, "Sobota"),
+        (7, "Nedeľa")
+    ]
+
+    day_of_week = models.IntegerField(
+        verbose_name="Deň v týždni", 
+        help_text="Deň v týždni.", 
+        choices=DAY_CHOICES, 
+        default=1, 
+        unique=True,
+        null=False
+    )
+
+    open_time = models.TimeField(
+        verbose_name="Otvárame o",
+        help_text="Čas otvárania.",
+        null=False
+    )
+
+    close_time = models.TimeField(
+        verbose_name="Zatvárame o",
+        help_text="Čas zatvárania.",
+        null=False
+    )
+
+    is_closed_all_day = models.BooleanField(
+        verbose_name="Zatvorené celý deň", 
+        help_text="Informácia o tom, či je prevádzka zatvorená celý deň.",
+        default=False, 
+        null=False
+    )
+
+    class Meta:
+        verbose_name = "Otváracia hodina"
+        verbose_name_plural = "Otváracie hodiny"
+        ordering = ["day_of_week"]
+
+    def __str__(self):
+        if self.is_closed_all_day:
+            return f"{self.day_of_week}: Zatvorené"
+
+        return f"{self.day_of_week}: {self.open_time.strftime('%H:%M')} - {self.close_time.strftime('%H:%M')}"
+
 class Dish(models.Model):
     allergens = models.ManyToManyField(
         "Allergen", 
@@ -68,7 +141,7 @@ class Allergen(models.Model):
         ordering = ["number"]
 
     def __str__(self):
-        return f"{self.number}. {self.name}"
+        return f"{self.number}. {self.title}"
 
 # Function For Generate The Order Tracking Code
 def generate_tracking_code():
@@ -297,7 +370,7 @@ class Rating(models.Model):
         unique_together = ("dish", "order")
 
     def __str__(self):
-        return f"{self.dish.name} - {self.stars} hviezdičiek" if self.stars > 1 else f"{self.dish.name} - {self.stars} hviezdička"
+        return f"{self.dish.title} - {self.rating} hviezdičiek" if self.rating > 1 else f"{self.dish.title} - {self.rating} hviezdička"
 
 class ContactMessage(models.Model):
     first_name = models.CharField(
@@ -429,7 +502,7 @@ class DailySoup(models.Model):
         verbose_name_plural = "Denné menu - Polievky"
 
     def __str__(self):
-        return f"{self.get_day_display()}: {self.name}"
+        return f"{self.get_day_display()}: {self.title}"
 
 class DailyMeal(models.Model):
     DAY_CHOICES = [
@@ -485,77 +558,4 @@ class DailyMeal(models.Model):
         ordering = ["number"]
 
     def __str__(self):
-        return f"{self.get_day_display()} - Menu {self.number}: {self.name}"
-
-class RestaurantConfig(models.Model):
-    is_force_closed = models.BooleanField(
-        verbose_name="Je mimoriadne zatvorené", 
-        help_text="Informácia o tom, či je prevádzka mimoriadne zatvorená (napr. sviatok).",
-        default=False, 
-        null=False
-    )
-
-    closure_reason = models.CharField(
-        verbose_name="Dôvod zatvorenia", 
-        help_text="Dôvod zatvorenia (zobrazené na stránke).",
-        max_length=250, 
-        blank=True, 
-        null=True, 
-    )
-
-    class Meta:
-        verbose_name = "Globálne nastavenie"
-        verbose_name_plural = "Globálne nastavenia"
-
-    def __str__(self):
-        return f"Status: {'ZATVORENÉ' if self.is_force_closed else 'OTVORENÉ'}"
-
-class OpeningHour(models.Model):
-    DAY_CHOICES = [
-        (1, "Pondelok"),
-        (2, "Utorok"),
-        (3, "Streda"),
-        (4, "Štvrtok"),
-        (5, "Piatok"),
-        (6, "Sobota"),
-        (7, "Nedeľa")
-    ]
-
-    day_of_week = models.IntegerField(
-        verbose_name="Deň v týždni", 
-        help_text="Deň v týždni.", 
-        choices=DAY_CHOICES, 
-        default=1, 
-        unique=True,
-        null=False
-    )
-
-    open_time = models.TimeField(
-        verbose_name="Otvárame o",
-        help_text="Čas otvárania.",
-        null=False
-    )
-
-    close_time = models.TimeField(
-        verbose_name="Zatvárame o",
-        help_text="Čas zatvárania.",
-        null=False
-    )
-
-    is_closed_all_day = models.BooleanField(
-        verbose_name="Zatvorené celý deň", 
-        help_text="Informácia o tom, či je prevádzka zatvorená celý deň.",
-        default=False, 
-        null=False
-    )
-
-    class Meta:
-        verbose_name = "Otváracia hodina"
-        verbose_name_plural = "Otváracie hodiny"
-        ordering = ["day_of_week"]
-
-    def __str__(self):
-        if self.is_closed_all_day:
-            return f"{self.get_day_display()}: Zatvorené"
-
-        return f"{self.get_day_display()}: {self.open_time.strftime('%H:%M')} - {self.close_time.strftime('%H:%M')}"
+        return f"{self.get_day_display()} - Menu {self.number}: {self.title}"

@@ -447,15 +447,11 @@
                 display: flex;
                 flex-direction: column;
                 gap: 10px;
-    
-                .checkout {
-                    @include orange_button($width: auto);
-                    display: flex;
-                    justify-content: space-between;
-                    gap: 10px;
+
+                .checkout,
+                .cash_on_delivery {
                     max-width: 100%;
-                    padding: 10px 20px;
-        
+
                     .total_price {
                         font-size: 1.5em;
                         font-weight: bold;
@@ -468,24 +464,47 @@
                         }
                     }
                 }
+    
+                .checkout {
+                    @include orange_button($width: auto);
+                    display: flex;
+                    justify-content: space-between;
+                    gap: 10px;
+                    padding: 10px 20px;
+
+                    &.disabled {
+                        opacity: 0.5;
+                        background-color: $main-color;
+                        color: $secondary-color;
+                        border-color: darken($secondary-color, 10%);
+
+                        &:hover,
+                        &:focus-visible {
+                            transform: translateY(0px);
+                            background-color: $main-color;
+                            cursor: not-allowed;
+                        }
+                    }
+                }
         
                 .cash_on_delivery {
                     @include yellow_button($width: auto);
                     display: flex;
                     justify-content: space-between;
                     gap: 10px;
-                    max-width: 100%;
                     padding: 10px 20px;
-        
-                    .total_price {
-                        font-size: 1.5em;
-                        font-weight: bold;
-                        line-height: 1;
-                    
-                        span {
-                            font-size: 0.6em;
-                            vertical-align: super;
-                            margin-left: 2px;
+
+                    &.disabled {
+                        opacity: 0.5;
+                        background-color: $main-color;
+                        color: $secondary-color;
+                        border-color: darken($secondary-color, 10%);
+
+                        &:hover,
+                        &:focus-visible {
+                            transform: translateY(0px);
+                            background-color: $main-color;
+                            cursor: not-allowed;
                         }
                     }
                 }

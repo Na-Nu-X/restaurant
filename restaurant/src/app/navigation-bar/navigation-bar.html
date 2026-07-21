@@ -1,10 +1,10 @@
 <nav class="navigation_bar">
     <div class="navigation_container">
         <button class="hamburger" (click)="toggleMenu()">
-            <i class="fa-solid" [class.fa-bars]="!is_open" [class.fa-xmark]="is_open"></i> <!-- https://fontawesome.com/icons/bars / https://fontawesome.com/icons/magnifying-glass -->
+            <i class="fa-solid" [class.fa-bars]="!is_menu_open" [class.fa-xmark]="is_menu_open"></i> <!-- https://fontawesome.com/icons/bars / https://fontawesome.com/icons/magnifying-glass -->
         </button>
     
-        <ul [class.open]="is_open">
+        <ul [class.open]="is_menu_open">
             <li><a href="/">Domov</a></li>
             <li (click)="scrollTo('.contact_form')"><a>Rezervácia</a></li>
             <li (click)="scrollTo('.all_dishes')"><a>Ponuka</a></li>
@@ -124,11 +124,11 @@
             </div>
     
             <div class="buttons">
-                <button class="checkout" title="Pokračovať k platbe" aria-label="Pokračovať k platbe" (click)="payAll()">
+                <button class="checkout" [class.disabled]="!is_open" [disabled]="!is_open" title="Pokračovať k platbe" aria-label="Pokračovať k platbe" (click)="payAll()">
                     Zaplatiť <p class="total_price">{{ (grand_total_price / 100) | currency:'EUR':'':'1.2-2':'sk-SK' }}<span>€</span></p>
                 </button>
     
-                <button class="cash_on_delivery" title="Zaplatiť na dobierku" aria-label="Zaplatiť na dobierku" (click)="orderAll()">
+                <button class="cash_on_delivery" [class.disabled]="!is_open" [disabled]="!is_open" title="Zaplatiť na dobierku" aria-label="Zaplatiť na dobierku" (click)="orderAll()">
                     Na dobierku <p class="total_price">{{ (price_after_discount / 100) | currency:'EUR':'':'1.2-2':'sk-SK' }}<span>€</span></p>
                 </button>
             </div>

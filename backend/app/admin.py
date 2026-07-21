@@ -1,6 +1,50 @@
 from django.contrib import admin
 from unfold.admin import ModelAdmin
-from .models import Dish, Allergen, Order, OrderItem, Rating, ContactMessage, Coupon, DailySoup, DailyMeal
+from .models import RestaurantConfig, OpeningHour, Dish, Allergen, Order, OrderItem, Rating, ContactMessage, Coupon, DailySoup, DailyMeal
+
+@admin.register(RestaurantConfig)
+class RestaurantConfigAdmin(ModelAdmin):
+    list_display = [
+        "id",
+        "is_force_closed",
+        "closure_reason"
+    ]
+
+    list_filter = []
+
+    search_fields = []
+
+    list_editable = [
+        "is_force_closed",
+        "closure_reason"
+    ]
+
+@admin.register(OpeningHour)
+class OpeningHourAdmin(ModelAdmin):
+    list_display = [
+        "id",
+        "day_of_week",
+        "open_time",
+        "close_time",
+        "is_closed_all_day"
+    ]
+
+    list_filter = [
+        "day_of_week",
+        "open_time",
+        "close_time",
+        "is_closed_all_day"
+    ]
+
+    search_fields = []
+
+    list_editable = [
+        "day_of_week",
+        "open_time",
+        "close_time",
+        "is_closed_all_day"
+    ]
+
 
 @admin.register(Dish)
 class DishAdmin(ModelAdmin):

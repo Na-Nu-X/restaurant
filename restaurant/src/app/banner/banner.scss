@@ -56,5 +56,18 @@
             border-radius: 50%;
             box-shadow: 0 0 5px $green-color;
         }
+
+        &.closed {
+            color: $red-color;
+
+            &::before {
+                background-color: $red-color;
+                box-shadow: 0 0 5px $red-color;
+            }
+        }
+
+        span {
+            font-size: 12px;
+        }
     }
 }

@@ -17,6 +17,7 @@ import {
 import { FormsModule } from "@angular/forms"
 import { Cart } from "../services/cart"
 import { Payment } from "../services/payment"
+import { Status } from "../services/status"
 import { Observable } from "rxjs"
 
 import type { CartItem } from "../services/cart"
@@ -38,7 +39,8 @@ export interface Customer {
 })
 
 export class NavigationBar implements OnInit {
-  is_open:boolean = false // Stores The Information If The Menu Is Open
+  is_open:boolean = false // Stores The Information If Is Open
+  is_menu_open:boolean = false // Stores The Information If The Menu Is Open
   is_scrolled:boolean = false  // Stores The Information If The Page Is Scrolled
   cart_amount$!:Observable<number>
   cart_items!:CartItem[]
@@ -59,7 +61,7 @@ export class NavigationBar implements OnInit {
     message: null
   }
   
-  constructor(private cartService:Cart, private paymentService:Payment, private cdr:ChangeDetectorRef) {
+  constructor(private cartService:Cart, private paymentService:Payment, private cdr:ChangeDetectorRef, private StatusService:Status) {
     afterNextRender(() => {
       this.checkWindowWidth(window.innerWidth)
       this.onWindowScroll()
@@ -69,11 +71,28 @@ export class NavigationBar implements OnInit {
   // Method Which Executes In Beginning
   ngOnInit():void {
     this.cart_amount$ = this.cartService.cart_amount$ // Sets The Cart Amount
+
+    // Gets The Current Status
+    this.StatusService.getStatus().subscribe({
+      next:(response) => {
+        if(response && response.success && response.status) {
+          this.is_open = response.is_open || false // Sets The Information If Is Open
+        }
+        
+        else {
+          console.error(response.message) // Shows The Error Message
+        }
+      },
+
+      error:(error) => {
+        console.error(error) // Shows The Error
+      }
+    })
   }
 
   // Method For Toggle The Menu
   toggleMenu():void {
-    this.is_open = !this.is_open // Shows / Hides The Menu
+    this.is_menu_open = !this.is_menu_open // Shows / Hides The Menu
   }
 
   // Window Scroll Functionality
@@ -93,7 +112,7 @@ export class NavigationBar implements OnInit {
   // Method For Check The Window Width
   private checkWindowWidth(width:number):void {
     if(width > 600) {
-      this.is_open = false // Hides The Menu
+      this.is_menu_open = false // Hides The Menu
     }
   }
 
@@ -275,7 +294,9 @@ export class NavigationBar implements OnInit {
 
       error:(error) => {
         console.error(error) // Shows The Error
-        alert("Pri spracovávaní platby došlo k chybe.") // Shows The Alert
+        
+        const message:string = error.error?.message || "Pri spracovávaní platby došlo k chybe." // Sets The Error Message
+        alert(message) // Shows The Alert
       }
     })
   }
@@ -318,7 +339,9 @@ export class NavigationBar implements OnInit {
 
       error:(error) => {
         console.error(error) // Shows The Error
-        alert("Pri spracovávaní objednávky došlo k chybe.") // Shows The Alert
+        
+        const message:string = error.error?.message || "Pri spracovávaní objednávky došlo k chybe." // Sets The Error Message
+        alert(message) // Shows The Alert
       }
     })
   }

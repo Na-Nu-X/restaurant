@@ -1,5 +1,6 @@
+from operator import is_
 from django.http import JsonResponse
-from .models import Dish, Order, OrderItem, Rating, ContactMessage, Coupon, DailySoup, DailyMeal
+from .models import RestaurantConfig, OpeningHour, Dish, Order, OrderItem, Rating, ContactMessage, Coupon, DailySoup, DailyMeal
 import stripe
 import json
 from django.conf import settings
@@ -31,6 +32,66 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 #     mail_message = EmailMultiAlternatives(subject, text_content, sender, receiver)
 #     mail_message.attach_alternative(html_content, "text/html")
 #     mail_message.send()
+
+@csrf_exempt
+def getStatus(request):
+    config = RestaurantConfig.objects.first() # Gets The Global Config
+    
+    if config and config.is_force_closed:
+        return JsonResponse({
+            "success": True,
+            "message": "Stav podniku bol úspešne získaný.",
+            "is_open": False,
+            "status": "Mimoriadne zatvorené",
+            "reason": config.closure_reason or "Dôvod nebol uvedený."
+        }, status=200)
+
+    now = timezone.localtime(timezone.now()) # Gets The Current Time
+    current_day_index = now.isoweekday() # Gets The Current Day Index
+    current_time = now.time() # Gets The Current Time
+
+    try:
+        opening_hour = OpeningHour.objects.get(day_of_week=current_day_index) # Gets The Opening Hour For The Current Day
+
+    except OpeningHour.DoesNotExist:
+        return JsonResponse({
+            "success": True,
+            "message": "Stav podniku bol úspešne získaný.",
+            "is_open": False,
+            "status": "Zatvorené",
+            "reason": "Neboli zadané otváracie hodiny."
+        }, status=200)
+
+    if opening_hour.is_closed_all_day:
+        return JsonResponse({
+            "success": True,
+            "message": "Stav podniku bol úspešne získaný.",
+            "is_open": False,
+            "status": "Zatvorené",
+            "reason": "Pravidelný zatvárací deň."
+        })
+
+    is_inside_opening_hours = opening_hour.open_time <= current_time <= opening_hour.close_time # Checks If The Current Time Is In Opening Hours
+
+    if is_inside_opening_hours:
+        return JsonResponse({
+            "success": True,
+            "message": "Stav podniku bol úspešne získaný.",
+            "is_open": True,
+            "status": "Otvorené",
+            "reason": None,
+            "open_till": opening_hour.close_time.strftime("%H:%M")
+        })
+
+    else:
+        return JsonResponse({
+            "success": True,
+            "message": "Stav podniku bol úspešne získaný.",
+            "is_open": False,
+            "status": "Zatvorené",
+            "reason": "Mimo otváracích hodín.",
+            "next_open": opening_hour.open_time.strftime("%H:%M")
+        })
 
 def getTodayMenu(request):
     day = request.GET.get("day") # Gets The Day Number
@@ -101,6 +162,18 @@ def getDishes(request):
 def createCheckoutSession(request):
     if request.method == "POST":
         try:
+            # Checks The Opening Hours
+
+            status_response = getStatus(request) # Gets The Status Response
+            status_data = json.loads(status_response.content.decode("utf-8")) # Gets The Status Data
+            is_open = status_data.get("is_open", False) # Checks If The Restaurant Is Open
+
+            if not is_open:
+                return JsonResponse({
+                    "success": False,
+                    "message": "Objednávky nie je možné uskutočniť, keď je zatvorené."
+                }, status=400)
+
             # Gets The Data
 
             is_local = os.environ.get("IS_LOCAL", "True") == "True" # Gets The Information About Local Development
@@ -270,6 +343,18 @@ def stripeWebhook(request):
 def createOrder(request):
     if request.method == "POST":
         try:
+            # Checks The Opening Hours
+
+            status_response = getStatus(request) # Gets The Status Response
+            status_data = json.loads(status_response.content.decode("utf-8")) # Gets The Status Data
+            is_open = status_data.get("is_open", False) # Checks If The Restaurant Is Open
+
+            if not is_open:
+                return JsonResponse({
+                    "success": False,
+                    "message": "Objednávky nie je možné uskutočniť, keď je zatvorené."
+                }, status=400)
+                
             # Gets The Data
 
             front_end_domain = os.environ.get("FRONT_END_DOMAIN_URL", "http://localhost:4200/") # Gets The Front-End Domain URL
