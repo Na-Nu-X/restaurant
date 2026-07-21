@@ -134,12 +134,35 @@ def getDishes(request):
     dishes = Dish.objects.annotate(
         average_rating=Round(Avg("ratings__rating"), 1),
         rating_amount=Count("ratings")
-    ).prefetch_related("allergens")
+    ).prefetch_related(
+        "allergens",
+        "modifier_groups__items"
+    )
 
     # Creates Valid Format Of Dishes For JSON Response
     dishes_data = []
 
     for one_dish in dishes:
+        modifier_groups_data = [] # Stores The Modifier Groups Data
+        
+        for one_group in one_dish.modifier_groups.all():
+            items_data = [] # Stores The Items Data
+
+            for item in one_group.items.all():
+                items_data.append({
+                    "id": item.id,
+                    "title": item.title,
+                    "extra_price": item.extra_price
+                })
+
+            modifier_groups_data.append({
+                "id": one_group.id,
+                "title": one_group.title,
+                "is_multiple_choice": one_group.is_multiple_choice,
+                "is_required": one_group.is_required,
+                "items": items_data
+            })
+
         dishes_data.append({
             "id": one_dish.id,
             "title": one_dish.title,
@@ -148,7 +171,8 @@ def getDishes(request):
             "image": one_dish.image,
             "allergens": list(one_dish.allergens.values("number", "name")),
             "average_rating": one_dish.average_rating or 0.0,
-            "rating_amount": one_dish.rating_amount
+            "rating_amount": one_dish.rating_amount,
+            "modifier_groups": modifier_groups_data
         })
 
     # Sends The Data As A JSON Response
@@ -354,7 +378,7 @@ def createOrder(request):
                     "success": False,
                     "message": "Objednávky nie je možné uskutočniť, keď je zatvorené."
                 }, status=400)
-                
+
             # Gets The Data
 
             front_end_domain = os.environ.get("FRONT_END_DOMAIN_URL", "http://localhost:4200/") # Gets The Front-End Domain URL

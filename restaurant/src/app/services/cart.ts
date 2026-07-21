@@ -2,6 +2,19 @@ import { Injectable } from "@angular/core"
 import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient } from "@angular/common/http"
 
+export interface modifierGroup {
+    id:number,
+    title:string,
+    is_multiple_choice:boolean,
+    is_required:boolean,
+
+    items:{
+        id:number,
+        title:string,
+        extra_price:number
+    }[]
+}
+
 export interface CartItem {
     id:number,
     title:string,
@@ -16,7 +29,9 @@ export interface CartItem {
     }[]
 
     average_rating?:number,
-    rating_amount?:number
+    rating_amount?:number,
+    modifier_groups?:modifierGroup[],
+    selected_modifiers?:Record<number, any[]>
 }
 
 export interface ValidateCouponResponse {
@@ -40,7 +55,18 @@ export class Cart {
 
     // Method For Add To Cart
     addToCart(dish:CartItem) {
-        this.cart_items$.push(dish) // Adds The Dish To The Cart Items
+        const selected_modifiers:any[] = Object.values(dish.selected_modifiers || {}).flat() // Gets The Selected Modifiers
+        const extra_price:number = selected_modifiers.reduce((sum:number, item:any) => sum + (item.extra_price || 0), 0) // Calculates The Extra Price
+      
+        // Creates The Copy Of Added Dish With The Extra Price
+        const cart_item:CartItem = {
+          ...dish,
+          price: dish.price + extra_price,
+          quantity: 1,
+          selected_modifiers: selected_modifiers
+        }
+      
+        this.cart_items$.push(cart_item) // Adds The Dish To The Cart Items
         this.saveCartToStorage() // Updates The Cart Items In The Local Storage
     }
 

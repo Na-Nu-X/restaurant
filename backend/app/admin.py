@@ -1,6 +1,6 @@
 from django.contrib import admin
 from unfold.admin import ModelAdmin
-from .models import RestaurantConfig, OpeningHour, Dish, Allergen, Order, OrderItem, Rating, ContactMessage, Coupon, DailySoup, DailyMeal
+from .models import RestaurantConfig, OpeningHour, Dish, DishModifierGroup, DishModifierItem, Allergen, Order, OrderItem, Rating, ContactMessage, Coupon, DailySoup, DailyMeal
 
 @admin.register(RestaurantConfig)
 class RestaurantConfigAdmin(ModelAdmin):
@@ -70,6 +70,59 @@ class DishAdmin(ModelAdmin):
         "description", 
         "price", 
         "image"
+    ]
+
+@admin.register(DishModifierGroup)
+class DishModifierGroupAdmin(ModelAdmin):
+    list_display = [
+        "id",
+        "dish",
+        "title", 
+        "is_multiple_choice", 
+        "is_required"
+    ]
+
+    list_filter = [ 
+        "dish",
+        "title",
+        "is_multiple_choice",
+        "is_required"
+    ]
+
+    search_fields = [
+        "title"
+    ]
+
+    list_editable = [
+        "dish",
+        "title", 
+        "is_multiple_choice", 
+        "is_required"
+    ]
+
+@admin.register(DishModifierItem)
+class DishModifierItemAdmin(ModelAdmin):
+    list_display = [
+        "id",
+        "group",
+        "title", 
+        "extra_price"
+    ]
+
+    list_filter = [ 
+        "group",
+        "title", 
+        "extra_price"
+    ]
+
+    search_fields = [
+        "title"
+    ]
+
+    list_editable = [
+        "group",
+        "title", 
+        "extra_price"
     ]
 
 @admin.register(Allergen)

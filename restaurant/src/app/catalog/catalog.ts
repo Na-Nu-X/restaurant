@@ -4,15 +4,16 @@ import {
   OnInit
 } from "@angular/core"
 
-import { CommonModule } from "@angular/common"
+import { CommonModule, CurrencyPipe } from "@angular/common"
 import { Dish } from "../services/dish"
 import { Cart } from "../services/cart"
 
 import type { CartItem } from "../services/cart"
+import type { modifierGroup } from "../services/cart"
 
 @Component({
   selector: "app-catalog",
-  imports: [CommonModule],
+  imports: [CommonModule, CurrencyPipe],
   templateUrl: "./catalog.html",
   styleUrl: "./catalog.scss",
 })
@@ -59,6 +60,42 @@ export class Catalog implements OnInit {
 
       this.cdr.detectChanges() // Rerenders The HTML
     })
+  }
+
+  // Method For Select The Modifier With A Radio Button
+  SelectModifierRadio(
+    dish:CartItem, 
+    group:modifierGroup, 
+
+    item:{
+      id:number,
+      title:string,
+      extra_price:number
+    }
+  ) {
+    if(!dish.selected_modifiers) dish.selected_modifiers = {}
+    dish.selected_modifiers[group.id] = [item]
+  }
+
+  // Method For Toggle The Modifier With A Checkbox Button
+  ToggleModifierCheckbox(
+    dish:CartItem, 
+    group:modifierGroup, 
+
+    item:{
+      id:number,
+      title:string,
+      extra_price:number
+    }, 
+    
+    event:Event
+  ) {
+    const is_checked:boolean = (event.target as HTMLInputElement).checked
+
+    if(!dish.selected_modifiers) dish.selected_modifiers = {}
+    if(!dish.selected_modifiers[group.id]) dish.selected_modifiers[group.id] = []
+    if(is_checked) dish.selected_modifiers[group.id].push(item)
+    else dish.selected_modifiers[group.id] = dish.selected_modifiers[group.id].filter(item => item.id !== item.id)
   }
 
   // Method For Add The Dish To The Cart

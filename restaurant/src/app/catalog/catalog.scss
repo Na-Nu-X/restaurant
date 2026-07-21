@@ -17,11 +17,8 @@
     overflow-y: auto; 
 
     .one_dish {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        width: 100%;
-        padding: 15px;
+        max-height: 587px;
+        padding: 5px;
         background-color: $secondary-color; 
         border-radius: $medium-border-radius;
         box-shadow: 0 4px 6px transparentize($main-color, 0.92), 0 2px 4px transparentize($main-color, 0.95);
@@ -33,145 +30,221 @@
             cursor: pointer;
         }
 
-        .rating {
-            display: inline-flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 5px; 
-            margin-left: auto; 
-            padding: 5px 10px;
-            background-color: transparentize($orange-color, 0.9);
-            border-radius: $big-border-radius;
-        
-            .fa-star {
-                color: $orange-color;
-                font-size: 1.2em;
-            }
-        
-            .average {
-                color: $main-color;
-                font-weight: 700;
-            }
-        
-            .amount {
-                font-size: 0.8em;
-                font-weight: 500;
-                color: transparentize($main-color, 0.4);
-            }
-        }
-
-        img {
-            max-width: 100%;
-            width: 100%;
-            aspect-ratio: 1 / 1;
-            object-fit: cover;
-            object-position: center;
-            border-radius: $medium-border-radius;
-        }
-
-        .title {
-            margin-bottom: 10px;
-            text-align: center;
-            font-family: $heading-font;
-            font-size: 1.2em;
-            font-weight: bold;
-        }
-
-        .description {
-            display: -webkit-box;
-            line-clamp: 4;
-            -webkit-line-clamp: 4;
-            -webkit-box-orient: vertical;
-            color: transparentize($main-color, 0.2);
-            overflow: hidden;
-        
-            &::first-letter {
-                margin-right: 10px;
-                initial-letter: 2;
-                font-weight: bold;
-            }
-        }
-
-        .allergens_container {
+        .one_dish_container {
+            @include scrollbar;
             display: flex;
-            gap: 5px;
-
-            p {
-                color: transparentize($main-color, 0.4);
-            }
-
-            .allergens {
-                display: flex;
-                align-items: center;
-                width: 100%;
-
-                .numbers {
-                    color: transparentize($main-color, 0.4);
-                }
-
-                // Tooltip
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            max-height: 587px - 10px;
+            padding: 10px;
     
-                .tooltip {
-                    @include tooltip;
-                    position: relative;
-                    display: inline-block;
-                    margin-left: auto;
-
+            .modifier_group {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+                margin-top: 10px;
+                padding-top: 10px;
+                border-top: 1px solid darken($secondary-color, 6%);
+    
+                > p {
+                    margin: 0px;
+                    color: $main-color;
+                    font-weight: 600;
+    
+                    .required {
+                        color: $red-color;
+                        font-weight: bold;
+                    }
+                }
+    
+                .modifier_item {
+                    display: flex;
+                    align-items: center;
+                    padding: 5px 10px;
+                    background-color: darken($secondary-color, 3%);
+                    border: 1px solid darken($secondary-color, 10%);
+                    border-radius: $small-border-radius;
+                    user-select: none;
+                    cursor: pointer;
+                    transition: background-color 0.2s ease, transform 0.1s ease;
+    
                     &:hover {
-                        .fa-circle-info {
-                            color: transparentize($main-color, 0.5);
+                        background-color: $secondary-color;
+                    }
+    
+                    &:active {
+                        transform: scale(0.98);
+                    }
+    
+                    input[type="checkbox"],
+                    input[type="radio"] {
+                        width: 15px;
+                        height: 15px;
+                        accent-color: $orange-color;
+                        cursor: pointer;
+                    }
+    
+                    span {
+                        margin-left: 10px;
+                        color: $main-color;
+                    }
+    
+                    .price {
+                        margin-left: auto;
+                        font-size: 0.9em;
+                        font-weight: bold;
+                        line-height: 1;
+                    
+                        span {
+                            font-size: 0.6em;
+                            vertical-align: super;
+                            margin-left: 2px;
                         }
                     }
-
-                    .fa-circle-info {
-                        display: block;
-                        color: transparentize($main-color, 0.8);
-                        transition: color 0.2s ease;
+                }
+            }
+    
+            .rating {
+                display: inline-flex;
+                align-items: center;
+                justify-content: flex-end;
+                gap: 5px; 
+                margin-left: auto; 
+                padding: 5px 10px;
+                background-color: transparentize($orange-color, 0.9);
+                border-radius: $big-border-radius;
+            
+                .fa-star {
+                    color: $orange-color;
+                    font-size: 1.2em;
+                }
+            
+                .average {
+                    color: $main-color;
+                    font-weight: 700;
+                }
+            
+                .amount {
+                    font-size: 0.8em;
+                    font-weight: 500;
+                    color: transparentize($main-color, 0.4);
+                }
+            }
+    
+            img {
+                max-width: 100%;
+                width: 100%;
+                aspect-ratio: 1 / 1;
+                object-fit: cover;
+                object-position: center;
+                border-radius: $medium-border-radius;
+            }
+    
+            .title {
+                margin-bottom: 10px;
+                text-align: center;
+                font-family: $heading-font;
+                font-size: 1.2em;
+                font-weight: bold;
+            }
+    
+            .description {
+                display: -webkit-box;
+                line-clamp: 4;
+                -webkit-line-clamp: 4;
+                -webkit-box-orient: vertical;
+                color: transparentize($main-color, 0.2);
+                overflow: hidden;
+            
+                &::first-letter {
+                    margin-right: 10px;
+                    initial-letter: 2;
+                    font-weight: bold;
+                }
+            }
+    
+            .allergens_container {
+                display: flex;
+                gap: 5px;
+    
+                p {
+                    color: transparentize($main-color, 0.4);
+                }
+    
+                .allergens {
+                    display: flex;
+                    align-items: center;
+                    width: 100%;
+    
+                    .numbers {
+                        color: transparentize($main-color, 0.4);
+                    }
+    
+                    // Tooltip
+        
+                    .tooltip {
+                        @include tooltip;
+                        position: relative;
+                        display: inline-block;
+                        margin-left: auto;
+    
+                        &:hover {
+                            .fa-circle-info {
+                                color: transparentize($main-color, 0.5);
+                            }
+                        }
+    
+                        .fa-circle-info {
+                            display: block;
+                            color: transparentize($main-color, 0.8);
+                            transition: color 0.2s ease;
+                        }
                     }
                 }
             }
-        }
-
-        .bottom {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            margin-top: auto;
-            padding-top: 10px;
-
-            .price {
-                font-size: 1.2em;
-                font-weight: bold;
-                line-height: 1;
-            
-                span {
-                    font-size: 0.6em;
-                    vertical-align: super;
-                    margin-left: 2px;
-                }
-            }
-
-            .add_to_cart {
-                all: unset;
+    
+            .bottom {
                 display: flex;
+                justify-content: space-between;
                 align-items: center;
-                gap: 10px;
-                padding: 10px 15px;
-                background-color: lighten($main-color, 15%);
-                color: $secondary-color; 
-                border-radius: $small-border-radius;
-                font-weight: bold;
-                font-size: 0.9em;
-                cursor: pointer;
-                transition: background-color 0.2s ease, transform 0.1s ease;
-        
-                &:hover {
-                    background-color: $main-color;
+                width: 100%;
+                margin-top: auto;
+                padding-top: 10px;
+    
+                .price {
+                    font-size: 1.2em;
+                    font-weight: bold;
+                    line-height: 1;
+                
+                    span {
+                        font-size: 0.6em;
+                        vertical-align: super;
+                        margin-left: 2px;
+                    }
                 }
-        
-                &:active {
-                    transform: scale(0.95);
+    
+                .add_to_cart {
+                    all: unset;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    padding: 10px 15px;
+                    background-color: lighten($main-color, 15%);
+                    color: $secondary-color; 
+                    border-radius: $small-border-radius;
+                    font-weight: bold;
+                    font-size: 0.9em;
+                    cursor: pointer;
+                    transition: background-color 0.2s ease, transform 0.1s ease;
+            
+                    &:hover {
+                        background-color: $main-color;
+                    }
+            
+                    &:active {
+                        transform: scale(0.95);
+                    }
                 }
             }
         }

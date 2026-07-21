@@ -1,41 +1,81 @@
 <section class="all_dishes">
     <article class="one_dish" *ngFor="let one_dish of filtered_dishes">
-        <div class="rating">
-            <span class="amount">({{ one_dish.rating_amount || 0 }})</span>
-            <i class="fa-solid fa-star"></i> <!-- https://fontawesome.com/icons/star -->
-            <span class="average">{{ one_dish.average_rating || 0 }}</span>
-        </div>
-
-        <img src="images/{{ one_dish.image }}" alt="">
-
-        <p class="title">{{ one_dish.title }}</p>
-        <p class="description">{{ one_dish.description }}</p>
-
-        <div class="allergens_container">
-            <p>Alergény: </p>
-
-            <div class="allergens" *ngIf="one_dish.allergens && one_dish.allergens.length > 0">
-                <span class="numbers">
-                    <span *ngFor="let one_allergen of one_dish.allergens; let is_last = last">
-                        {{ one_allergen.number }}{{ is_last ? '' : ', ' }}
-                    </span>
-                </span>
-
-                <div 
-                    class="tooltip"
-                    *ngIf="one_dish.allergens && one_dish.allergens.length > 0"
-                    [attr.data-tooltip]="getAllergensTooltip(one_dish.allergens)"
-                >
-                    <i class="fa-solid fa-circle-info"></i> <!-- https://fontawesome.com/icons/circle-info -->
-                </div>
+        <div class="one_dish_container">
+            <div class="rating">
+                <span class="amount">({{ one_dish.rating_amount || 0 }})</span>
+                <i class="fa-solid fa-star"></i> <!-- https://fontawesome.com/icons/star -->
+                <span class="average">{{ one_dish.average_rating || 0 }}</span>
             </div>
 
-            <p *ngIf="one_dish.allergens.length === 0">žiadne</p>
-        </div>
+            <img src="images/{{ one_dish.image }}" alt="">
 
-        <div class="bottom">
-            <p class="price">{{ (one_dish.price / 100) | currency:'EUR':'':'1.2-2':'sk-SK' }}<span>€</span></p>
-            <button class="add_to_cart" title="Pridať do košíka" aria-label="Pridať do košíka" (click)="addToCart(one_dish)"><i class="fa-solid fa-basket-shopping"></i> Pridať</button> <!-- https://fontawesome.com/icons/basket-shopping -->
+            <p class="title">{{ one_dish.title }}</p>
+            <p class="description">{{ one_dish.description }}</p>
+
+            <div class="allergens_container">
+                <p>Alergény: </p>
+
+                <div class="allergens" *ngIf="one_dish.allergens && one_dish.allergens.length > 0">
+                    <span class="numbers">
+                        <span *ngFor="let one_allergen of one_dish.allergens; let is_last = last">
+                            {{ one_allergen.number }}{{ is_last ? '' : ', ' }}
+                        </span>
+                    </span>
+
+                    <div 
+                        class="tooltip"
+                        *ngIf="one_dish.allergens && one_dish.allergens.length > 0"
+                        [attr.data-tooltip]="getAllergensTooltip(one_dish.allergens)"
+                    >
+                        <i class="fa-solid fa-circle-info"></i> <!-- https://fontawesome.com/icons/circle-info -->
+                    </div>
+                </div>
+
+                <p *ngIf="one_dish.allergens.length === 0">žiadne</p>
+            </div>
+
+            @for(group of one_dish.modifier_groups; track group.id) {
+                <div class="modifier_group">
+                    <p>
+                        {{ group.title }}
+
+                        @if(group.is_required) { <span class="required">*</span> }
+                    </p>
+            
+                    @for(item of group.items; track item.id) {
+                        <label class="modifier_item">
+                            @if(group.is_multiple_choice) {
+                                <input 
+                                    type="checkbox" 
+                                    [name]="'dish_' + one_dish.id + '_group_' + group.id" 
+                                    [value]="item.id"
+                                    (change)="ToggleModifierCheckbox(one_dish, group, item, $event)"
+                                >
+                            } 
+                            
+                            @else {
+                                <input 
+                                    type="radio" 
+                                    [name]="'dish_' + one_dish.id + '_group_' + group.id" 
+                                    [value]="item.id"
+                                    (change)="SelectModifierRadio(one_dish, group, item)"
+                                >
+                            }
+                
+                            <span>{{ item.title }}</span>
+
+                            @if(item.extra_price > 0) {
+                                <p class="price">{{ (item.extra_price / 100) | currency:'EUR':'':'1.2-2':'sk-SK' }}<span>€</span></p>
+                            }
+                        </label>
+                    }
+                </div>
+            }
+
+            <div class="bottom">
+                <p class="price">{{ (one_dish.price / 100) | currency:'EUR':'':'1.2-2':'sk-SK' }}<span>€</span></p>
+                <button class="add_to_cart" title="Pridať do košíka" aria-label="Pridať do košíka" (click)="addToCart(one_dish)"><i class="fa-solid fa-basket-shopping"></i> Pridať</button> <!-- https://fontawesome.com/icons/basket-shopping -->
+            </div>
         </div>
     </article>
 </section>

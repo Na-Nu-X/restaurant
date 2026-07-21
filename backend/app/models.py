@@ -120,6 +120,75 @@ class Dish(models.Model):
     def __str__(self):
         return self.title
 
+class DishModifierGroup(models.Model):
+    dish = models.ForeignKey(
+        Dish, 
+        verbose_name="Jedlo",
+        help_text="Jedlo ktorému zodpovedá vybraná skupina prídavkov.", 
+        on_delete=models.CASCADE, 
+        related_name="modifier_groups", 
+        null=False
+    )
+
+    title = models.CharField(
+        verbose_name="Názov", 
+        help_text='Názov skupiny (napr. "Vyberte si prílohu" alebo "Extra prísady").',
+        max_length=100, 
+        null=False
+    )
+
+    is_multiple_choice = models.BooleanField(
+        verbose_name="Viacnásobný výber", 
+        help_text="Ak je zakliknuté, zákazník si môže vybrať viacero položiek. Ak nie, iba jednu.",
+        default=False, 
+        null=False
+    )
+
+    is_required = models.BooleanField(
+        verbose_name="Povinné", 
+        help_text="Musí si zákazník vybrať aspoň jednu možnosť, aby mohol jedlo vložiť do košíka?",
+        default=True, 
+        null=False
+    )
+
+    class Meta:
+        verbose_name = "Skupina úprav jedla"
+        verbose_name_plural = "Skupiny úprav jedál"
+
+    def __str__(self):
+        return f"{self.dish.title} - {self.title}"
+
+class DishModifierItem(models.Model):
+    group = models.ForeignKey(
+        DishModifierGroup, 
+        verbose_name="Skupina úprav",
+        help_text="Skupina ktorej zodpovedá vybraný prídavok.", 
+        on_delete=models.CASCADE, 
+        related_name="items", 
+        null=False
+    )
+
+    title = models.CharField(
+        verbose_name="Názov", 
+        help_text='Názov položky (napr. "Hranolky" alebo "Ryža").',
+        max_length=100, 
+        null=False
+    )
+
+    extra_price = models.PositiveIntegerField(
+        verbose_name="Príplatok (v centoch)", 
+        help_text="Koľko centov sa pripočíta k základnej cene jedla. 0 znamená bez doplatku.",
+        default=0,
+        null=False
+    )
+
+    class Meta:
+        verbose_name = "Položka úpravy"
+        verbose_name_plural = "Položky úprav"
+
+    def __str__(self):
+        return f"{self.title} (+{self.extra_price / 100}€)"
+
 class Allergen(models.Model):
     number = models.PositiveIntegerField(
         verbose_name="Číslo", 
