@@ -19,6 +19,7 @@ export interface CartItem {
     id:number,
     title:string,
     description:string,
+    category_id?:number,
     price:number,
     quantity:number,
     image:string,

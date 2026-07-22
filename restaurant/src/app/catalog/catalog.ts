@@ -7,13 +7,14 @@ import {
 import { CommonModule, CurrencyPipe } from "@angular/common"
 import { Dish } from "../services/dish"
 import { Cart } from "../services/cart"
+import { Filters } from "../filters/filters"
 
 import type { CartItem } from "../services/cart"
 import type { modifierGroup } from "../services/cart"
 
 @Component({
   selector: "app-catalog",
-  imports: [CommonModule, CurrencyPipe],
+  imports: [CommonModule, CurrencyPipe, Filters],
   templateUrl: "./catalog.html",
   styleUrl: "./catalog.scss",
 })
@@ -56,9 +57,27 @@ export class Catalog implements OnInit {
       const searched_text:string = text.toLowerCase().trim() // Gets The Clear Search Text
     
       if(!searched_text) this.filtered_dishes = this.dishes // Shows Everything If The Search is Empty
-      else this.filtered_dishes = this.dishes.filter(dish => dish.title.toLowerCase().includes(searched_text)) // Filters The Dishes
+      else this.filtered_dishes = this.dishes.filter(one_dish => one_dish.title.toLowerCase().includes(searched_text)) // Filters The Dishes
 
       this.cdr.detectChanges() // Rerenders The HTML
+    })
+  }
+
+  // Method For Listen On The Category Change
+  listenToCategory(active_filters:{ [group_id:number]:number|null }):void {
+    const has_active_filters:boolean = Object.values(active_filters).some(id => id !== null) // Checks If Are Any Filters Applied
+
+    if(!has_active_filters) {
+      this.filtered_dishes = [...this.dishes] // Shows Everything If The Filters Are Empty
+      return
+    }
+
+    // Filters The Dishes
+    this.filtered_dishes = this.dishes.filter(one_dish => {
+      return Object.entries(active_filters).every(([group_id, category_id]) => {
+        if(category_id === null) return true
+        return one_dish.category_id === category_id
+      })
     })
   }
 

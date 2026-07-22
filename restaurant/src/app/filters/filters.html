@@ -1,0 +1,30 @@
+<div class="select_menus">
+    <div class="select_menu" *ngFor="let group of filter_groups">
+        <button 
+            class="refresh" 
+            title="Obnoviť predvolené filtre" 
+            aria-label="Obnoviť predvolené filtre"
+            (click)="resetGroupFilter(group.id)"
+        >
+            <i class="fa-solid fa-arrow-rotate-right"></i> <!-- https://fontawesome.com/icons/arrow-rotate-right -->
+        </button>
+
+        <div class="select" tabindex="0" (click)="toggleShowSelectMenu(group.id)">
+            <span>{{ getGroupLabel(group) }}</span>
+            <i class="fa-solid fa-angle-down"></i> <!-- https://fontawesome.com/icons/angle-down -->
+        </div>
+
+        <div class="options_list" [class.active]="open_group_id === group.id">
+            <div 
+                *ngFor="let one_category of group.categories"
+                class="option" 
+                [class.selected]="selected_filters[group.id]?.id === one_category.id"
+                (click)="selectCategory(group.id, one_category)" 
+                tabindex="0"
+            >
+                <i [class]="one_category.icon"></i>
+                <span>{{ one_category.name }}</span>
+            </div>
+        </div>
+    </div>
+</div>

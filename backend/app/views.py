@@ -1,6 +1,6 @@
 from operator import is_
 from django.http import JsonResponse
-from .models import RestaurantConfig, OpeningHour, Dish, Order, OrderItem, Rating, ContactMessage, Coupon, DailySoup, DailyMeal
+from .models import RestaurantConfig, OpeningHour, Dish, FilterGroup, Order, OrderItem, Rating, ContactMessage, Coupon, DailySoup, DailyMeal
 import stripe
 import json
 from django.conf import settings
@@ -169,6 +169,7 @@ def getDishes(request):
             "id": one_dish.id,
             "title": one_dish.title,
             "description": one_dish.description,
+            "category_id": one_dish.category.id if one_dish.category else None,
             "price": one_dish.price,
             "image": request.build_absolute_uri(one_dish.image.url) if one_dish.image else None,
             "allergens": list(one_dish.allergens.values("number", "name")),
@@ -183,6 +184,36 @@ def getDishes(request):
         "message": "Položky boli nájdené.",
         "dishes": list(dishes_data), 
     }, status=200, safe=False)
+
+@csrf_exempt
+def getCategories(request):
+    filter_groups = FilterGroup.objects.prefetch_related("categories").all() # Gets All Filter Groups With Categories
+
+    # Creates Valid Format Of Filter Groups For JSON Response
+    filter_groups_data = [
+        {
+            "id": one_group.id,
+            "name": one_group.name,
+            
+            "categories": [
+                {
+                    "id": one_category.id,
+                    "name": one_category.name,
+                    "icon": one_category.icon
+                }
+
+                for one_category in one_group.categories.all()
+            ]
+        }
+
+        for one_group in filter_groups
+    ]
+
+    return JsonResponse({
+        "success": True,
+        "message": "Skupiny filtrov kategórií boli nájdené.",
+        "filter_groups": filter_groups_data,
+    }, status=200)
 
 @csrf_exempt
 def createCheckoutSession(request):

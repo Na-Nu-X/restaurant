@@ -304,3 +304,144 @@
         outline-offset: 2px !important;
     }
 }
+
+// Custom Select Menu
+
+@mixin custom_select_menu($options_list_height: 200px, $scrollbar: auto) {
+    position: relative;
+    display: flex; 
+    align-items: flex-start;
+    gap: 10px; 
+    max-width: 100%;
+    width: 100%;
+
+    .refresh {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        width: 40px;
+        height: 40px;
+        background-color: darken($secondary-color, 3%);
+        color: transparentize($main-color, 0.4);
+        border: 1px solid darken($secondary-color, 10%);
+        border-radius: $small-border-radius;
+        cursor: pointer;
+        transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+
+        &:hover, 
+        &:focus-visible {
+            background-color: $secondary-color;
+            border-color: $orange-color;
+            color: $orange-color;
+            box-shadow: 0 0 0 3px transparentize($orange-color, 0.8);
+            outline: none;
+
+            i {
+                transform: rotate(180deg);
+                transition: transform 0.3s ease;
+            }
+        }
+    }
+
+    .select {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-grow: 1;
+        height: 40px;
+        padding: 0px 10px;
+        background-color: darken($secondary-color, 3%);
+        color: transparentize($main-color, 0.4);
+        border: 1px solid darken($secondary-color, 10%);
+        border-radius: $small-border-radius;
+        cursor: pointer;
+        transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+
+        &:hover,
+        &:focus-visible {
+            background-color: $secondary-color;
+            border-color: $orange-color;
+            box-shadow: 0 0 0 3px transparentize($orange-color, 0.8);
+            outline: none;
+
+            .fa-angle-down {
+                color: $orange-color;
+            }
+        }
+
+        span {
+            @include crop_text;
+            font-weight: 500;
+        }
+
+        .fa-angle-down {
+            color: transparentize($main-color, 0.4);
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+    }
+
+    .options_list {
+        position: absolute;
+        top: 40px + 5px;
+        right: 0px;
+        width: calc(100% - 50px);
+        height: 0px;
+        interpolate-size: allow-keywords; 
+        opacity: 0;
+        visibility: hidden;
+        background-color: transparentize($main-color, 0.05);
+        color: $secondary-color;
+        border-radius: $small-border-radius;
+        box-shadow: 0 4px 6px transparentize($main-color, 0.92), 0 2px 4px transparentize($main-color, 0.95);
+        overflow-y: $scrollbar;
+        overflow-x: hidden;
+        transition: height 0.3s ease, opacity 0.3s ease, visibility 0.3s ease;
+        z-index: 500;
+
+        &::-webkit-scrollbar {
+            width: 3px;
+            background-color: $secondary-color;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background-color: $secondary-color;
+        }
+
+        &.active {
+            height: $options_list_height;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .option {
+            @include crop_text;
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, padding-left 0.2s ease, color 0.2s ease;
+
+            &:hover,
+            &:focus-visible,
+            &.selected {
+                background-color: transparentize($secondary-color, 0.9);
+                color: $orange-color; 
+                padding-left: 20px;
+                outline: none;
+
+                i { 
+                    color: $orange-color; 
+                }
+            }
+
+            i {
+                width: 20px;
+                margin-right: 15px;
+                color: $secondary-color;
+                text-align: center;
+                transition: color 0.2s ease;
+            }
+        }
+    }
+}

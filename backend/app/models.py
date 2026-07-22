@@ -99,6 +99,16 @@ class Dish(models.Model):
         null=False
     )
 
+    category = models.ForeignKey(
+        "Category",
+        on_delete=models.SET_NULL,
+        verbose_name="Kategória",
+        help_text="Kategória do ktorej spadá dané jedlo.", 
+        related_name="dishes",
+        null=True,
+        blank=True
+    )
+
     price = models.PositiveIntegerField(
         verbose_name="Cena", 
         help_text="Cena v centoch.",
@@ -119,6 +129,56 @@ class Dish(models.Model):
 
     def __str__(self):
         return self.title
+
+class FilterGroup(models.Model):
+    name = models.CharField(
+        verbose_name="Názov",
+        help_text="Názov skupiny (napr. podľa typu, kuchyne, obmedzení, alergénov atď).",
+        max_length=50,
+        unique=True,
+        null=False
+    )
+
+    class Meta:
+        verbose_name = "Skupina filtrov"
+        verbose_name_plural = "Skupiny filtrov"
+
+    def __str__(self):
+        return self.name
+
+class Category(models.Model):
+    group = models.ForeignKey(
+        FilterGroup, 
+        verbose_name="Skupina filtrov",
+        help_text="Skupina filtrov ku ktorej patrí daná kategória.", 
+        on_delete=models.CASCADE, 
+        related_name="categories", 
+        null=True,
+        blank=True
+    )
+
+    name = models.CharField(
+        verbose_name="Názov",
+        help_text="Názov kategórie.",
+        max_length=50,
+        unique=True,
+        null=False
+    )
+
+    icon = models.CharField(
+        verbose_name="Ikonka (Font Awesome)",
+        help_text="Ikonka z https://fontawesome.com/",
+        max_length=100,
+        default="fa-solid fa-list",
+        null=False
+    )
+
+    class Meta:
+        verbose_name = "Kategória"
+        verbose_name_plural = "Kategórie"
+
+    def __str__(self):
+        return self.name
 
 class DishModifierGroup(models.Model):
     dish = models.ForeignKey(

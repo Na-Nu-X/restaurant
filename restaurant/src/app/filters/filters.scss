@@ -1,0 +1,13 @@
+@import "../../partials/mixins";
+
+.select_menus {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0px auto 20px;
+    max-width: 500px;
+
+    .select_menu {
+        @include custom_select_menu($options_list_height: auto);
+    }
+}
