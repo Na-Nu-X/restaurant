@@ -9,6 +9,18 @@ import type { CartItem } from "./cart"
 export class Order {
     constructor(private http:HttpClient) {}
 
+    // Method For Cancel The Order
+    cancelOrder(tracking_code:string):Observable<{ 
+        success:string,
+        message:string
+    }> {
+        // Returns The Data
+        return this.http.get<{ 
+            success:string,
+            message:string
+        }>(`http://127.0.0.1:8001/api/cancel-order/${tracking_code}/`)
+    }
+
     // Method For Get The Order Status
     getOrderStatus(tracking_code:string):Observable<{ 
         success:string,

@@ -47,7 +47,7 @@ export interface ValidateCouponResponse {
 })
 export class Cart {
     private storage_key:string = "cart_items" // Sets The Local Storage Key For Stored Cart Items
-    cart_items$: CartItem[] = this.loadCartFromStorage() // Loads The Cart Items From The Local Storage
+    cart_items$:CartItem[] = this.loadCartFromStorage() // Loads The Cart Items From The Local Storage
 
     private cart_counter:BehaviorSubject<number> = new BehaviorSubject<number>(this.cart_items$.length) // Updates The Cart Counter
     cart_amount$ = this.cart_counter.asObservable() // Sends The Cart Amount To Other Components

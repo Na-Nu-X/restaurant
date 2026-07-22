@@ -346,12 +346,14 @@ def createCheckoutSession(request):
                 line_items=line_items,
                 mode="payment",
                 success_url=f"{front_end_domain}success?code={new_order.tracking_code}",
-                cancel_url=front_end_domain,
+                cancel_url=f"{front_end_domain}?cancel_order_code={new_order.tracking_code}",
                 
                 metadata={
                     "order_id": str(new_order.id)
                 }
             )
+
+            print(checkout_session)
 
             new_order.stripe_intent_id = checkout_session.id # Saves The Stripe Intent ID
             new_order.save() # Saves The Updated Order
@@ -402,6 +404,20 @@ def stripeWebhook(request):
 
         except Order.DoesNotExist:
             pass
+
+    # Expired Checkout
+    if event["type"] == "checkout.session.expired":
+        checkout_session = event["data"]["object"]
+
+        metadata = checkout_session.metadata # Gets The Metadata
+        order_id = metadata["order_id"] # Gets The Order ID
+        
+        if order_id:
+            order = Order.objects.get(id=order_id) # Gets The Order
+
+            if order and order.status == "PENDING":
+                order.status = "CANCELLED" # Updates The Order Status
+                order.save() # Saves The Updated Order
 
     return HttpResponse(status=200)
 
@@ -504,6 +520,24 @@ def createOrder(request):
         "success": False, 
         "message": "Objednávka sa dá uskutočniť len pomocou POST metódy."
     }, status=405)
+
+@csrf_exempt
+def cancelOrder(request, tracking_code):
+    try:
+        order = Order.objects.get(tracking_code=tracking_code.upper(), status="PENDING") # Gets The Order
+        order.status = "CANCELLED" # Updates The Order Status
+        order.save() # Saves The Updated Order
+
+        return JsonResponse({
+            "success": True, 
+            "message": "Objednávka bola zrušená."
+        }, status=200)
+
+    except Order.DoesNotExist:
+        return JsonResponse({
+            "success": False, 
+            "message": "Objednávku sa nepodarilo nájsť."
+        }, status=404)
 
 @csrf_exempt
 def getOrderStatus(request, tracking_code):

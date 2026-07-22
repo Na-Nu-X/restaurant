@@ -88,6 +88,8 @@ export class NavigationBar implements OnInit {
         console.error(error) // Shows The Error
       }
     })
+
+    this.customer = this.loadCustomerFromStorage() // Loads The Customer Data From The Local Storage
   }
 
   // Method For Toggle The Menu
@@ -130,6 +132,32 @@ export class NavigationBar implements OnInit {
 
         window.scrollTo({ top: element_position - offset, behavior: "smooth" }) // Starts The Scroll Animation
       }
+    }
+  }
+
+  // Method For Save The Customer's Delivery Data To The Local Storage
+  private saveCustomerToStorage():void {
+    if(typeof window !== "undefined") localStorage.setItem("customer", JSON.stringify(this.customer)) // Saves The Customer Data To The Local Storage
+  }
+
+  // Method For Load The Customer's Delivery Data From The Local Storage
+  private loadCustomerFromStorage():Customer {
+    if(typeof window !== "undefined") {
+      const stored_customer_data:string|null = localStorage.getItem("customer") || null // Gets The Stored Customer Data
+
+      if(stored_customer_data) {
+        return JSON.parse(stored_customer_data) // Returns The Customer Data If There Are Any
+      }
+    }
+
+    // Returns An Empty Customer Data
+    return {
+      first_name: "",
+      last_name: "",
+      address: "",
+      city: "",
+      phone_number: "",
+      message: null
     }
   }
 
@@ -272,7 +300,7 @@ export class NavigationBar implements OnInit {
       return
     }
 
-    const tip_in_cents:number = Math.round(this.total_price * (this.selected_tip / 100)) // Calculates The Tip Amount In Cents
+    this.saveCustomerToStorage() // Updates The Customer's Delivery Data In The Local Storage
 
     // Creates The Checkout Session
     this.paymentService.createCheckoutSession(
