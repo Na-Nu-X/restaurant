@@ -73,6 +73,8 @@ def getStatus(request):
 
     is_inside_opening_hours = opening_hour.open_time <= current_time <= opening_hour.close_time # Checks If The Current Time Is In Opening Hours
 
+    print(current_time)
+
     if is_inside_opening_hours:
         return JsonResponse({
             "success": True,
