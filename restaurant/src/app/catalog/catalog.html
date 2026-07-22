@@ -7,7 +7,7 @@
                 <span class="average">{{ one_dish.average_rating || 0 }}</span>
             </div>
 
-            <img src="images/{{ one_dish.image }}" alt="">
+            <img [src]="one_dish.image" [alt]="one_dish.title">
 
             <p class="title">{{ one_dish.title }}</p>
             <p class="description">{{ one_dish.description }}</p>

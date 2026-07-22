@@ -170,7 +170,7 @@ def getDishes(request):
             "title": one_dish.title,
             "description": one_dish.description,
             "price": one_dish.price,
-            "image": one_dish.image,
+            "image": request.build_absolute_uri(one_dish.image.url) if one_dish.image else None,
             "allergens": list(one_dish.allergens.values("number", "name")),
             "average_rating": one_dish.average_rating or 0.0,
             "rating_amount": one_dish.rating_amount,
@@ -259,18 +259,27 @@ def createCheckoutSession(request):
             discount_multiplier = (100 - discount_percent) / 100 if discount_percent > 0 else 1.0 # Gets The Discount Multiplayer (10% = 0.9)
 
             for one_item in items:
-                image_name = one_item.get("image") # Gets THe Image Name
+                image_name = one_item.get("image", "") # Gets The Image Name
                 item_id = one_item.get("id") # Gets The Item ID
                 original_unit_price = int(one_item.get("price", "0")) # Gets The Original Price
 
                 if is_local:
                     title = one_item.get("title", "food") # Gets The Title
                     safe_title = urllib.parse.quote(title) # Creates The Clear Title
-                    image_url = f"https://dummyimage.com/600x400/ff7f00/fff?text={safe_title}" # Generates Random Image
-                    
+                    image_url = f"https://dummyimage.com/600x400/fdc152/fff?text={safe_title}" # Generates Random Image
+
                 else:
-                    domain = os.environ.get("DOMAIN_URL", "localhost") # Gets The Domain
-                    image_url = f"https://{domain}/static/images/{image_name}" # Gets The Image URL
+                    if image_name.startswith("http://") or image_name.startswith("https://"):
+                        image_url = image_name # Sets The Image URL
+
+                    else:
+                        domain = os.environ.get("DOMAIN_URL", "localhost:8001") # Gets The Domain
+                        clean_domain = domain.replace("http://", "").replace("https://", "").rstrip("/") # Cleans The Domain
+
+                        if not image_name.startswith("/"):
+                            image_name = f"/{image_name}" # Gets The Image Name
+
+                        image_url = f"https://{clean_domain}{image_name}" # Sets The Image URL
 
                 if item_id and int(item_id) == -1:
                     final_unit_price = original_unit_price # Doesn't Apply The Discount On The Tip
@@ -509,7 +518,7 @@ def getOrderedItems(request, id):
             "description": one_item.dish.description,
             "price": one_item.price_at_purchase,
             "quantity": one_item.quantity,
-            "image": one_item.dish.image
+            "image": request.build_absolute_uri(one_item.dish.image.url) if one_item.dish.image else None,
         }
 
         for one_item in items

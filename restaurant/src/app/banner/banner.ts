@@ -28,8 +28,6 @@ export class Banner {
           if(response.reason) this.reason = response.reason // Sets The Status Reason
           if(response.open_till) this.open_till = response.open_till // Sets The Open Till Time
           if(response.next_open) this.next_open = response.next_open // Sets The Status Next Open Time
-
-          console.log(response)
         }
         
         else {

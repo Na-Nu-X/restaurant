@@ -22,7 +22,7 @@
 
             <div class="all_items" *ngIf="order_details.status === 'COMPLETED' && ordered_items && ordered_items.length > 0" [style.transform]="'translateX(calc(' + (-current_index * 100) + '% + ' + (current_index * 20) + 'px))'">
                 <div class="one_item" *ngFor="let one_item of ordered_items; let i = index" (click)="changeCartItem(i)">
-                    <img src="images/{{ one_item.image }}" alt="">
+                    <img [src]="one_item.image" [alt]="one_item.title">
     
                     <p class="title">{{ one_item.title }}</p>
     
@@ -50,7 +50,7 @@
                 </div>
             </div>
 
-            <div class="bars" *ngIf="order_details.status === 'COMPLETED' && ordered_items && ordered_items.length > 0">
+            <div class="bars" *ngIf="order_details.status === 'COMPLETED' && ordered_items && ordered_items.length > 1">
                 <div 
                     class="one_bar" 
                     *ngFor="let one_item of ordered_items; let i = index"

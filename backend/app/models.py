@@ -106,10 +106,10 @@ class Dish(models.Model):
         null=False
     )
 
-    image = models.CharField(
+    image = models.ImageField(
+        upload_to="dishes/",
         verbose_name="Obrázok", 
         help_text="Obrázok jedla (názov súboru).",
-        max_length=200, 
         null=False
     )
 
@@ -210,7 +210,7 @@ class Allergen(models.Model):
         ordering = ["number"]
 
     def __str__(self):
-        return f"{self.number}. {self.title}"
+        return f"{self.number}. {self.name}"
 
 # Function For Generate The Order Tracking Code
 def generate_tracking_code():
@@ -627,4 +627,4 @@ class DailyMeal(models.Model):
         ordering = ["number"]
 
     def __str__(self):
-        return f"{self.get_day_display()} - Menu {self.number}: {self.title}"
+        return f"{self.day_of_week} - Menu {self.number}: {self.title}"
