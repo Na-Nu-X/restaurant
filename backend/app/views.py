@@ -444,7 +444,28 @@ def cancelOrder(request, tracking_code):
 @csrf_exempt
 def getOrderStatus(request, tracking_code):
     try:
-        order = Order.objects.get(tracking_code=tracking_code.upper()) # Gets The Order
+        order = Order.objects.prefetch_related("items__dish", "items__modifiers", "ratings").get(tracking_code=tracking_code.upper()) # Gets The Order
+
+        ratings = {rating.dish_id: rating.rating for rating in order.ratings.all()} # Ratings Already Given For This Order
+
+        # Ordered Dishes With The Chosen Options (The Tip Is Returned Separately)
+        items = [
+            {
+                "line_id": one_item.id,
+                "dish_id": one_item.dish_id,
+                "title": one_item.dish.title if one_item.dish else "Jedlo už nie je v ponuke",
+                "image": request.build_absolute_uri(one_item.dish.image.url) if one_item.dish and one_item.dish.image else None,
+                "quantity": one_item.quantity,
+                "unit_price": one_item.price_at_purchase,
+                "modifiers": [modifier.title for modifier in one_item.modifiers.all()],
+                "rating": ratings.get(one_item.dish_id)
+            }
+
+            for one_item in order.items.all()
+            if not one_item.is_tip
+        ]
+
+        tip = sum(one_item.price_at_purchase * one_item.quantity for one_item in order.items.all() if one_item.is_tip)
 
         # Creates Valid Format Of Order Details For JSON Response
         order_details = {
@@ -455,10 +476,14 @@ def getOrderStatus(request, tracking_code):
             "address": order.address,
             "city": order.city,
             "phone_number": order.phone_number,
+            "message": order.message,
+            "price": order.price,
+            "tip": tip,
             "total_price": order.total_price,
             "status": order.status,
             "cash_on_delivery": order.cash_on_delivery,
-            "creation_time": order.creation_time.isoformat()
+            "creation_time": order.creation_time.isoformat(),
+            "items": items
         }
         
         return JsonResponse({
@@ -472,33 +497,6 @@ def getOrderStatus(request, tracking_code):
             "success": False, 
             "message": "Objednávku sa nepodarilo nájsť."
         }, status=404)
-
-@csrf_exempt
-def getOrderedItems(request, id):
-    items = OrderItem.objects.filter(order_id=id).select_related("dish").prefetch_related("modifiers")
-
-    # Creates Valid Format Of Ordered Items For JSON Response
-    ordered_items = [
-        {
-            "id": one_item.dish.id,
-            "line_id": one_item.id,
-            "title": one_item.dish.title,
-            "description": one_item.dish.description,
-            "price": one_item.price_at_purchase,
-            "quantity": one_item.quantity,
-            "image": request.build_absolute_uri(one_item.dish.image.url) if one_item.dish.image else None,
-            "modifiers": [modifier.title for modifier in one_item.modifiers.all()]
-        }
-
-        for one_item in items
-        if one_item.dish and not one_item.is_tip
-    ]
-    
-    return JsonResponse({
-        "success": True, 
-        "message": "Položky boli nájdené.",
-        "ordered_items": ordered_items
-    }, status=200)
 
 @csrf_exempt
 def sendRating(request):

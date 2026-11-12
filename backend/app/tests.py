@@ -6,7 +6,7 @@ from unittest.mock import patch
 from django.test import TestCase
 from django.utils import timezone
 
-from .models import Coupon, OpeningHour, Dish, DishModifierGroup, DishModifierItem, Order, OrderItem, OrderItemModifier
+from .models import Coupon, OpeningHour, Rating, Dish, DishModifierGroup, DishModifierItem, Order, OrderItem, OrderItemModifier
 from .ordering import OrderValidationError, buildOrderDraft
 
 
@@ -162,17 +162,32 @@ class CreateOrderViewTests(OrderTestData):
         self.assertFalse(Order.objects.exists())
         self.assertFalse(OrderItem.objects.exists())
 
-    def test_ordered_items_include_the_options(self, _open):
-        response = self.post("/api/create-order/", {
-            "items": [{"id": self.pizza.id, "quantity": 1, "modifier_ids": [self.large.id]}],
+    def test_order_status_includes_items_options_and_tip(self, _open):
+        create_session = patch("app.views.stripe.checkout.Session.create", return_value=SimpleNamespace(id="cs_test_1", url="https://stripe.test")).start()
+        self.addCleanup(patch.stopall)
+
+        self.post("/api/create-checkout-session/", {
+            "items": [{"id": self.pizza.id, "quantity": 2, "modifier_ids": [self.large.id]}, {"id": -1, "price": 250}],
             "customer": self.customer
         })
 
-        order_id = Order.objects.get(tracking_code=response.json()["tracking_code"]).id
-        items = self.client.get(f"/api/ordered-items/{order_id}/").json()["ordered_items"]
+        order = Order.objects.get()
+        order.status = "COMPLETED"
+        order.save()
+        Rating.objects.create(order=order, dish=self.pizza, rating=4)
 
-        self.assertEqual(items[0]["modifiers"], ["45 cm"])
+        details = self.client.get(f"/api/order-status/{order.tracking_code.lower()}/").json()["order_details"]
 
+        self.assertEqual(details["tip"], 250)
+        self.assertEqual(details["price"], 1300 * 2)
+        self.assertEqual(len(details["items"]), 1)
+        self.assertEqual(details["items"][0]["modifiers"], ["45 cm"])
+        self.assertEqual(details["items"][0]["unit_price"], 1300)
+        self.assertEqual(details["items"][0]["rating"], 4)
+        self.assertTrue(create_session.called)
+
+    def test_unknown_tracking_code_returns_404(self, _open):
+        self.assertEqual(self.client.get("/api/order-status/NOPE00/").status_code, 404)
 
 class OpeningHoursViewTests(TestCase):
     def test_returns_the_week_ordered_by_day(self):

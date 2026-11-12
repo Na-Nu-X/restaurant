@@ -3,9 +3,20 @@ import { Injectable } from "@angular/core"
 import { Observable } from "rxjs"
 import { apiUrl } from "../config/api"
 
-import type { CartItem } from "./cart"
 
 export type OrderStatus = "PENDING" | "PAID" | "PREPARING" | "DELIVERING" | "COMPLETED" | "CANCELLED"
+
+// One Ordered Dish (The Tip Is Not Included)
+export interface OrderedItem {
+  line_id:number,
+  dish_id:number|null, // null When The Dish Was Deleted From The Menu
+  title:string,
+  image:string|null,
+  quantity:number,
+  unit_price:number, // In Cents, After The Discount, Including The Options
+  modifiers:string[],
+  rating:number|null // Rating Already Given By The Customer
+}
 
 export interface OrderDetails {
   id:number,
@@ -15,10 +26,14 @@ export interface OrderDetails {
   address:string,
   city:string,
   phone_number:string,
+  message:string|null,
+  price:number, // Dishes After The Discount
+  tip:number,
   total_price:number,
   status:OrderStatus,
   cash_on_delivery:boolean,
-  creation_time:string
+  creation_time:string,
+  items:OrderedItem[]
 }
 
 @Injectable({ providedIn: "root" })
@@ -49,20 +64,6 @@ export class Order {
             message:string,
             order_details?:OrderDetails
         }>(apiUrl(`order-status/${tracking_code}/`))
-    }
-
-    // Method For Get All Ordered And Delivered Items
-    getOrderedItems(order_id:number):Observable<{ 
-        success:string,
-        message:string,
-        ordered_items:CartItem[]
-    }> {
-        // Returns The Data
-        return this.http.get<{ 
-            success:string,
-            message:string,
-            ordered_items:CartItem[]
-        }>(apiUrl(`ordered-items/${order_id}/`))
     }
 
     // Method For Send The Rating
