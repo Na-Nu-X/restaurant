@@ -1,18 +1,9 @@
 @import "../partials/mixins";
 
-// Background Canvas
-
-.background_canvas {
-    position: fixed;
-    top: 0px;
-    left: 0px;
-    pointer-events: none;
-    z-index: -1
-}
-
 // Preloader
 
 .preloader {
     @include loading;
     @include position_center($position: fixed);
+    z-index: var(--z-loader);
 }

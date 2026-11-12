@@ -1,31 +1,21 @@
-import { 
-  Component, 
-  ViewChild, 
-  ElementRef
-} from "@angular/core"
+import { Component, ElementRef, input, model, viewChild } from "@angular/core"
 
-import { Dish } from "../services/dish"
-
+// Reusable Search Field With A Clear Button (Two-Way Bound: [(value)])
 @Component({
   selector: "app-search-bar",
-  imports: [],
   templateUrl: "./search-bar.html",
   styleUrl: "./search-bar.scss",
 })
-
 export class SearchBar {
-  constructor(private dishService:Dish) { }
+  readonly value = model<string>("") // Current Search Text
+  readonly placeholder = input<string>("Hľadať...")
+  readonly label = input<string>("Vyhľadávanie")
 
-  @ViewChild("search_bar", { static: false }) search_bar!:ElementRef<HTMLInputElement> // Gets The Search Bar
+  private readonly field = viewChild.required<ElementRef<HTMLInputElement>>("field")
 
-  // Method For Search The Dishes
-  searchDish(searched_text:string):void {
-    this.dishService.searchDish(searched_text) // Searches The Dishes
-  }
-
-  // Method For Delete The Search
-  deleteSearch():void {
-    this.search_bar.nativeElement.value = "" // Deletes The Searched Text
-    this.dishService.searchDish("") // Shows All Dishes
+  // Method For Delete The Search And Keep Typing
+  clear():void {
+    this.value.set("")
+    this.field().nativeElement.focus()
   }
 }

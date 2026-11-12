@@ -1,5 +1,12 @@
 <app-banner></app-banner>
-<app-search-bar></app-search-bar>
-<app-catalog></app-catalog>
-<app-contact-form></app-contact-form>
-<app-map></app-map>
+<app-daily-menu></app-daily-menu>
+
+<section class="menu-section" [id]="sections.menu" aria-label="Menu">
+    <app-catalog></app-catalog>
+</section>
+
+<!-- Reservation / Contact (Redesigned In Phase 5) -->
+<section [id]="sections.contact" aria-label="Rezervácia a kontakt">
+    <app-contact-form></app-contact-form>
+    <app-map></app-map>
+</section>

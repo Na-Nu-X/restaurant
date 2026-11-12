@@ -1,85 +1,79 @@
-<app-filters (listenToCategory)="listenToCategory($event)" *ngIf="is_any_filters"></app-filters>
+<div class="menu">
+    <header class="section__header menu__header">
+        <p class="eyebrow">Naša ponuka</p>
+        <h2 class="section__title">Menu</h2>
+        <p class="section__lead">Vyberte si jedlo, prispôsobte si ho podľa chuti a objednajte online.</p>
+    </header>
 
-<section class="all_dishes">
-    @for(one_dish of filtered_dishes; track one_dish.id) {
-        <article class="one_dish">
-            <div class="one_dish_container">
-                <div class="rating">
-                    <span class="amount">({{ one_dish.rating_amount || 0 }})</span>
-                    <i class="fa-solid fa-star"></i> <!-- https://fontawesome.com/icons/star -->
-                    <span class="average">{{ one_dish.average_rating || 0 }}</span>
-                </div>
+    <!-- Search + Category Chips (Sticks Below The Header While Scrolling The Menu) -->
+    <div class="menu__toolbar">
+        <div class="menu__search-row">
+            <app-search-bar class="menu__search" [(value)]="query" placeholder="Hľadať jedlo, napr. pizza" label="Hľadať v menu"></app-search-bar>
 
-                <img [src]="one_dish.image" [alt]="one_dish.title">
+            @if(state() === "ready") {
+                <p class="menu__count" aria-live="polite">{{ result_label() }}</p>
+            }
+        </div>
 
-                <p class="title">{{ one_dish.title }}</p>
-                <p class="description">{{ one_dish.description }}</p>
+        @if(groups().length > 0) {
+            <app-filters [groups]="groups()" [(selected)]="category"></app-filters>
+        }
+    </div>
 
-                <div class="allergens_container">
-                    <p>Alergény: </p>
-
-                    <div class="allergens" *ngIf="one_dish.allergens && one_dish.allergens.length > 0">
-                        <span class="numbers">
-                            <span *ngFor="let one_allergen of one_dish.allergens; let is_last = last">
-                                {{ one_allergen.number }}{{ is_last ? '' : ', ' }}
-                            </span>
-                        </span>
-
-                        <div 
-                            class="tooltip"
-                            *ngIf="one_dish.allergens && one_dish.allergens.length > 0"
-                            [attr.data-tooltip]="getAllergensTooltip(one_dish.allergens)"
-                        >
-                            <i class="fa-solid fa-circle-info"></i> <!-- https://fontawesome.com/icons/circle-info -->
+    @switch(state()) {
+        @case("loading") {
+            <div class="menu__grid" aria-busy="true" aria-label="Načítavam menu">
+                @for(item of skeletons; track item) {
+                    <div class="skeleton-card" aria-hidden="true">
+                        <div class="skeleton skeleton--image"></div>
+                        <div class="skeleton-card__body">
+                            <div class="skeleton skeleton--title"></div>
+                            <div class="skeleton skeleton--text"></div>
+                            <div class="skeleton skeleton--price"></div>
                         </div>
                     </div>
-
-                    <p *ngIf="one_dish.allergens.length === 0">žiadne</p>
-                </div>
-
-                @for(group of one_dish.modifier_groups; track group.id) {
-                    <div class="modifier_group">
-                        <p>
-                            {{ group.title }}
-
-                            @if(group.is_required) { <span class="required">*</span> }
-                        </p>
-                
-                        @for(item of group.items; track item.id) {
-                            <label class="modifier_item">
-                                @if(group.is_multiple_choice) {
-                                    <input 
-                                        type="checkbox" 
-                                        [name]="'dish_' + one_dish.id + '_group_' + group.id" 
-                                        [value]="item.id"
-                                        (change)="ToggleModifierCheckbox(one_dish, group, item, $event)"
-                                    >
-                                } 
-                                
-                                @else {
-                                    <input 
-                                        type="radio" 
-                                        [name]="'dish_' + one_dish.id + '_group_' + group.id" 
-                                        [value]="item.id"
-                                        (change)="SelectModifierRadio(one_dish, group, item)"
-                                    >
-                                }
-                    
-                                <span>{{ item.title }}</span>
-
-                                @if(item.extra_price > 0) {
-                                    <p class="price">{{ (item.extra_price / 100) | currency:'EUR':'':'1.2-2':'sk-SK' }}<span>€</span></p>
-                                }
-                            </label>
-                        }
-                    </div>
                 }
-
-                <div class="bottom">
-                    <p class="price">{{ (one_dish.price / 100) | currency:'EUR':'':'1.2-2':'sk-SK' }}<span>€</span></p>
-                    <button class="add_to_cart" title="Pridať do košíka" aria-label="Pridať do košíka" (click)="addToCart(one_dish)"><i class="fa-solid fa-basket-shopping"></i> Pridať</button> <!-- https://fontawesome.com/icons/basket-shopping -->
-                </div>
             </div>
-        </article>
+        }
+
+        @case("error") {
+            <div class="menu__state">
+                <i class="fa-solid fa-plug-circle-exclamation menu__state-icon" aria-hidden="true"></i>
+                <h3>Menu sa nepodarilo načítať</h3>
+                <p>Skontrolujte pripojenie a skúste to znova.</p>
+                <button type="button" class="btn btn--primary" (click)="loadDishes()">Skúsiť znova</button>
+            </div>
+        }
+
+        @default {
+            @if(filtered().length > 0) {
+                <ul class="menu__grid" role="list">
+                    @for(dish of filtered(); track dish.id) {
+                        <li>
+                            <app-dish-card
+                                [dish]="dish"
+                                [just_added]="just_added_id() === dish.id"
+                                (opened)="open($event)"
+                                (quick_added)="quickAdd($event)"
+                            ></app-dish-card>
+                        </li>
+                    }
+                </ul>
+            } @else {
+                <div class="menu__state">
+                    <i class="fa-solid fa-bowl-food menu__state-icon" aria-hidden="true"></i>
+                    <h3>Nenašli sme žiadne jedlo</h3>
+
+                    @if(has_active_filters()) {
+                        <p>Skúste iné slovo alebo zrušte filter.</p>
+                        <button type="button" class="btn btn--secondary" (click)="resetFilters()">Zrušiť filtre</button>
+                    } @else {
+                        <p>Ponuka sa práve pripravuje. Zastavte sa čoskoro.</p>
+                    }
+                </div>
+            }
+        }
     }
-</section>
+</div>
+
+<app-dish-detail [dish]="selected_dish()" (closed)="closeDetail()" (confirmed)="onConfirm($event)"></app-dish-detail>

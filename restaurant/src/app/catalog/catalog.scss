@@ -1,252 +1,174 @@
-@import "../../partials/variables";
 @import "../../partials/mixins";
 
-.all_dishes {
-    @include scrollbar;
+.menu {
+    @include container;
+}
+
+.menu__header {
+    margin-bottom: var(--space-6);
+}
+
+/******************************************************************************
+ Toolbar (Sticky Below The Fixed Header)
+******************************************************************************/
+
+.menu__toolbar {
+    position: sticky;
+    top: var(--header-height);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-inline: calc(-1 * var(--gutter));
+    margin-bottom: var(--space-6);
+    padding: var(--space-3) var(--gutter);
+    background-color: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+    z-index: var(--z-sticky);
+
+    // Desktop: Scrolls With The Page (The Wrapped Chips Would Take Too Much Space When Sticky)
+    @include bp(md) {
+        position: static;
+        gap: var(--space-4);
+        margin-inline: 0;
+        padding: 0 0 var(--space-6);
+    }
+}
+
+.menu__search-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+}
+
+.menu__search {
+    flex: 1;
+
+    @include bp(md) {
+        flex: 0 1 420px;
+    }
+}
+
+.menu__count {
+    display: none;
+    margin-left: auto;
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    white-space: nowrap;
+
+    @include bp(sm) {
+        display: block;
+    }
+}
+
+/******************************************************************************
+ Grid
+ Phones: One Column Of Horizontal Cards. 768px+: Grid Of Vertical Cards.
+******************************************************************************/
+
+.menu__grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    justify-content: center; 
-    justify-items: center;
-    align-items: start; 
-    gap: 20px;
-    max-width: $main-width;
-    width: 100%; 
-    max-height: 80vh;
-    margin: 0px auto;
-    padding: 20px;
-    overflow-y: auto; 
+    gap: var(--space-3);
+    list-style: none;
 
-    .one_dish {
-        max-height: 587px;
-        padding: 5px;
-        background-color: $secondary-color; 
-        border-radius: $medium-border-radius;
-        box-shadow: 0 4px 6px transparentize($main-color, 0.92), 0 2px 4px transparentize($main-color, 0.95);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    
-        &:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px transparentize($main-color, 0.82), 0 4px 6px transparentize($main-color, 0.88);
-            cursor: pointer;
-        }
+    @include bp(md) {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: var(--space-6);
+    }
+}
 
-        .one_dish_container {
-            @include scrollbar;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            width: 100%;
-            max-height: 587px - 10px;
-            padding: 10px;
-    
-            .modifier_group {
-                display: flex;
-                flex-direction: column;
-                gap: 5px;
-                margin-top: 10px;
-                padding-top: 10px;
-                border-top: 1px solid darken($secondary-color, 6%);
-    
-                > p {
-                    margin: 0px;
-                    color: $main-color;
-                    font-weight: 600;
-    
-                    .required {
-                        color: $red-color;
-                        font-weight: bold;
-                    }
-                }
-    
-                .modifier_item {
-                    display: flex;
-                    align-items: center;
-                    padding: 5px 10px;
-                    background-color: darken($secondary-color, 3%);
-                    border: 1px solid darken($secondary-color, 10%);
-                    border-radius: $small-border-radius;
-                    user-select: none;
-                    cursor: pointer;
-                    transition: background-color 0.2s ease, transform 0.1s ease;
-    
-                    &:hover {
-                        background-color: $secondary-color;
-                    }
-    
-                    &:active {
-                        transform: scale(0.98);
-                    }
-    
-                    input[type="checkbox"],
-                    input[type="radio"] {
-                        width: 15px;
-                        height: 15px;
-                        accent-color: $orange-color;
-                        cursor: pointer;
-                    }
-    
-                    span {
-                        margin-left: 10px;
-                        color: $main-color;
-                    }
-    
-                    .price {
-                        margin-left: auto;
-                        font-size: 0.9em;
-                        font-weight: bold;
-                        line-height: 1;
-                    
-                        span {
-                            font-size: 0.6em;
-                            vertical-align: super;
-                            margin-left: 2px;
-                        }
-                    }
-                }
-            }
-    
-            .rating {
-                display: inline-flex;
-                align-items: center;
-                justify-content: flex-end;
-                gap: 5px; 
-                margin-left: auto; 
-                padding: 5px 10px;
-                background-color: transparentize($orange-color, 0.9);
-                border-radius: $big-border-radius;
-            
-                .fa-star {
-                    color: $orange-color;
-                    font-size: 1.2em;
-                }
-            
-                .average {
-                    color: $main-color;
-                    font-weight: 700;
-                }
-            
-                .amount {
-                    font-size: 0.8em;
-                    font-weight: 500;
-                    color: transparentize($main-color, 0.4);
-                }
-            }
-    
-            img {
-                max-width: 100%;
-                width: 100%;
-                aspect-ratio: 1 / 1;
-                object-fit: cover;
-                object-position: center;
-                border-radius: $medium-border-radius;
-            }
-    
-            .title {
-                margin-bottom: 10px;
-                text-align: center;
-                font-family: $heading-font;
-                font-size: 1.2em;
-                font-weight: bold;
-            }
-    
-            .description {
-                display: -webkit-box;
-                line-clamp: 4;
-                -webkit-line-clamp: 4;
-                -webkit-box-orient: vertical;
-                color: transparentize($main-color, 0.2);
-                overflow: hidden;
-            
-                &::first-letter {
-                    margin-right: 10px;
-                    initial-letter: 2;
-                    font-weight: bold;
-                }
-            }
-    
-            .allergens_container {
-                display: flex;
-                gap: 5px;
-    
-                p {
-                    color: transparentize($main-color, 0.4);
-                }
-    
-                .allergens {
-                    display: flex;
-                    align-items: center;
-                    width: 100%;
-    
-                    .numbers {
-                        color: transparentize($main-color, 0.4);
-                    }
-    
-                    // Tooltip
-        
-                    .tooltip {
-                        @include tooltip;
-                        position: relative;
-                        display: inline-block;
-                        margin-left: auto;
-    
-                        &:hover {
-                            .fa-circle-info {
-                                color: transparentize($main-color, 0.5);
-                            }
-                        }
-    
-                        .fa-circle-info {
-                            display: block;
-                            color: transparentize($main-color, 0.8);
-                            transition: color 0.2s ease;
-                        }
-                    }
-                }
-            }
-    
-            .bottom {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                width: 100%;
-                margin-top: auto;
-                padding-top: 10px;
-    
-                .price {
-                    font-size: 1.2em;
-                    font-weight: bold;
-                    line-height: 1;
-                
-                    span {
-                        font-size: 0.6em;
-                        vertical-align: super;
-                        margin-left: 2px;
-                    }
-                }
-    
-                .add_to_cart {
-                    all: unset;
-                    display: flex;
-                    align-items: center;
-                    gap: 10px;
-                    padding: 10px 15px;
-                    background-color: lighten($main-color, 15%);
-                    color: $secondary-color; 
-                    border-radius: $small-border-radius;
-                    font-weight: bold;
-                    font-size: 0.9em;
-                    cursor: pointer;
-                    transition: background-color 0.2s ease, transform 0.1s ease;
-            
-                    &:hover {
-                        background-color: $main-color;
-                    }
-            
-                    &:active {
-                        transform: scale(0.95);
-                    }
-                }
-            }
+/******************************************************************************
+ Empty / Error State
+******************************************************************************/
+
+.menu__state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-16) var(--space-4);
+    text-align: center;
+
+    h3 {
+        font-size: var(--text-2xl);
+    }
+
+    p {
+        max-width: 40ch;
+        color: var(--color-text-muted);
+    }
+
+    .btn {
+        margin-top: var(--space-2);
+    }
+}
+
+.menu__state-icon {
+    display: grid;
+    place-items: center;
+    width: 72px;
+    height: 72px;
+    margin-bottom: var(--space-2);
+    background-color: var(--color-primary-soft);
+    color: var(--color-primary);
+    font-size: 1.75rem;
+    border-radius: 50%;
+}
+
+/******************************************************************************
+ Loading Placeholders
+******************************************************************************/
+
+.skeleton-card {
+    display: grid;
+    grid-template-columns: 1fr 112px;
+    gap: var(--space-4);
+    padding: var(--space-4);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+
+    .skeleton--image {
+        order: 2;
+        aspect-ratio: 1;
+        border-radius: var(--radius-md);
+    }
+
+    @include bp(md) {
+        grid-template-columns: 1fr;
+        gap: 0;
+        padding: 0;
+        overflow: hidden;
+
+        .skeleton--image {
+            order: 0;
+            aspect-ratio: 4 / 3;
+            border-radius: 0;
         }
     }
+}
+
+.skeleton-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+
+    @include bp(md) {
+        padding: var(--space-5);
+    }
+}
+
+.skeleton {
+    border-radius: var(--radius-sm);
+    background: linear-gradient(90deg, var(--color-surface-muted) 25%, var(--color-border) 50%, var(--color-surface-muted) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s ease-in-out infinite;
+}
+
+.skeleton--title { height: 22px; width: 70%; }
+.skeleton--text { height: 36px; }
+.skeleton--price { height: 20px; width: 30%; }
+
+@keyframes shimmer {
+    from { background-position: 200% 0; }
+    to { background-position: -200% 0; }
 }

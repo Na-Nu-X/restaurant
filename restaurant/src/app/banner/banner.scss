@@ -1,73 +1,190 @@
-@import "../../partials/variables";
 @import "../../partials/mixins";
 
-.banner {
+.hero {
+    position: relative;
+    padding-top: calc(var(--header-height) + var(--space-8));
+    padding-bottom: var(--space-section);
+    overflow: hidden;
+    isolation: isolate;
+
+    // Warm Glow Behind The Photo
+    &::before {
+        content: "";
+        position: absolute;
+        top: -20%;
+        right: -25%;
+        width: 90vw;
+        max-width: 1100px;
+        aspect-ratio: 1;
+        background: radial-gradient(closest-side, var(--color-primary-soft), transparent);
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    @include bp(lg) {
+        padding-top: calc(var(--header-height) + var(--space-16));
+    }
+}
+
+.hero__inner {
+    @include container;
+    display: grid;
+    gap: var(--space-10);
+    align-items: center;
+
+    @include bp(lg) {
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: var(--space-16);
+    }
+}
+
+/******************************************************************************
+ Text Column
+******************************************************************************/
+
+.hero__content {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    gap: 20px;
-    max-width: $main-width;
+    align-items: flex-start;
+    gap: var(--space-5);
+}
+
+.hero__title {
+    max-width: 15ch;
+    font-size: var(--text-5xl);
+    font-weight: var(--weight-semibold);
+    letter-spacing: -0.025em;
+}
+
+.hero__subtitle {
+    max-width: 46ch;
+    color: var(--color-text-muted);
+    font-size: var(--text-lg);
+
+    @include bp(lg) {
+        font-size: var(--text-xl);
+    }
+}
+
+.hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
     width: 100%;
-    min-height: calc(100vh - 45px - 20px);
-    margin: 0px auto;
-    padding: 100px 20px 40px; 
-    color: $main-color; // Ak použiješ tmavé pozadie, text by mal byť biely
+    margin-top: var(--space-2);
 
-    h1 {
-        line-height: 1;
-        font-family: $heading-font;
-        font-size: clamp(2.5em, 5vw, 4em);
+    .btn {
+        flex: 1 1 auto; // Full-Width Buttons On Small Phones
+
+        @include bp(sm) {
+            flex: 0 0 auto;
+        }
     }
 
-    > p:first-of-type {
-        max-width: 600px;
-        font-size: 1.2em;
-        color: transparentize($main-color, 0.4);
+    .fa-arrow-right {
+        transition: transform var(--duration-fast) ease;
     }
 
-    .buttons {
+    .btn:hover .fa-arrow-right {
+        transform: translateX(3px);
+    }
+}
+
+.hero__highlights {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-6);
+    margin-top: var(--space-3);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+
+    li {
         display: flex;
-        gap: 15px;
-        flex-wrap: wrap;
-
-        .book {
-            @include orange_button;
-        }
-
-        .order {
-            @include yellow_button;
-        }
+        align-items: center;
+        gap: var(--space-2);
     }
 
-    .status {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        margin-top: 10px;
-        color: $green-color;
-        font-weight: bold;
+    i {
+        color: var(--color-primary);
+    }
+}
 
-        &::before {
-            content: "";
-            display: block;
-            width: 10px;
-            height: 10px;
-            background-color: $green-color;
-            border-radius: 50%;
-            box-shadow: 0 0 5px $green-color;
-        }
+/******************************************************************************
+ Photo Column
+******************************************************************************/
 
-        &.closed {
-            color: $red-color;
+.hero__media {
+    position: relative;
+    width: 100%;
+    max-width: 520px;
+    justify-self: center;
 
-            &::before {
-                background-color: $red-color;
-                box-shadow: 0 0 5px $red-color;
-            }
-        }
+    @include bp(lg) {
+        justify-self: end;
+    }
+}
 
-        span {
-            font-size: 12px;
-        }
+.hero__image {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+
+    @include bp(md) {
+        aspect-ratio: 4 / 5;
+        max-height: 620px;
+    }
+}
+
+.hero__card {
+    position: absolute;
+    left: var(--space-4);
+    bottom: var(--space-4);
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-5) var(--space-3) var(--space-3);
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    text-decoration: none;
+    border-radius: var(--radius-pill);
+    box-shadow: var(--shadow-md);
+    transition: transform var(--duration-fast) ease, box-shadow var(--duration-fast) ease;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    @include bp(lg) {
+        left: calc(-1 * var(--space-8));
+        bottom: var(--space-10);
+    }
+}
+
+.hero__card-icon {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    background-color: var(--color-primary-soft);
+    color: var(--color-primary);
+    border-radius: 50%;
+}
+
+.hero__card-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+
+    small {
+        color: var(--color-text-muted);
+        font-size: var(--text-xs);
+    }
+
+    strong {
+        font-size: var(--text-base);
+        font-weight: var(--weight-semibold);
     }
 }

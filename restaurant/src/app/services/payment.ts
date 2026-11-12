@@ -1,9 +1,10 @@
 import { Injectable } from "@angular/core"
 import { HttpClient } from "@angular/common/http"
 import { Observable } from "rxjs"
+import { apiUrl } from "../config/api"
 
 import type { CartItem } from "./cart"
-import type { Customer } from "../navigation-bar/navigation-bar"
+import type { Customer } from "../cart-modal/cart-modal"
 
 @Injectable({
   providedIn: "root"
@@ -17,7 +18,7 @@ export class Payment {
         message:string,
         url?:string 
     }> {
-      const api_url:string = "http://127.0.0.1:8001/api/create-checkout-session/" // Connection To The Back-End API
+      const api_url:string = apiUrl("create-checkout-session/") // Connection To The Back-End API
       const items_to_send:CartItem[] = [...items] // Saves The Copy Of Items
 
       // If The Tip Is Selected
@@ -50,7 +51,7 @@ export class Payment {
         message:string,
         url?:string 
     }> {
-      const api_url:string = "http://127.0.0.1:8001/api/create-order/" // Connection To The Back-End API
+      const api_url:string = apiUrl("create-order/") // Connection To The Back-End API
       const items_to_send:CartItem[] = [...items] // Saves The Copy Of Items
 
     // Returns The Data

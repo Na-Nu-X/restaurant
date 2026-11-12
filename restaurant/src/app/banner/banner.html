@@ -1,19 +1,49 @@
-<div class="banner">
-    <h1>Vitaj! Na čo máš chuť?</h1>
+<section class="hero" aria-labelledby="hero-title">
+    <div class="hero__inner">
+        <div class="hero__content">
+            <app-status-badge [status]="status()" size="lg"></app-status-badge>
 
-    <!-- <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Veniam dolor, doloribus eligendi error debitis assumenda vero? Aperiam, veniam labore delectus et mollitia accusamus illo voluptatum recusandae! Sequi fugit tempora placeat!</p> -->
+            <h1 id="hero-title" class="hero__title">{{ title }}</h1>
+            <p class="hero__subtitle">{{ subtitle }}</p>
 
-    <app-daily-menu></app-daily-menu>
+            <div class="hero__actions">
+                <a class="btn btn--primary btn--lg" [href]="'/#' + sections.menu" (click)="go(sections.menu, $event)">
+                    {{ primary_label() }}
+                    <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                </a>
 
-    <div class="buttons">
-        <button class="book" (click)="scrollTo('.contact_form')">Rezervovať</button>
-        <button class="order" (click)="scrollTo('.all_dishes')">Objednať</button>
+                <a class="btn btn--secondary btn--lg" [href]="'/#' + sections.contact" (click)="go(sections.contact, $event)">
+                    Rezervovať stôl
+                </a>
+            </div>
+
+            @if(hero.highlights.length > 0) {
+                <ul class="hero__highlights" role="list">
+                    @for(highlight of hero.highlights; track highlight.text) {
+                        <li>
+                            <i [class]="highlight.icon" aria-hidden="true"></i>
+                            <span>{{ highlight.text }}</span>
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+
+        <div class="hero__media">
+            <picture>
+                @if(hero.imageSmall) {
+                    <source media="(max-width: 767px)" [attr.srcset]="hero.imageSmall">
+                }
+                <img class="hero__image" [src]="hero.image" [alt]="hero.imageAlt" width="1000" height="1208" fetchpriority="high">
+            </picture>
+
+            <a class="hero__card" [href]="'tel:' + brand.contact.phone">
+                <span class="hero__card-icon" aria-hidden="true"><i class="fa-solid fa-phone"></i></span>
+                <span class="hero__card-text">
+                    <small>Objednávky telefonicky</small>
+                    <strong>{{ brand.contact.phoneDisplay }}</strong>
+                </span>
+            </a>
+        </div>
     </div>
-
-    <p class="status" [class.open]="is_open" [class.closed]="!is_open">
-        {{ status }}
-        <span *ngIf="is_open && open_till">(do {{ open_till }})</span>
-        <span *ngIf="!is_open && next_open">(otvárame o {{ next_open }})</span>
-        <span *ngIf="reason && reason !== '' && !next_open">({{ reason }})</span>
-    </p>
-</div>
+</section>

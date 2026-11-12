@@ -1,28 +1,53 @@
+/******************************************************************************
+ Sass Variables
+
+ New code should use the CSS custom properties from `_theme.scss`
+ (e.g. `var(--color-primary)`), so that a client can be re-themed in one place.
+******************************************************************************/
+
+// Breakpoints (Mobile-First, Used With The `bp()` Mixin)
+
+$breakpoints: (
+    sm: 480px,
+    md: 768px,
+    lg: 1024px,
+    xl: 1280px
+);
+
+/******************************************************************************
+ LEGACY Variables
+
+ Still used by components that have not been redesigned yet. They pass through
+ Sass color functions (darken, transparentize), which do not accept CSS
+ variables, so they are kept as plain colors matching the new palette.
+ Remove each usage as its component is redesigned.
+******************************************************************************/
+
 // Colors
 
-$main-color: #000; // Background
-$secondary-color: #fff; // Text
+$main-color: #1f1a17; // Ink (Dark Surfaces / Text)
+$secondary-color: #fff; // White
 
-$orange-color: #fdc152;
-$yellow-color: #fcfad5;
-$light-yellow-color: #fdfcf6;
-$green-color: #4ade80;
-$red-color: #df3535;
+$orange-color: #c2410c; // Primary (Terracotta)
+$yellow-color: #fff4ea; // Soft Primary Tint
+$light-yellow-color: #fffbf5; // Page Background
+$green-color: #15803d; // Success
+$red-color: #b91c1c; // Danger
 
 // Dimensions
 
-$main-width: 1000px;
+$main-width: 1200px;
 
 // Fonts
 
-$heading-font: "Nunito", sans-serif;
-$main-font: Poppins, Arial, sans-serif;
-$copywrite-font: 'Courier New', Courier, monospace;
+$heading-font: "Fraunces", Georgia, serif;
+$main-font: "Inter", system-ui, Arial, sans-serif;
+$copywrite-font: $main-font;
 
-$default-font-size: 15px;
+$default-font-size: 16px;
 
 // Borders
 
-$big-border-radius: 25px;
-$medium-border-radius: 10px;
-$small-border-radius: 5px;
+$big-border-radius: 20px;
+$medium-border-radius: 12px;
+$small-border-radius: 6px;

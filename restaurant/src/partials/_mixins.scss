@@ -1,8 +1,202 @@
 @import "./variables";
 
-/***************
+/******************************************************************************
+ Layout Mixins
+******************************************************************************/
+
+// Mobile-First Breakpoint (e.g. @include bp(md) { ... } -> min-width: 768px)
+
+@mixin bp($name) {
+    $width: map-get($breakpoints, $name);
+
+    @if not $width {
+        @error "Unknown breakpoint `#{$name}`. Use one of: #{map-keys($breakpoints)}.";
+    }
+
+    @media (min-width: $width) {
+        @content;
+    }
+}
+
+// Max-Width Breakpoint (Use Sparingly, Prefer `bp()`)
+
+@mixin bp_down($name) {
+    @media (max-width: map-get($breakpoints, $name) - 0.02px) {
+        @content;
+    }
+}
+
+// Centered Page Container With Responsive Side Gutters
+
+@mixin container($max: var(--container-max)) {
+    width: 100%;
+    max-width: calc(#{$max} + 2 * var(--gutter));
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+}
+
+// Accessible Focus Ring
+
+@mixin focus_ring {
+    &:focus-visible {
+        outline: none;
+        box-shadow: var(--focus-ring);
+    }
+}
+
+/******************************************************************************
+ Component Mixins (Mirrored By The Global `.btn`, `.input`, ... Classes)
+******************************************************************************/
+
+// Button Base
+
+@mixin button_base {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    min-height: 44px;
+    padding: 0 var(--space-5);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    font-weight: var(--weight-semibold);
+    line-height: 1;
+    text-align: center;
+    text-decoration: none;
+    white-space: nowrap;
+    border: 1px solid transparent;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    user-select: none;
+    transition: background-color var(--duration-fast) ease, border-color var(--duration-fast) ease,
+        color var(--duration-fast) ease, box-shadow var(--duration-fast) ease, transform var(--duration-fast) ease;
+
+    &:focus-visible {
+        outline: none;
+        box-shadow: var(--focus-ring);
+    }
+
+    &:active:not(:disabled) {
+        transform: translateY(1px);
+    }
+
+    &:disabled,
+    &.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        box-shadow: none;
+    }
+}
+
+@mixin button_primary {
+    @include button_base;
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
+    box-shadow: var(--shadow-sm);
+
+    &:hover:not(:disabled) {
+        background-color: var(--color-primary-hover);
+    }
+
+    &:active:not(:disabled) {
+        background-color: var(--color-primary-active);
+    }
+}
+
+@mixin button_secondary {
+    @include button_base;
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    border-color: var(--color-border-strong);
+
+    &:hover:not(:disabled) {
+        border-color: var(--color-text);
+    }
+}
+
+@mixin button_soft {
+    @include button_base;
+    background-color: var(--color-primary-soft);
+    color: var(--color-primary);
+
+    &:hover:not(:disabled) {
+        background-color: var(--color-primary-soft-hover);
+    }
+}
+
+@mixin button_ghost {
+    @include button_base;
+    background-color: transparent;
+    color: var(--color-text);
+
+    &:hover:not(:disabled) {
+        background-color: var(--color-surface-muted);
+    }
+}
+
+// Round Icon-Only Button (Always Give It An `aria-label`)
+
+@mixin icon_button($size: 44px) {
+    @include button_base;
+    width: $size;
+    min-height: $size;
+    height: $size;
+    padding: 0;
+    background-color: transparent;
+    color: var(--color-text);
+    font-size: 1.1rem;
+
+    &:hover:not(:disabled) {
+        background-color: var(--color-surface-muted);
+    }
+}
+
+// Text Input / Textarea / Select
+
+@mixin input_base {
+    width: 100%;
+    min-height: 44px;
+    padding: var(--space-3) var(--space-4);
+    font-family: var(--font-body);
+    font-size: var(--text-base); // 16px Prevents Zoom-In On iOS
+    line-height: var(--leading-snug);
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    outline: none;
+    transition: border-color var(--duration-fast) ease, box-shadow var(--duration-fast) ease;
+
+    &::placeholder {
+        color: var(--color-text-subtle);
+    }
+
+    &:hover:not(:disabled) {
+        border-color: var(--color-text-subtle);
+    }
+
+    &:focus-visible,
+    &:focus {
+        border-color: var(--color-primary);
+        box-shadow: var(--focus-ring);
+    }
+
+    &:disabled {
+        background-color: var(--color-surface-muted);
+        color: var(--color-text-muted);
+        cursor: not-allowed;
+    }
+
+    &.invalid,
+    &.ng-invalid.ng-touched {
+        border-color: var(--color-danger);
+    }
+}
+
+/******************************************************************************
  General Mixins
-***************/
+******************************************************************************/
 
 // Center Positioning
 
@@ -24,7 +218,7 @@
     width: $size;
     height: $size;
     font-size: $size;
-    color: darken($secondary-color, 20%);
+    color: var(--color-primary);
     border-radius: 50%;
     transition: opacity 1s ease, visibility 1s ease;
     animation: preloaderSpin 1s infinite linear;
@@ -96,55 +290,20 @@
     }
 }
 
-// Orange Button
+// LEGACY: Primary Button (Prefer `button_primary` Or The `.btn--primary` Class)
 
-@mixin orange_button($width: 150px, $border-radius: $small-border-radius) {
-    all: unset;
+@mixin orange_button($width: 150px, $border-radius: var(--radius-pill)) {
+    @include button_primary;
     width: $width;
-    padding: 10px 0px;
-    text-align: center;
-    font-weight: 600;
-    background-color: $orange-color;
-    color: $secondary-color;
-    border: 1px solid $light-yellow-color;
     border-radius: $border-radius;
-    transition: transform 0.2s ease, background-color 0.2s ease;
-
-    &:hover,
-    &:focus-visible {
-        transform: translateY(-2px);
-        background-color: lighten($orange-color, 5%);
-        cursor: pointer;
-    }
-    
-    &:active {
-        transform: translateY(1px);
-    }
 }
 
-// Yellow Button
+// LEGACY: Secondary Button (Prefer `button_soft` Or The `.btn--soft` Class)
 
-@mixin yellow_button($width: 150px, $border-radius: $small-border-radius) {
-    all: unset;
+@mixin yellow_button($width: 150px, $border-radius: var(--radius-pill)) {
+    @include button_soft;
     width: $width;
-    padding: 10px 0px;
-    text-align: center;
-    font-weight: 600;
-    background-color: $yellow-color;
-    color: $orange-color;
-    border: 1px solid $orange-color;
     border-radius: $border-radius;
-    transition: transform 0.2s ease, background-color 0.2s ease;
-    
-    &:hover {
-        transform: translateY(-2px);
-        background-color: lighten($yellow-color, 2%);
-        cursor: pointer;
-    }
-    
-    &:active {
-        transform: translateY(1px);
-    }
 }
 
 // Tooltip
@@ -198,44 +357,15 @@
     }
 }
 
-// Form Input
+// LEGACY: Form Input (Prefer `input_base` Or The `.input` Class)
 
 @mixin form_input {
-    width: 100%;
-    padding: 10px 15px;
-    background-color: darken($secondary-color, 3%);
-    color: transparentize($main-color, 0.4);
-    border: 1px solid darken($secondary-color, 10%);
-    border-radius: $small-border-radius;
-    font-family: inherit;
-    outline: none;
-    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-
-    &::placeholder {
-        color: darken($secondary-color, 40%);
-    }
-
-    &:focus-visible {
-        background-color: $secondary-color;
-        border-color: $orange-color;
-        box-shadow: 0 0 0 3px transparentize($orange-color, 0.8);
-    }
-
-    &:-webkit-autofill {
-        -webkit-text-fill-color: transparentize($main-color, 0.4);
-        transition: width 0.3s ease, background-color 9999s ease;
-
-        &:hover,
-        &:focus {
-            -webkit-text-fill-color: transparentize($main-color, 0.4);
-            transition: width 0.3s ease, background-color 9999s ease;
-        }
-    }
+    @include input_base;
 }
 
 // Circle Decoration
 
-@mixin circle_decoration($top: auto, $right: auto, $bottom: auto, $left: auto, $width: 100px, $height: 100px, $color: transparentize($blue-color, 0.95)) {
+@mixin circle_decoration($top: auto, $right: auto, $bottom: auto, $left: auto, $width: 100px, $height: 100px, $color: var(--color-primary-soft)) {
     content: "";
     position: absolute;
     top: $top;
@@ -273,17 +403,17 @@
     }
 
     &::-webkit-scrollbar-thumb {
-        background: darken($secondary-color, 10%);
+        background: var(--color-border-strong);
         border-radius: 2.5px;
 
         &:hover {
-            background-color: darken($secondary-color, 20%);
+            background-color: var(--color-text-subtle);
             cursor: pointer;
         }
     }
 
     &::-webkit-scrollbar-track {
-        background: darken($secondary-color, 5%);
+        background: var(--color-surface-muted);
         border-radius: 2.5px;
     }
 }
@@ -300,7 +430,7 @@
 
 @mixin focus {
     &:focus-visible {
-        outline: 2px solid $red-color !important;
+        outline: 2px solid var(--color-primary) !important;
         outline-offset: 2px !important;
     }
 }

@@ -1,0 +1,370 @@
+@import "../../partials/mixins";
+
+/******************************************************************************
+ Dialog Shell
+ Phones: Bottom Sheet. 768px+: Centered Dialog.
+******************************************************************************/
+
+.sheet {
+    width: 100%;
+    max-width: 100%;
+    max-height: 94dvh;
+    margin: auto 0 0;
+    padding: 0;
+    background: transparent;
+    color: var(--color-text);
+    border: none;
+    overflow: visible;
+
+    &[open] {
+        animation: sheet-up var(--duration-slow) var(--ease-out);
+    }
+
+    @include bp(md) {
+        width: min(560px, calc(100% - 2 * var(--gutter)));
+        max-height: min(88dvh, 860px);
+        margin: auto;
+
+        &[open] {
+            animation: dialog-in var(--duration) var(--ease-out);
+        }
+    }
+}
+
+.sheet__panel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    max-height: inherit;
+    background-color: var(--color-surface);
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+
+    @include bp(md) {
+        border-radius: var(--radius-xl);
+    }
+}
+
+.sheet__close {
+    @include icon_button(40px);
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+    background-color: color-mix(in oklab, var(--color-surface) 92%, transparent);
+    box-shadow: var(--shadow-sm);
+    z-index: var(--z-raised);
+
+    &:hover:not(:disabled) {
+        background-color: var(--color-surface);
+    }
+}
+
+.sheet__body {
+    flex: 1;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+.sheet__image {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    background-color: var(--color-surface-muted);
+
+    @include bp(md) {
+        aspect-ratio: 2 / 1;
+    }
+}
+
+.sheet__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    padding: var(--space-5) var(--gutter) var(--space-6);
+
+    @include bp(md) {
+        padding-inline: var(--space-8);
+    }
+}
+
+/******************************************************************************
+ Header (Title, Price, Rating, Description)
+******************************************************************************/
+
+.sheet__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.sheet__title {
+    font-size: var(--text-3xl);
+    padding-right: var(--space-8);
+
+    // Leaves Room For The Close Button When There Is No Photo
+    .sheet__body > &:first-child {
+        padding-top: var(--space-2);
+    }
+}
+
+.sheet__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-4);
+}
+
+.sheet__price {
+    font-size: var(--text-xl);
+    font-weight: var(--weight-bold);
+}
+
+.sheet__rating {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+
+    i {
+        color: var(--color-accent);
+    }
+}
+
+.sheet__rating-count {
+    color: var(--color-text-subtle);
+    font-weight: var(--weight-regular);
+}
+
+.sheet__description {
+    color: var(--color-text-muted);
+}
+
+/******************************************************************************
+ Allergens (Collapsible)
+******************************************************************************/
+
+.sheet__allergens {
+    background-color: var(--color-surface-muted);
+    border-radius: var(--radius-md);
+
+    summary {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        padding: var(--space-3) var(--space-4);
+        color: var(--color-text-muted);
+        font-size: var(--text-sm);
+        font-weight: var(--weight-medium);
+        list-style: none;
+        cursor: pointer;
+
+        &::-webkit-details-marker {
+            display: none;
+        }
+    }
+
+    &[open] .sheet__allergens-chevron {
+        transform: rotate(180deg);
+    }
+
+    ul {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
+        padding: 0 var(--space-4) var(--space-4);
+        font-size: var(--text-sm);
+    }
+
+    li {
+        display: flex;
+        gap: var(--space-2);
+    }
+}
+
+.sheet__allergens-chevron {
+    margin-left: auto;
+    font-size: var(--text-xs);
+    transition: transform var(--duration-fast) ease;
+}
+
+.sheet__allergen-number {
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    background-color: var(--color-surface);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-bold);
+    border-radius: 50%;
+}
+
+/******************************************************************************
+ Option Groups
+******************************************************************************/
+
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    min-width: 0;
+    border: none;
+}
+
+.options__legend {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    width: 100%;
+    margin-bottom: var(--space-2);
+}
+
+.options__title {
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    font-weight: var(--weight-semibold);
+}
+
+.options__error {
+    color: var(--color-danger);
+    font-size: var(--text-sm);
+}
+
+.option {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: 52px;
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: border-color var(--duration-fast) ease, background-color var(--duration-fast) ease;
+
+    &:hover {
+        border-color: var(--color-border-strong);
+    }
+
+    &.is-selected {
+        background-color: var(--color-primary-soft);
+        border-color: var(--color-primary);
+    }
+
+    &:has(.option__input:focus-visible) {
+        box-shadow: var(--focus-ring);
+    }
+
+    .is-missing & {
+        border-color: color-mix(in oklab, var(--color-danger) 45%, var(--color-border));
+    }
+}
+
+// Native Input Kept For Accessibility, Visually Replaced By `.option__control`
+.option__input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.option__control {
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    color: transparent;
+    font-size: 12px;
+    border: 2px solid var(--color-border-strong);
+    border-radius: var(--radius-sm);
+    transition: background-color var(--duration-fast) ease, border-color var(--duration-fast) ease, color var(--duration-fast) ease;
+
+    .is-selected & {
+        background-color: var(--color-primary);
+        border-color: var(--color-primary);
+        color: var(--color-on-primary);
+    }
+}
+
+.option__control--round {
+    border-radius: 50%;
+}
+
+.option__title {
+    flex: 1;
+}
+
+.option__price {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    white-space: nowrap;
+}
+
+/******************************************************************************
+ Footer (Quantity + Add)
+******************************************************************************/
+
+.sheet__footer {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--gutter) calc(var(--space-3) + env(safe-area-inset-bottom));
+    background-color: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+
+    @include bp(md) {
+        padding: var(--space-4) var(--space-8);
+    }
+}
+
+.stepper {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    height: 52px;
+    padding: var(--space-1);
+    background-color: var(--color-surface-muted);
+    border-radius: var(--radius-pill);
+}
+
+.stepper__button {
+    @include icon_button(44px);
+    font-size: var(--text-sm);
+
+    &:hover:not(:disabled) {
+        background-color: var(--color-surface);
+    }
+}
+
+.stepper__value {
+    min-width: 2ch;
+    font-weight: var(--weight-bold);
+    text-align: center;
+}
+
+.sheet__add {
+    flex: 1;
+    justify-content: space-between;
+    padding-inline: var(--space-6);
+}
+
+.sheet__add-price {
+    font-variant-numeric: tabular-nums;
+}
+
+/******************************************************************************
+ Animations
+******************************************************************************/
+
+@keyframes sheet-up {
+    from { transform: translateY(100%); }
+}
+
+@keyframes dialog-in {
+    from { opacity: 0; transform: translateY(16px) scale(0.98); }
+}

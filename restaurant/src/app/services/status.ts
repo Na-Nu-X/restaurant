@@ -1,13 +1,14 @@
-import { Injectable } from "@angular/core"
+import { Injectable, inject } from "@angular/core"
 import { HttpClient } from "@angular/common/http"
-import { Observable } from "rxjs"
+import { Observable, catchError, of, shareReplay } from "rxjs"
+import { apiUrl } from "../config/api"
 
-interface StatusResponse {
+export interface StatusResponse {
     success:boolean,
     message:string,
     is_open?:boolean,
     status?:string,
-    reason?:string,
+    reason?:string|null,
     open_till?:string,
     next_open?:string
 }
@@ -16,12 +17,20 @@ interface StatusResponse {
     providedIn: "root"
 })
 export class Status {
-    private api_url:string = "http://127.0.0.1:8001/api/get-status/" // Connection To The Back-End API
+    private http:HttpClient = inject(HttpClient)
+    private api_url:string = apiUrl("get-status/") // Connection To The Back-End API
 
-    constructor(private http: HttpClient) { }
+    // Restaurant Status, Fetched Once And Shared By All Components (Header, Hero, Cart)
+    readonly status$:Observable<StatusResponse> = this.http.get<StatusResponse>(this.api_url).pipe(
+        catchError((error) => {
+            console.error(error) // Shows The Error
+            return of<StatusResponse>({ success: false, message: "Stav podniku sa nepodarilo načítať." })
+        }),
+        shareReplay({ bufferSize: 1, refCount: false })
+    )
 
-    // Method For Send The Message
+    // Method For Get The Restaurant Status
     getStatus():Observable<StatusResponse> {
-        return this.http.get<StatusResponse>(this.api_url) // Returns The Data
+        return this.status$ // Returns The Shared Data
     }
 }

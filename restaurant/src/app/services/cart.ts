@@ -1,38 +1,50 @@
 import { Injectable } from "@angular/core"
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from "rxjs"
 import { HttpClient } from "@angular/common/http"
+import { apiUrl } from "../config/api"
 
-export interface modifierGroup {
+// One Selectable Option Of A Dish (e.g. "Hranolky", +150 Cents)
+export interface ModifierItem {
+    id:number,
+    title:string,
+    extra_price:number // In Cents
+}
+
+// Group Of Options Of A Dish (e.g. "Vyberte si prílohu")
+export interface ModifierGroup {
     id:number,
     title:string,
     is_multiple_choice:boolean,
     is_required:boolean,
-
-    items:{
-        id:number,
-        title:string,
-        extra_price:number
-    }[]
+    items:ModifierItem[]
 }
 
+/** @deprecated Use `ModifierGroup`. */
+export type modifierGroup = ModifierGroup
+
+export interface Allergen {
+    number:number,
+    name:string
+}
+
+// Dish As Returned By The Back-End And Stored In The Cart
 export interface CartItem {
     id:number,
     title:string,
     description:string,
-    category_id?:number,
-    price:number,
+    category_id?:number|null,
+    price:number, // In Cents. In The Cart It Is The Unit Price Including The Selected Options
     quantity:number,
     image:string,
-
-    allergens:{
-        number:number,
-        name:string
-    }[]
+    allergens:Allergen[],
 
     average_rating?:number,
     rating_amount?:number,
-    modifier_groups?:modifierGroup[],
-    selected_modifiers?:Record<number, any[]>
+    modifier_groups?:ModifierGroup[],
+
+    // Cart-Only Fields
+    selected_modifiers?:ModifierItem[], // Options Chosen By The Customer
+    line_key?:string // Identifies Identical Lines (Same Dish + Same Options) So They Are Merged
 }
 
 export interface ValidateCouponResponse {
@@ -49,26 +61,56 @@ export class Cart {
     private storage_key:string = "cart_items" // Sets The Local Storage Key For Stored Cart Items
     cart_items$:CartItem[] = this.loadCartFromStorage() // Loads The Cart Items From The Local Storage
 
-    private cart_counter:BehaviorSubject<number> = new BehaviorSubject<number>(this.cart_items$.length) // Updates The Cart Counter
-    cart_amount$ = this.cart_counter.asObservable() // Sends The Cart Amount To Other Components
+    private cart_counter:BehaviorSubject<number> = new BehaviorSubject<number>(this.countItems()) // Updates The Cart Counter
+    cart_amount$ = this.cart_counter.asObservable() // Sends The Cart Amount (Sum Of Quantities) To Other Components
+
+    private open_requests:Subject<void> = new Subject<void>()
+    open_requests$:Observable<void> = this.open_requests.asObservable() // Emits When Any Component Asks To Show The Cart
+
+    // Method For Open The Cart (The Cart Modal Listens To `open_requests$`)
+    openCart():void {
+        this.open_requests.next()
+    }
+
+    // Method For Count All Items In The Cart (Respects Quantities)
+    private countItems():number {
+        return this.cart_items$.reduce((sum, one_item) => sum + (one_item.quantity || 1), 0)
+    }
 
     constructor(private http:HttpClient) {}
 
-    // Method For Add To Cart
-    addToCart(dish:CartItem) {
-        const selected_modifiers:any[] = Object.values(dish.selected_modifiers || {}).flat() // Gets The Selected Modifiers
-        const extra_price:number = selected_modifiers.reduce((sum:number, item:any) => sum + (item.extra_price || 0), 0) // Calculates The Extra Price
-      
-        // Creates The Copy Of Added Dish With The Extra Price
-        const cart_item:CartItem = {
-          ...dish,
-          price: dish.price + extra_price,
-          quantity: 1,
-          selected_modifiers: selected_modifiers
+    // Method For Add A Dish (With The Chosen Options) To The Cart
+    // Identical Lines (Same Dish And Same Options) Are Merged By Increasing The Quantity
+    addToCart(dish:CartItem, selected_modifiers:ModifierItem[] = [], quantity:number = 1):void {
+        const amount:number = Math.max(1, Math.floor(quantity))
+        const extra_price:number = selected_modifiers.reduce((sum, item) => sum + item.extra_price, 0) // Calculates The Extra Price
+        const line_key:string = Cart.lineKey(dish.id, selected_modifiers)
+
+        const existing:CartItem|undefined = this.cart_items$.find(item => (item.line_key ?? Cart.lineKey(item.id, item.selected_modifiers ?? [])) === line_key)
+
+        if(existing) {
+            existing.quantity = (existing.quantity || 1) + amount
         }
-      
-        this.cart_items$.push(cart_item) // Adds The Dish To The Cart Items
+
+        else {
+            // Stores A Copy Of The Dish Without The Data Only Needed By The Menu
+            const { modifier_groups, average_rating, rating_amount, ...dish_data } = dish
+
+            this.cart_items$.push({
+                ...dish_data,
+                price: dish.price + extra_price,
+                quantity: amount,
+                selected_modifiers: [...selected_modifiers],
+                line_key
+            })
+        }
+
         this.saveCartToStorage() // Updates The Cart Items In The Local Storage
+    }
+
+    // Builds The Key Of A Cart Line (e.g. "12:3,7")
+    static lineKey(dish_id:number, selected_modifiers:ModifierItem[]):string {
+        return `${dish_id}:${selected_modifiers.map(item => item.id).sort((a, b) => a - b).join(",")}`
     }
 
     // Method For Remove The Item From Cart
@@ -89,7 +131,7 @@ export class Cart {
     // Method For Save The Cart Items To The Local Storage
     private saveCartToStorage():void {
         if(typeof window !== "undefined") localStorage.setItem(this.storage_key, JSON.stringify(this.cart_items$)) // Saves The Cart Items To The Local Storage
-        this.cart_counter.next(this.cart_items$.length) // Sends The New Amount Of Cart Items
+        this.cart_counter.next(this.countItems()) // Sends The New Amount Of Cart Items
     }
 
     // Method For Load The Cart Items From The Local Storage
@@ -104,6 +146,6 @@ export class Cart {
 
     // Method For Validate The Applied Coupon
     validateCoupon(code:string):Observable<ValidateCouponResponse> {
-        return this.http.post<ValidateCouponResponse>("http://127.0.0.1:8001/api/validate-coupon/", { code }) // Returns The Data
+        return this.http.post<ValidateCouponResponse>(apiUrl("validate-coupon/"), { code }) // Returns The Data
     }
 }
