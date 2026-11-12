@@ -48,7 +48,7 @@ export class NavigationBar {
   ]
 
   readonly status = toSignal(inject(Status).status$, { initialValue: null }) // Restaurant Open / Closed Status
-  readonly cart_count = toSignal(this.cartService.cart_amount$, { initialValue: 0 }) // Number Of Items In The Cart
+  readonly cart_count = this.cartService.count // Number Of Items In The Cart
 
   readonly is_menu_open = signal<boolean>(false) // Stores The Information If The Mobile Menu Is Open
   readonly is_scrolled = signal<boolean>(false) // Stores The Information If The Page Is Scrolled

@@ -1,0 +1,313 @@
+<dialog
+    #dialog
+    class="drawer"
+    aria-labelledby="cart-drawer-title"
+    (click)="onDialogClick($event)"
+    (cancel)="onCancel($event)"
+>
+    <div class="drawer__panel">
+        <!-- Header -->
+        <header class="drawer__header">
+            @if(step() === "details") {
+                <button type="button" class="icon-btn" aria-label="Späť do košíka" [disabled]="submitting()" (click)="backToCart()">
+                    <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+                </button>
+            }
+
+            <h2 id="cart-drawer-title" class="drawer__title">
+                {{ step() === "cart" ? "Váš košík" : "Doručenie a platba" }}
+                @if(step() === "cart" && count() > 0) { <span class="drawer__count">({{ count() }})</span> }
+            </h2>
+
+            <button type="button" class="icon-btn" aria-label="Zavrieť košík" (click)="close()">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
+        </header>
+
+        @if(items().length > 0) {
+            <ol class="steps" role="list" aria-label="Kroky objednávky">
+                <li class="steps__item" [class.is-active]="step() === 'cart'" [class.is-done]="step() === 'details'" [attr.aria-current]="step() === 'cart' ? 'step' : null">
+                    <span class="steps__number" aria-hidden="true">@if(step() === "details") { <i class="fa-solid fa-check"></i> } @else { 1 }</span>
+                    Košík
+                </li>
+                <li class="steps__line" aria-hidden="true"></li>
+                <li class="steps__item" [class.is-active]="step() === 'details'" [attr.aria-current]="step() === 'details' ? 'step' : null">
+                    <span class="steps__number" aria-hidden="true">2</span>
+                    Doručenie a platba
+                </li>
+            </ol>
+        }
+
+        <!-- Body -->
+        <div class="drawer__body">
+            @if(last_removed(); as removed) {
+                <p class="notice notice--neutral" role="status">
+                    <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
+                    <span class="notice__text">{{ removed.item.title }} – odstránené z košíka.</span>
+                    <button type="button" class="notice__action" (click)="undoRemove()">Vrátiť</button>
+                </p>
+            }
+
+            @if(items().length === 0) {
+                <div class="empty">
+                    <span class="empty__icon" aria-hidden="true"><i class="fa-solid fa-bag-shopping"></i></span>
+                    <h3>Váš košík je prázdny</h3>
+                    <p>Pozrite si naše menu a pridajte si niečo dobré.</p>
+                    <button type="button" class="btn btn--primary" (click)="browseMenu()">Pozrieť menu</button>
+                </div>
+            }
+
+            @else if(step() === "cart") {
+                @if(is_closed()) {
+                    <p class="notice notice--warning" role="status">
+                        <i class="fa-solid fa-clock" aria-hidden="true"></i>
+                        {{ closed_message() }}
+                    </p>
+                }
+
+                <ul class="lines" role="list">
+                    @for(item of items(); track item.line_key) {
+                        <li class="line">
+                            @if(item.image) {
+                                <img class="line__image" [src]="item.image" [alt]="" width="64" height="64" loading="lazy">
+                            }
+
+                            <div class="line__info">
+                                <p class="line__title">{{ item.title }}</p>
+
+                                @if(optionsLabel(item)) {
+                                    <p class="line__options">{{ optionsLabel(item) }}</p>
+                                }
+
+                                <p class="line__unit">{{ item.price | price }} / ks</p>
+                            </div>
+
+                            <div class="line__side">
+                                <span class="line__total">{{ item.price * item.quantity | price }}</span>
+
+                                <div class="qty" role="group" [attr.aria-label]="'Množstvo: ' + item.title">
+                                    @if(item.quantity === 1) {
+                                        <button type="button" class="qty__button" [attr.aria-label]="'Odstrániť ' + item.title" (click)="remove(item)">
+                                            <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
+                                        </button>
+                                    } @else {
+                                        <button type="button" class="qty__button" aria-label="Menej" (click)="changeQuantity(item, -1)">
+                                            <i class="fa-solid fa-minus" aria-hidden="true"></i>
+                                        </button>
+                                    }
+
+                                    <output class="qty__value" aria-live="polite">{{ item.quantity }}</output>
+
+                                    <button type="button" class="qty__button" aria-label="Viac" [disabled]="item.quantity >= max_quantity" (click)="changeQuantity(item, 1)">
+                                        <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ul>
+
+                <!-- Coupon -->
+                <div class="coupon">
+                    @if(coupon(); as applied) {
+                        <div class="coupon__applied">
+                            <span class="badge badge--success"><i class="fa-solid fa-tag" aria-hidden="true"></i> {{ applied.code }} · −{{ applied.discount_percent }} %</span>
+                            <button type="button" class="btn btn--ghost btn--sm" (click)="removeCoupon()">Odstrániť</button>
+                        </div>
+                    } @else {
+                        <details class="coupon__toggle" [open]="!!coupon_message()">
+                            <summary><i class="fa-solid fa-tag" aria-hidden="true"></i> Máte zľavový kupón?</summary>
+
+                            <form class="coupon__form" (submit)="$event.preventDefault(); applyCoupon()">
+                                <label class="visually-hidden" for="coupon-code">Zľavový kupón</label>
+                                <input
+                                    id="coupon-code"
+                                    class="input"
+                                    type="text"
+                                    autocomplete="off"
+                                    autocapitalize="characters"
+                                    maxlength="50"
+                                    placeholder="Kód kupónu"
+                                    [class.invalid]="coupon_message()?.tone === 'error'"
+                                    [value]="coupon_input()"
+                                    (input)="coupon_input.set($any($event.target).value)"
+                                >
+                                <button type="submit" class="btn btn--secondary" [disabled]="!coupon_input().trim() || coupon_loading()">
+                                    {{ coupon_loading() ? "Overujem..." : "Uplatniť" }}
+                                </button>
+                            </form>
+                        </details>
+                    }
+
+                    @if(coupon_message(); as message) {
+                        <p class="coupon__message" [class.is-error]="message.tone === 'error'" role="status">{{ message.text }}</p>
+                    }
+                </div>
+            }
+
+            @else {
+                <form id="checkout-form" class="checkout" novalidate (submit)="$event.preventDefault(); submit()">
+                    <!-- Delivery -->
+                    <fieldset class="checkout__section">
+                        <legend class="checkout__legend">Kam vám to prinesieme?</legend>
+
+                        <div class="checkout__row">
+                            <div class="field">
+                                <label class="field__label" for="checkout-first_name">Meno</label>
+                                <input id="checkout-first_name" class="input" type="text" autocomplete="given-name" maxlength="20" required
+                                    [class.invalid]="fieldError('first_name')" [attr.aria-invalid]="!!fieldError('first_name')" aria-describedby="error-first_name"
+                                    [value]="customer().first_name" (input)="updateField('first_name', $any($event.target).value)" (blur)="touch('first_name')">
+                                @if(fieldError("first_name"); as error) { <span id="error-first_name" class="field__error">{{ error }}</span> }
+                            </div>
+
+                            <div class="field">
+                                <label class="field__label" for="checkout-last_name">Priezvisko</label>
+                                <input id="checkout-last_name" class="input" type="text" autocomplete="family-name" maxlength="50" required
+                                    [class.invalid]="fieldError('last_name')" [attr.aria-invalid]="!!fieldError('last_name')" aria-describedby="error-last_name"
+                                    [value]="customer().last_name" (input)="updateField('last_name', $any($event.target).value)" (blur)="touch('last_name')">
+                                @if(fieldError("last_name"); as error) { <span id="error-last_name" class="field__error">{{ error }}</span> }
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label class="field__label" for="checkout-phone_number">Telefón</label>
+                            <input id="checkout-phone_number" class="input" type="tel" autocomplete="tel" inputmode="tel" maxlength="50" required placeholder="+421 900 123 456"
+                                [class.invalid]="fieldError('phone_number')" [attr.aria-invalid]="!!fieldError('phone_number')" aria-describedby="hint-phone error-phone_number"
+                                [value]="customer().phone_number" (input)="updateField('phone_number', $any($event.target).value)" (blur)="touch('phone_number')">
+                            @if(fieldError("phone_number"); as error) {
+                                <span id="error-phone_number" class="field__error">{{ error }}</span>
+                            } @else {
+                                <span id="hint-phone" class="field__hint">Kuriér vám zavolá, ak nenájde adresu.</span>
+                            }
+                        </div>
+
+                        <div class="field">
+                            <label class="field__label" for="checkout-address">Ulica a číslo domu</label>
+                            <input id="checkout-address" class="input" type="text" autocomplete="street-address" maxlength="100" required
+                                [class.invalid]="fieldError('address')" [attr.aria-invalid]="!!fieldError('address')" aria-describedby="error-address"
+                                [value]="customer().address" (input)="updateField('address', $any($event.target).value)" (blur)="touch('address')">
+                            @if(fieldError("address"); as error) { <span id="error-address" class="field__error">{{ error }}</span> }
+                        </div>
+
+                        <div class="field">
+                            <label class="field__label" for="checkout-city">Mesto</label>
+                            <input id="checkout-city" class="input" type="text" autocomplete="address-level2" maxlength="50" required
+                                [class.invalid]="fieldError('city')" [attr.aria-invalid]="!!fieldError('city')" aria-describedby="error-city"
+                                [value]="customer().city" (input)="updateField('city', $any($event.target).value)" (blur)="touch('city')">
+                            @if(fieldError("city"); as error) { <span id="error-city" class="field__error">{{ error }}</span> }
+                        </div>
+
+                        <div class="field">
+                            <label class="field__label" for="checkout-message">Poznámka <span class="field__optional">(nepovinné)</span></label>
+                            <textarea id="checkout-message" class="input" rows="2" maxlength="100" placeholder="Napr. poschodie, zvonček, bez príboru..."
+                                [value]="customer().message ?? ''" (input)="updateField('message', $any($event.target).value)"></textarea>
+                        </div>
+                    </fieldset>
+
+                    <!-- Payment -->
+                    <fieldset class="checkout__section">
+                        <legend class="checkout__legend">Spôsob platby</legend>
+
+                        <div class="pay-options">
+                            <label class="pay-option" [class.is-selected]="payment_method() === 'card'">
+                                <input type="radio" name="payment" value="card" [checked]="payment_method() === 'card'" (change)="payment_method.set('card')">
+                                <i class="fa-regular fa-credit-card pay-option__icon" aria-hidden="true"></i>
+                                <span class="pay-option__text">
+                                    <strong>Kartou online</strong>
+                                    <small>Bezpečná platba cez Stripe</small>
+                                </span>
+                            </label>
+
+                            <label class="pay-option" [class.is-selected]="payment_method() === 'cash'">
+                                <input type="radio" name="payment" value="cash" [checked]="payment_method() === 'cash'" (change)="payment_method.set('cash')">
+                                <i class="fa-solid fa-money-bill-wave pay-option__icon" aria-hidden="true"></i>
+                                <span class="pay-option__text">
+                                    <strong>Na dobierku</strong>
+                                    <small>Platíte pri prevzatí</small>
+                                </span>
+                            </label>
+                        </div>
+
+                        @if(payment_method() === "card" && tip_options.length > 1) {
+                            <div class="tip" role="group" aria-labelledby="tip-label">
+                                <p id="tip-label" class="tip__label">Prepitné pre kuchyňu a kuriéra</p>
+
+                                <div class="tip__options">
+                                    @for(option of tip_options; track option) {
+                                        <button type="button" class="chip" [class.is-active]="tip_percent() === option" [attr.aria-pressed]="tip_percent() === option" (click)="tip_percent.set(option)">
+                                            {{ option === 0 ? "Bez prepitného" : option + " %" }}
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </fieldset>
+
+                    <!-- Full Breakdown (The Footer Only Shows The Total To Leave Room For The Form) -->
+                    <section class="checkout__section" aria-labelledby="summary-title">
+                        <h3 id="summary-title" class="checkout__legend">Zhrnutie</h3>
+
+                        <dl class="summary summary--card">
+                            <div class="summary__row"><dt>Jedlo ({{ count() }} ks)</dt><dd>{{ totals().subtotal | price }}</dd></div>
+
+                            @if(totals().discount > 0) {
+                                <div class="summary__row summary__row--discount"><dt>Zľava ({{ coupon()?.code }})</dt><dd>−{{ totals().discount | price }}</dd></div>
+                            }
+
+                            @if(totals().tip > 0) {
+                                <div class="summary__row"><dt>Prepitné ({{ tip_percent() }} %)</dt><dd>{{ totals().tip | price }}</dd></div>
+                            }
+
+                            <div class="summary__row summary__row--total"><dt>Spolu</dt><dd>{{ totals().total | price }}</dd></div>
+                        </dl>
+                    </section>
+
+                    @if(server_error(); as error) {
+                        <p class="notice notice--danger" role="alert">
+                            <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+                            {{ error }}
+                        </p>
+                    }
+
+                    @if(is_closed()) {
+                        <p class="notice notice--warning" role="status">
+                            <i class="fa-solid fa-clock" aria-hidden="true"></i>
+                            {{ closed_message() }}
+                        </p>
+                    }
+                </form>
+            }
+        </div>
+
+        <!-- Footer: Summary + Main Action -->
+        @if(items().length > 0) {
+            <footer class="drawer__footer">
+                <dl class="summary">
+                    @if(step() === "cart" && totals().discount > 0) {
+                        <div class="summary__row"><dt>Medzisúčet</dt><dd>{{ totals().subtotal | price }}</dd></div>
+                        <div class="summary__row summary__row--discount"><dt>Zľava ({{ coupon()?.code }})</dt><dd>−{{ totals().discount | price }}</dd></div>
+                    }
+
+                    <div class="summary__row summary__row--total"><dt>Spolu</dt><dd>{{ totals().total | price }}</dd></div>
+                </dl>
+
+                @if(step() === "cart") {
+                    <button type="button" class="btn btn--primary btn--lg btn--block drawer__cta" (click)="goToDetails()">
+                        <span>Pokračovať</span>
+                        <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                    </button>
+                } @else {
+                    <button type="submit" form="checkout-form" class="btn btn--primary btn--lg btn--block drawer__cta" [disabled]="submitting() || is_closed()">
+                        @if(submitting()) {
+                            <span class="spinner" aria-hidden="true"></span>
+                            <span>{{ payment_method() === "card" ? "Presmerúvam na platbu..." : "Odosielam objednávku..." }}</span>
+                        } @else {
+                            <span>{{ submit_label() }}</span>
+                            <span>{{ totals().total | price }}</span>
+                        }
+                    </button>
+                }
+            </footer>
+        }
+    </div>
+</dialog>

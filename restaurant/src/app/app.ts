@@ -3,14 +3,14 @@ import { RouterOutlet } from "@angular/router"
 import { Meta, Title } from "@angular/platform-browser"
 import { NavigationBar } from "./navigation-bar/navigation-bar"
 import { Footer } from "./footer/footer"
-import { CartModal } from "./cart-modal/cart-modal"
+import { CartDrawer } from "./cart-drawer/cart-drawer"
 import { ToastHost } from "./shared/toast/toast-host"
 import { Loading } from "./services/loading"
 import { BRAND } from "./config/brand.config"
 
 @Component({
   selector: "app-root",
-  imports: [RouterOutlet, NavigationBar, Footer, CartModal, ToastHost],
+  imports: [RouterOutlet, NavigationBar, Footer, CartDrawer, ToastHost],
   templateUrl: "./app.html",
   styleUrl: "./app.scss"
 })

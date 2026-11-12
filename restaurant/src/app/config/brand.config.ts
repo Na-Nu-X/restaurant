@@ -54,6 +54,12 @@ export interface BrandConfig {
   // Card Brands Shown In The Footer (Icons From `public/images/<name>.png`)
   paymentMethods:PaymentMethod[]
 
+  // Checkout Settings
+  checkout:{
+    tipOptions:number[],      // Tip Percentages Offered For Card Payments (0 = No Tip)
+    defaultTipPercent:number  // Preselected Tip (Must Be One Of `tipOptions`)
+  }
+
   // Formatting Of Prices
   locale:string
   currency:string
@@ -99,6 +105,11 @@ export const BRAND:BrandConfig = {
   },
 
   paymentMethods: ["visa", "mastercard", "amex", "discover", "diners_club", "jcb"],
+
+  checkout: {
+    tipOptions: [0, 5, 10, 15],
+    defaultTipPercent: 10
+  },
 
   locale: "sk-SK",
   currency: "EUR"
