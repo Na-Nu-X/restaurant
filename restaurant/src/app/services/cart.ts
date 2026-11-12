@@ -19,9 +19,6 @@ export interface ModifierGroup {
     items:ModifierItem[]
 }
 
-/** @deprecated Use `ModifierGroup`. */
-export type modifierGroup = ModifierGroup
-
 export interface Allergen {
     number:number,
     name:string

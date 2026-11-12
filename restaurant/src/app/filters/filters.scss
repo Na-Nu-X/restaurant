@@ -1,4 +1,4 @@
-@import "../../partials/mixins";
+@use "../../partials/mixins" as *;
 
 :host {
     display: block;

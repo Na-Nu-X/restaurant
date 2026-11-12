@@ -1,6 +1,5 @@
-@import "./partials/theme";
-@import "./partials/variables";
-@import "./partials/mixins";
+@use "./partials/theme";
+@use "./partials/mixins" as *;
 
 /******************************************************************************
  Reset & Base

@@ -1,4 +1,4 @@
-@import "../../partials/mixins";
+@use "../../partials/mixins" as *;
 
 .footer {
     background-color: var(--color-surface-inverse);

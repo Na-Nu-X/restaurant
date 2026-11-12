@@ -1,4 +1,4 @@
-@import "../../partials/mixins";
+@use "../../partials/mixins" as *;
 
 .daily {
     background-color: var(--color-surface-muted);

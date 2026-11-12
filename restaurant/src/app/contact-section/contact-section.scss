@@ -1,4 +1,4 @@
-@import "../../partials/mixins";
+@use "../../partials/mixins" as *;
 
 .contact-section {
     background-color: var(--color-surface-muted);
