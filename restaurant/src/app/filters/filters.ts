@@ -21,6 +21,7 @@ export class Filters {
 
   // Method Which Executes In Beginning
   ngOnInit():void {
+    // Gets The Categories
     this.dishService.getCategories().subscribe({
       next:(response) => {
         if(response && response.success) {

@@ -196,7 +196,7 @@ export class NavigationBar implements OnInit {
   validateCoupon():void {
     if(!this.coupon_code) return // Do Nothing If The Coupon Wasn't Entered
 
-    // Sends The Rating
+    // Validates The Coupon
     this.cartService.validateCoupon(this.coupon_code).subscribe({
       next:(response) => {
         if(response && response.success && response.code && response.discount_percent) {
@@ -348,6 +348,8 @@ export class NavigationBar implements OnInit {
       alert("Prosím, vyplňte všetky povinné kontaktné údaje pre doručenie.") // Shows The Alert
       return
     }
+
+    this.saveCustomerToStorage() // Updates The Customer's Delivery Data In The Local Storage
 
     // Creates The Checkout Session
     this.paymentService.orderAll(

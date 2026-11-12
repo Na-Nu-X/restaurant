@@ -56,7 +56,7 @@
             </div>
         </div>
     
-        <div class="bottom" title="Platba" aria-label="Platba" *ngIf="cart_items && cart_items.length > 0">
+        <div class="bottom" *ngIf="cart_items && cart_items.length > 0">
             <form class="customer_form" action="">
                 <div class="name_container">
                     <input type="text" name="first_name" placeholder="Meno" maxlength="20" required [(ngModel)]="customer.first_name">

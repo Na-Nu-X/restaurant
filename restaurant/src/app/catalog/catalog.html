@@ -1,4 +1,4 @@
-<app-filters (listenToCategory)="listenToCategory($event)"></app-filters>
+<app-filters (listenToCategory)="listenToCategory($event)" *ngIf="is_any_filters"></app-filters>
 
 <section class="all_dishes">
     @for(one_dish of filtered_dishes; track one_dish.id) {

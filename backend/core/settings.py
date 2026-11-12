@@ -35,7 +35,9 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = []
+SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', 'False').lower() in ('true', '1', 't')
+
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',') # ALLOWED_HOSTS
 
 
 # Application definition
@@ -102,9 +104,9 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'restaurant',
-        'USER': 'restaurant_admin',
-        'PASSWORD': 'aw!85b_!zgkz&gvg7rs2kr856t4v9!aeummgxipakwqu$8mh8&',
+        'NAME': os.environ.get("POSTGRES_DB"),
+        'USER': os.environ.get("POSTGRES_USER"),
+        'PASSWORD': os.environ.get("POSTGRES_PASSWORD"),
         'HOST': 'localhost',
         'PORT': '5433',
     }
@@ -159,12 +161,12 @@ STRIPE_WEBHOOK_SECRET = os.environ.get('STRIPE_WEBHOOK_SECRET')
 
 # Gmail
 
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'behulpatrik@gmail.com'
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.environ.get("EMAIL_HOST")
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+EMAIL_PORT = os.environ.get("EMAIL_PORT")
+EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS")
+EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND")
 
 # Unfold Admin Page
 
@@ -188,3 +190,11 @@ UNFOLD = {
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# Other Production Settings
+
+SESSION_COOKIE_SECURE = os.environ.get('SESSION_COOKIE_SECURE')
+CSRF_COOKIE_SECURE = os.environ.get('CSRF_COOKIE_SECURE')
+SECURE_HSTS_SECONDS = os.environ.get('SECURE_HSTS_SECONDS')
+SECURE_HSTS_INCLUDE_SUBDOMAINS = os.environ.get('SECURE_HSTS_INCLUDE_SUBDOMAINS')
+SECURE_HSTS_PRELOAD = os.environ.get('SECURE_HSTS_PRELOAD')

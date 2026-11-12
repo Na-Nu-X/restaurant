@@ -20,6 +20,7 @@ import type { modifierGroup } from "../services/cart"
 })
 
 export class Catalog implements OnInit {
+  is_any_filters:boolean = false // Stores The Information If Any Filters Exist
   dishes:CartItem[] = [] // Stores The Dishes Data
   filtered_dishes:CartItem[] = [] // Stores The Filtered Dishes Data
 
@@ -31,6 +32,24 @@ export class Catalog implements OnInit {
 
   // Method Which Executes In Beginning
   ngOnInit():void {
+    // Gets The Categories
+    this.dishService.getCategories().subscribe({
+      next:(response) => {
+        if(response && response.success) {
+          if(response.filter_groups.length > 0) this.is_any_filters = true // Sets The Information That There Are Any Filters Available
+        }
+        
+        else {
+          console.error(response.message) // Shows The Error Message
+        }
+      },
+
+      error:(error) => {
+        console.error(error) // Shows The Error
+      }
+    })
+
+    // Gets The Dishes
     this.dishService.getDishes().subscribe({
       next:(response) => {
         if(response && response.success) {
