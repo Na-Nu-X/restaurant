@@ -1,11 +1,37 @@
-<form class="contact_form" action="">
+<form class="contact_form" novalidate (submit)="$event.preventDefault(); sendMessage()">
     <div class="name_container">
-        <input type="text" name="first_name" placeholder="Meno" maxlength="20" required [(ngModel)]="contact_form.first_name">
-        <input type="text" name="last_name" placeholder="Priezvisko" maxlength="50" required [(ngModel)]="contact_form.last_name">
+        <div class="field">
+            <input type="text" name="first_name" placeholder="Meno" aria-label="Meno" maxlength="20" required autocomplete="given-name"
+                [class.invalid]="errors().first_name" [attr.aria-invalid]="!!errors().first_name"
+                [(ngModel)]="contact_form.first_name" (ngModelChange)="onInput()">
+            @if(errors().first_name; as error) { <span class="field__error">{{ error }}</span> }
+        </div>
+
+        <div class="field">
+            <input type="text" name="last_name" placeholder="Priezvisko" aria-label="Priezvisko" maxlength="50" required autocomplete="family-name"
+                [class.invalid]="errors().last_name" [attr.aria-invalid]="!!errors().last_name"
+                [(ngModel)]="contact_form.last_name" (ngModelChange)="onInput()">
+            @if(errors().last_name; as error) { <span class="field__error">{{ error }}</span> }
+        </div>
     </div>
 
-    <input type="email" name="email_address" placeholder="E-mail" maxlength="50" required [(ngModel)]="contact_form.email_address">
-    <textarea name="message" placeholder="Správa..." rows="5" maxlength="250" required [(ngModel)]="contact_form.message"></textarea>
+    <div class="field">
+        <input type="email" name="email_address" placeholder="E-mail" aria-label="E-mail" maxlength="50" required autocomplete="email"
+            [class.invalid]="errors().email_address" [attr.aria-invalid]="!!errors().email_address"
+            [(ngModel)]="contact_form.email_address" (ngModelChange)="onInput()">
+        @if(errors().email_address; as error) { <span class="field__error">{{ error }}</span> }
+    </div>
 
-    <button type="submit" class="send" (click)="sendMessage()">Odoslať správu</button>
+    <div class="field">
+        <textarea name="message" placeholder="Správa..." aria-label="Správa" rows="5" maxlength="250" required
+            [class.invalid]="errors().message" [attr.aria-invalid]="!!errors().message"
+            [(ngModel)]="contact_form.message" (ngModelChange)="onInput()"></textarea>
+        @if(errors().message; as error) { <span class="field__error">{{ error }}</span> }
+    </div>
+
+    <button type="submit" class="send" [disabled]="sending()">{{ sending() ? "Odosielam..." : "Odoslať správu" }}</button>
+
+    @if(status(); as message) {
+        <p class="form_status" [class.is-error]="message.tone === 'error'" [attr.role]="message.tone === 'error' ? 'alert' : 'status'">{{ message.text }}</p>
+    }
 </form>

@@ -1,7 +1,8 @@
-import { Component } from "@angular/core"
+import { Component, inject } from "@angular/core"
 import { Order } from "../services/order"
 import { ActivatedRoute } from "@angular/router"
 import { CommonModule } from "@angular/common"
+import { Toast } from "../shared/toast/toast.service"
 
 import type { Cart, CartItem } from "../services/cart"
 
@@ -31,6 +32,8 @@ export class TrackOrder {
   ordered_items:(CartItem & { selected_rating?:number; hovered_rating?:number })[] | null = null // Stores The Ordered Items
   current_index:number = 0 // Stores The Current Index Of The Active Item
 
+  private toast:Toast = inject(Toast)
+
   constructor(private orderService:Order, private route: ActivatedRoute) { }
 
   ngOnInit():void {
@@ -52,7 +55,7 @@ export class TrackOrder {
 
         error:(error) => {
           console.error(error) // Shows The Error
-          alert("Pri načítavaní objednávky došlo k chybe.") // Shows The Alert
+          this.toast.error("Objednávku sa nepodarilo načítať. Skontrolujte kód objednávky alebo to skúste neskôr.")
         }
       })
     }
@@ -74,7 +77,7 @@ export class TrackOrder {
 
       error:(error) => {
         console.error(error) // Shows The Error
-        alert("Pri načítavaní položiek došlo k chybe.") // Shows The Alert
+        this.toast.error("Položky objednávky sa nepodarilo načítať.")
       }
     })
   }
@@ -120,7 +123,7 @@ export class TrackOrder {
           }))
 
     if(all_ratings.length === 0) {
-      alert("Pred odoslaním ohodnoť aspoň jedno jedlo.") // Shows The Alert
+      this.toast.show("Pred odoslaním ohodnoťte aspoň jedno jedlo.")
       return
     }
 
@@ -128,17 +131,17 @@ export class TrackOrder {
     this.orderService.sendRating(this.tracking_code, all_ratings).subscribe({
       next:(response) => {
         if(response && response.success) {
-          alert("Ďakujeme za tvoje hodnotenie!") // Shows The Alert
+          this.toast.success("Ďakujeme za vaše hodnotenie!")
         } 
         
         else {
-          console.error(response.message) // Shows The Error Message
+          this.toast.error(response?.message || "Hodnotenie sa nepodarilo odoslať.")
         }
       },
 
       error:(error) => {
         console.error(error) // Shows The Error
-        alert("Pri odosielaní hodnotenia došlo k chybe.") // Shows The Alert
+        this.toast.error(error.error?.message || "Pri odosielaní hodnotenia došlo k chybe.")
       }
     })
   }

@@ -32,6 +32,20 @@
         min-height: 100px;
     }
 
+    .field {
+        flex: 1;
+    }
+
+    .form_status {
+        color: var(--color-success);
+        font-size: var(--text-sm);
+        text-align: center;
+
+        &.is-error {
+            color: var(--color-danger);
+        }
+    }
+
     .send {
         @include orange_button($width: auto);
         max-width: 100%;
