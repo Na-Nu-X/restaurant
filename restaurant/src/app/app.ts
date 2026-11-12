@@ -1,6 +1,6 @@
-import { Component, OnInit } from "@angular/core"
+import { Component, OnInit, inject } from "@angular/core"
 import { RouterOutlet } from "@angular/router"
-import { Meta, Title } from "@angular/platform-browser"
+import { Meta } from "@angular/platform-browser"
 import { NavigationBar } from "./navigation-bar/navigation-bar"
 import { Footer } from "./footer/footer"
 import { CartDrawer } from "./cart-drawer/cart-drawer"
@@ -15,26 +15,16 @@ import { BRAND } from "./config/brand.config"
   styleUrl: "./app.scss"
 })
 export class App implements OnInit {
-  is_loading:boolean = false // Stores The Information If The Page Is Loading
+  readonly is_loading = inject(Loading).is_loading // True While Any HTTP Request Is Pending
 
-  constructor(
-    private LoadingService:Loading,
-    private title:Title,
-    private meta:Meta
-  ) { }
+  constructor(private meta:Meta) { }
 
   // Method Which Executes In Beginning
   ngOnInit():void {
-    // Sets The Page Title And SEO Description From The Brand Config
-    this.title.setTitle(BRAND.name)
+    // Sets The SEO Description From The Brand Config (The Page Title Is Set By `BrandTitleStrategy`)
     this.meta.updateTag({ name: "description", content: BRAND.description })
     this.meta.updateTag({ property: "og:title", content: BRAND.name })
     this.meta.updateTag({ property: "og:description", content: BRAND.description })
-
-    // Initializes The Loader
-    this.LoadingService.is_loading$.subscribe((state) => {
-      this.is_loading = state
-    })
 
     console.log("%cWebsite by Patrik Behul - behulpatrik@gmail.com", "color: rgb(170, 255, 50); background-color: rgb(0, 0, 0)") // Secret Message
   }

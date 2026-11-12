@@ -1,7 +1,6 @@
 import { Routes } from "@angular/router"
-import { Success } from "./success/success"
 import { Home } from "./home/home"
-import { SuccessOrder } from "./success-order/success-order"
+import { OrderConfirmation } from "./order-confirmation/order-confirmation"
 import { TrackOrder } from "./track-order/track-order"
 
 export const routes:Routes = [
@@ -10,18 +9,24 @@ export const routes:Routes = [
         component: Home
     },
 
+    // Thank-You Pages (The Back-End Redirects Here: Stripe → "success", Cash On Delivery → "success-order")
     { 
         path: "success", 
-        component: Success 
+        component: OrderConfirmation,
+        data: { kind: "card" },
+        title: "Platba prebehla úspešne"
     },
 
     { 
         path: "success-order", 
-        component: SuccessOrder 
+        component: OrderConfirmation,
+        data: { kind: "cash" },
+        title: "Objednávka je prijatá"
     },
 
     { 
-        path: 'objednavka/:tracking_code', 
-        component: TrackOrder 
+        path: "objednavka/:tracking_code", 
+        component: TrackOrder,
+        title: "Sledovanie objednávky"
     }
 ]

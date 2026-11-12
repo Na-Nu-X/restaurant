@@ -1,24 +1,12 @@
 import { Component, inject } from "@angular/core"
 import { Order } from "../services/order"
+import type { OrderDetails } from "../services/order"
 import { ActivatedRoute } from "@angular/router"
 import { CommonModule } from "@angular/common"
 import { Toast } from "../shared/toast/toast.service"
 
 import type { Cart, CartItem } from "../services/cart"
 
-export interface OrderDetails {
-  id:number,
-  tracking_code:string,
-  first_name:string,
-  last_name:string,
-  address:string,
-  city:string,
-  phone_number:string,
-  total_price:number,
-  status:"PENDING"|"PAID"|"PREPARING"|"DELIVERING"|"COMPLETED"|"CANCELLED"
-  cash_on_delivery:boolean,
-  creation_time:string
-}
 
 @Component({
   selector: 'app-track-order',

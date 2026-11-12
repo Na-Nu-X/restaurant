@@ -1,11 +1,12 @@
 import { ApplicationConfig, provideZonelessChangeDetection } from "@angular/core"
-import { provideRouter } from "@angular/router"
+import { TitleStrategy, provideRouter } from "@angular/router"
 import { provideHttpClient, withInterceptorsFromDi, HTTP_INTERCEPTORS } from "@angular/common/http"
 import { provideClientHydration, withNoHttpTransferCache } from "@angular/platform-browser"
 import { routes } from "./app.routes"
 import { registerLocaleData } from "@angular/common"
 import localeSk from "@angular/common/locales/sk"
 import { LoadingInterceptor } from "./interceptors/loading-interceptor"
+import { BrandTitleStrategy } from "./shared/brand-title-strategy"
 
 registerLocaleData(localeSk, "sk-SK")
 
@@ -13,6 +14,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZonelessChangeDetection(),
     provideRouter(routes), 
+    { provide: TitleStrategy, useClass: BrandTitleStrategy }, // "Page | Restaurant Name"
     provideClientHydration(withNoHttpTransferCache()), // Prerendered Pages Contain Build-Time API Data, So The Browser Always Fetches Fresh Data (Status, Dishes, Daily Menu)
     provideHttpClient(withInterceptorsFromDi()),
 

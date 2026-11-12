@@ -3,8 +3,23 @@ import { Injectable } from "@angular/core"
 import { Observable } from "rxjs"
 import { apiUrl } from "../config/api"
 
-import type { OrderDetails } from "../track-order/track-order"
 import type { CartItem } from "./cart"
+
+export type OrderStatus = "PENDING" | "PAID" | "PREPARING" | "DELIVERING" | "COMPLETED" | "CANCELLED"
+
+export interface OrderDetails {
+  id:number,
+  tracking_code:string,
+  first_name:string,
+  last_name:string,
+  address:string,
+  city:string,
+  phone_number:string,
+  total_price:number,
+  status:OrderStatus,
+  cash_on_delivery:boolean,
+  creation_time:string
+}
 
 @Injectable({ providedIn: "root" })
 export class Order {

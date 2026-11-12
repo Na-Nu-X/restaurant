@@ -55,7 +55,7 @@ Back-end (run in `backend/`, virtualenv at `backend/.venv`):
 - Daily lunch menu: `DailySoup` (one per weekday) and `DailyMeal` (many per weekday, ordered by `number`), served by `today-menu`.
 
 ### Front-end
-- Routes in `src/app/app.routes.ts`: `""` Home, `success` (after Stripe), `success-order` (after cash order), `objednavka/:tracking_code` (tracking). `app.routes.server.ts` prerenders every route.
+- Routes in `src/app/app.routes.ts`: `""` Home, `success` (after Stripe) and `success-order` (after cash order) — both render `OrderConfirmation`, told apart by route `data.kind` — and `objednavka/:tracking_code` (tracking). Route `title`s are formatted as "Page | BRAND.name" by `BrandTitleStrategy` (`shared/brand-title-strategy.ts`); don't set `document.title` manually.
 - Each component is a folder `name/name.{ts,html,scss,spec.ts}` with no `.component` suffix. Classes are named without suffixes (e.g. services `Dish`, `Cart`, `Order`, `Payment`, `Status`, `Message`, `Loading` in `src/app/services/`). Older components inject them via constructor as `dishService`, `cartService`, etc.
 - Back-end URL lives in `src/environments/environment*.ts` (`environment.development.ts` is swapped in for `ng serve` via `fileReplacements`). Services build URLs with `apiUrl("dishes/")` from `src/app/config/api.ts`; never hard-code the host.
 - **White-label setup:** all client-specific content (name, contacts, address, map embed, socials, payment icons, locale/currency) is in `src/app/config/brand.config.ts`; colors and fonts are CSS custom properties in `src/partials/_theme.scss` (only the "Brand" block needs editing; shades derive via `color-mix`). Fonts are loaded in `src/index.html` and must match `--font-heading` / `--font-body`.
@@ -72,7 +72,9 @@ Back-end (run in `backend/`, virtualenv at `backend/.venv`):
 - `Cart` is signal-based (`items`, `count`, `subtotal`). Use `addToCart(dish, modifiers, quantity)`, `setQuantity(line_key, n)`, `remove(line_key)`, `restoreLine()`. `price` on a cart line is the unit price including option surcharges; lines with the same dish + options (`line_key`) are merged.
 - User feedback: use the `Toast` service (`shared/toast`, host is in the app shell), not `alert()`.
 - Hero text from `BRAND.hero` goes through `bindShortWords()` (`shared/typography.ts`) so Slovak one-letter words don't end a line.
-- State uses RxJS `BehaviorSubject`s in services. Because the app is zoneless, components often call `ChangeDetectorRef.detectChanges()` after async updates.
+- The app is zoneless: a plain field assigned in an RxJS callback does not re-render the view. Hold async UI state in signals (older components still use `ChangeDetectorRef.detectChanges()`).
 - `Cart` persists cart items (`cart_items`), and `CartDrawer` persists customer delivery data (`customer`), to `localStorage`. These accesses are guarded with `typeof window !== "undefined"` / `isPlatformBrowser` because of SSR; keep that guard for any browser-only API.
-- `LoadingInterceptor` (registered via `HTTP_INTERCEPTORS`) drives the global `Loading` service spinner for all HTTP calls.
+- `LoadingInterceptor` (registered via `HTTP_INTERCEPTORS`) drives the global spinner through the `Loading` service, which counts pending requests in a signal (`is_loading()`).
+- Opening hours: `OpeningHours` service (`services/opening-hours.ts`, cached `week$` from `/api/opening-hours/`) and the `<app-opening-hours>` list (`tone="inverse"` on dark backgrounds); days without an `OpeningHour` row are shown as closed, matching `getStatus`.
+- Home page sections: `Banner` (hero), `DailyMenu`, `Catalog` (inside `#menu`), `ContactSection` (`#kontakt`: contact details, opening hours, `ContactForm`, `Map`). Contact details, map and footer content all come from `BRAND`.
 - Code style: snake_case for fields and local variables, `Title Case` explanatory trailing comments on most lines, and double quotes in most TS files (despite the Prettier single-quote setting).

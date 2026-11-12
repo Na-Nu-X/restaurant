@@ -1,20 +1,21 @@
-import { Injectable } from "@angular/core"
-import { BehaviorSubject } from "rxjs"
+import { Injectable, computed, signal } from "@angular/core"
 
+// Global Loading State: Counts The Pending HTTP Requests (Updated By `LoadingInterceptor`)
 @Injectable({
   providedIn: "root",
 })
 export class Loading {
-  private loading_subject:BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false)
-  is_loading$ = this.loading_subject.asObservable() // Stores The Information If The Page Is Loading
+  private readonly pending = signal<number>(0)
 
-  // Method For Show The Loader
-  show() {
-    this.loading_subject.next(true)
+  readonly is_loading = computed<boolean>(() => this.pending() > 0) // True While At Least One Request Is Pending
+
+  // Method For Register A Started Request
+  show():void {
+    this.pending.update(count => count + 1)
   }
 
-  // Method For Hide The Loader
-  hide() {
-    this.loading_subject.next(false)
+  // Method For Register A Finished Request
+  hide():void {
+    this.pending.update(count => Math.max(0, count - 1))
   }
 }
