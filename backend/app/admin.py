@@ -1,6 +1,6 @@
 from django.contrib import admin
-from unfold.admin import ModelAdmin
-from .models import RestaurantConfig, OpeningHour, Dish, FilterGroup, Category, DishModifierGroup, DishModifierItem, Allergen, Order, OrderItem, Rating, ContactMessage, Coupon, DailySoup, DailyMeal
+from unfold.admin import ModelAdmin, TabularInline
+from .models import RestaurantConfig, OpeningHour, Dish, FilterGroup, Category, DishModifierGroup, DishModifierItem, Allergen, Order, OrderItem, OrderItemModifier, Rating, ContactMessage, Coupon, DailySoup, DailyMeal
 
 @admin.register(RestaurantConfig)
 class RestaurantConfigAdmin(ModelAdmin):
@@ -193,6 +193,35 @@ class AllergenAdmin(ModelAdmin):
         "name"
     ]
 
+class OrderItemInline(TabularInline):
+    model = OrderItem
+    extra = 0
+    can_delete = False
+    fields = ["dish", "options", "quantity", "price_at_purchase", "is_tip"]
+    readonly_fields = ["dish", "options", "quantity", "price_at_purchase", "is_tip"]
+    verbose_name = "Položka"
+    verbose_name_plural = "Položky objednávky"
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    @admin.display(description="Zvolené možnosti")
+    def options(self, obj):
+        return ", ".join(modifier.title for modifier in obj.modifiers.all()) or "—"
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related("dish").prefetch_related("modifiers")
+
+class OrderItemModifierInline(TabularInline):
+    model = OrderItemModifier
+    extra = 0
+    fields = ["title", "extra_price", "modifier_item"]
+    readonly_fields = ["title", "extra_price", "modifier_item"]
+    can_delete = False
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
 @admin.register(Order)
 class OrderAdmin(ModelAdmin):
     list_display = [
@@ -224,6 +253,8 @@ class OrderAdmin(ModelAdmin):
         "status"
     ]
 
+    inlines = [OrderItemInline]
+
 @admin.register(OrderItem)
 class OrderItemAdmin(ModelAdmin):
     list_display = [
@@ -241,10 +272,12 @@ class OrderItemAdmin(ModelAdmin):
     ]
 
     search_fields = [
-        "order",
+        "order__tracking_code",
     ]
 
     list_editable = []
+
+    inlines = [OrderItemModifierInline]
 
 @admin.register(Rating)
 class RatingAdmin(ModelAdmin):

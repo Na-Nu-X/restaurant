@@ -12,6 +12,8 @@ from django.db.models import Avg, Count
 from django.db.models.functions import Round
 from django.core.mail import EmailMultiAlternatives
 from django.utils import timezone
+from django.db import transaction
+from .ordering import OrderValidationError, buildOrderDraft, saveOrder
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -215,131 +217,70 @@ def getCategories(request):
         "filter_groups": filter_groups_data,
     }, status=200)
 
+def _stripeImageUrl(line):
+    """Returns The Image Shown In Stripe Checkout For An Order Line."""
+    if os.environ.get("IS_LOCAL", "True") == "True" or line.dish is None or not line.dish.image:
+        safe_title = urllib.parse.quote(line.title) # Creates The Clear Title
+        return f"https://dummyimage.com/600x400/c2410c/fff?text={safe_title}" # Placeholder (Stripe Cannot Load Local Images)
+
+    domain = os.environ.get("DOMAIN_URL", "localhost:8001") # Gets The Domain
+    clean_domain = domain.replace("http://", "").replace("https://", "").rstrip("/") # Cleans The Domain
+
+    return f"https://{clean_domain}{line.dish.image.url}" # Sets The Image URL
+
+def _checkOpen(request):
+    """Returns An Error Response When The Restaurant Is Closed, Otherwise None."""
+    status_response = getStatus(request) # Gets The Status Response
+    status_data = json.loads(status_response.content.decode("utf-8")) # Gets The Status Data
+
+    if not status_data.get("is_open", False):
+        return JsonResponse({
+            "success": False,
+            "message": "Objednávky nie je možné uskutočniť, keď je zatvorené."
+        }, status=400)
+
+    return None
+
 @csrf_exempt
 def createCheckoutSession(request):
-    if request.method == "POST":
-        try:
-            # Checks The Opening Hours
+    if request.method != "POST":
+        return JsonResponse({
+            "success": False,
+            "message": "Platba sa dá uskutočniť len pomocou POST metódy."
+        }, status=405)
 
-            status_response = getStatus(request) # Gets The Status Response
-            status_data = json.loads(status_response.content.decode("utf-8")) # Gets The Status Data
-            is_open = status_data.get("is_open", False) # Checks If The Restaurant Is Open
+    closed_response = _checkOpen(request) # Checks The Opening Hours
+    if closed_response: return closed_response
 
-            if not is_open:
-                return JsonResponse({
-                    "success": False,
-                    "message": "Objednávky nie je možné uskutočniť, keď je zatvorené."
-                }, status=400)
+    try:
+        front_end_domain = os.environ.get("FRONT_END_DOMAIN_URL", "http://localhost:4200/") # Gets The Front-End Domain URL
 
-            # Gets The Data
+        data = json.loads(request.body) # Gets The Data
+        draft = buildOrderDraft(data.get("items"), data.get("coupon_code"), include_tip=True) # Validates The Cart And Calculates The Prices
 
-            is_local = os.environ.get("IS_LOCAL", "True") == "True" # Gets The Information About Local Development
-            front_end_domain = os.environ.get("FRONT_END_DOMAIN_URL", "http://localhost:4200/") # Gets The Front-End Domain URL
+        with transaction.atomic():
+            new_order = saveOrder(draft, data.get("customer"), status="PENDING", cash_on_delivery=False) # Saves The New Order
 
-            data = json.loads(request.body) # Gets The Data
-            items = data.get("items", []) # Gets The Items
-            customer = data.get("customer", []) # Gets The Customer
-            coupon_code = data.get("coupon_code", None)  # Gets The Coupon Code
+            line_items = [] # Stores All Stripe Line Items
 
-            # Calculates The Price
+            for line in draft.lines:
+                product_data = {
+                    "name": line.title,
+                    "images": [_stripeImageUrl(line)]
+                }
 
-            discount_percent = 0 # Stores The Discount Percent
-
-            if coupon_code:
-                coupon = Coupon.objects.filter(code__iexact=coupon_code.strip(), is_active=True).first() # Gets The Active Coupon
-
-                if coupon and (not coupon.valid_until or coupon.valid_until > timezone.now()):
-                    discount_percent = coupon.discount_percent # Sets The Discount Percent
-
-            raw_items_price = 0 # Stores The Price In Cents Without The Discount
-            tip_amount = 0 # Stores The Tip Amount In Cents
-
-            for one_item in items:
-                item_id = one_item.get("id") # Gets The Item ID
-                item_price = int(one_item.get("price", "0")) # Gets The Item Price
-                item_quantity = int(one_item.get("quantity", "1")) # Gets The Item Quantity
-
-                if item_id and int(item_id) == -1:
-                    tip_amount += item_price * item_quantity # Saves The Tip Amount
-
-                else:
-                    raw_items_price += item_price * item_quantity # Calculates The Raw Items Price
-
-            discount_amount = int(raw_items_price * (discount_percent / 100)) if discount_percent > 0 else 0 # Stores The Discount Amount
-            discounted_items_price = raw_items_price - discount_amount # Stores The Discounted Items Price
-            
-            total_price = discounted_items_price + tip_amount # Gets The Total Price In Cents (Dishes After Discount + Tip)
-
-            # Processes The Order
-
-            # Saves The New Order
-            new_order = Order.objects.create(
-                first_name=customer.get("first_name", "Neznáme"),
-                last_name=customer.get("last_name", "Neznáme"),
-                address=customer.get("address", "Neznáma"),
-                city=customer.get("city", "Neznáme"),
-                phone_number=customer.get("phone_number", "Neznáme"),
-                message=customer.get("message", None),
-                price=discounted_items_price,
-                total_price=total_price,
-                status="PENDING"
-            )
-
-            line_items = [] # Stores All Items
-
-            discount_multiplier = (100 - discount_percent) / 100 if discount_percent > 0 else 1.0 # Gets The Discount Multiplayer (10% = 0.9)
-
-            for one_item in items:
-                image_name = one_item.get("image", "") # Gets The Image Name
-                item_id = one_item.get("id") # Gets The Item ID
-                original_unit_price = int(one_item.get("price", "0")) # Gets The Original Price
-
-                if is_local:
-                    title = one_item.get("title", "food") # Gets The Title
-                    safe_title = urllib.parse.quote(title) # Creates The Clear Title
-                    image_url = f"https://dummyimage.com/600x400/fdc152/fff?text={safe_title}" # Generates Random Image
-
-                else:
-                    if image_name.startswith("http://") or image_name.startswith("https://"):
-                        image_url = image_name # Sets The Image URL
-
-                    else:
-                        domain = os.environ.get("DOMAIN_URL", "localhost:8001") # Gets The Domain
-                        clean_domain = domain.replace("http://", "").replace("https://", "").rstrip("/") # Cleans The Domain
-
-                        if not image_name.startswith("/"):
-                            image_name = f"/{image_name}" # Gets The Image Name
-
-                        image_url = f"https://{clean_domain}{image_name}" # Sets The Image URL
-
-                if item_id and int(item_id) == -1:
-                    final_unit_price = original_unit_price # Doesn't Apply The Discount On The Tip
-
-                else:
-                    final_unit_price = int(round(original_unit_price * discount_multiplier)) # Applies The Discount On The Dish
+                if line.modifiers:
+                    product_data["description"] = line.modifiers_label # Shows The Chosen Options In Stripe Checkout
 
                 line_items.append({
                     "price_data": {
                         "currency": "eur",
-                        "product_data": {
-                            "name": one_item.get("title"),
-                            "images": [image_url],
-                        },
-
-                        "unit_amount": final_unit_price,
+                        "product_data": product_data,
+                        "unit_amount": line.unit_price
                     },
 
-                    "quantity": int(one_item.get("quantity", "1"))
+                    "quantity": line.quantity
                 })
-
-                # Saves The New Order
-                OrderItem.objects.create(
-                    order=new_order,
-                    dish_id=int(item_id) if item_id and int(item_id) != -1 else None,
-                    quantity=int(one_item.get("quantity", "1")),
-                    price_at_purchase=final_unit_price,
-                    is_tip=True if item_id and int(item_id) == -1 else False
-                )
 
             checkout_session = stripe.checkout.Session.create(
                 payment_method_types=["card"],
@@ -353,27 +294,27 @@ def createCheckoutSession(request):
                 }
             )
 
-            print(checkout_session)
-
             new_order.stripe_intent_id = checkout_session.id # Saves The Stripe Intent ID
             new_order.save() # Saves The Updated Order
 
-            return JsonResponse({
-                "success": True,
-                "message": "Platba prebehla úspešne.",
-                "url": checkout_session.url
-            }, status=200)
+        return JsonResponse({
+            "success": True,
+            "message": "Presmerovanie na platbu.",
+            "url": checkout_session.url
+        }, status=200)
 
-        except Exception:
-            return JsonResponse({
-                "success": False,
-                "message": "Pri spracovávaní platby došlo k chybe."
-            }, status=500)
+    except OrderValidationError as error:
+        return JsonResponse({
+            "success": False,
+            "message": str(error)
+        }, status=400)
 
-    return JsonResponse({
-        "success": False,
-        "message": "Platba sa dá uskutočniť len pomocou POST metódy."
-    }, status=405)
+    except Exception as error:
+        print(error)
+        return JsonResponse({
+            "success": False,
+            "message": "Pri spracovávaní platby došlo k chybe."
+        }, status=500)
 
 @csrf_exempt
 def stripeWebhook(request):
@@ -423,103 +364,42 @@ def stripeWebhook(request):
 
 @csrf_exempt
 def createOrder(request):
-    if request.method == "POST":
-        try:
-            # Checks The Opening Hours
+    if request.method != "POST":
+        return JsonResponse({
+            "success": False, 
+            "message": "Objednávka sa dá uskutočniť len pomocou POST metódy."
+        }, status=405)
 
-            status_response = getStatus(request) # Gets The Status Response
-            status_data = json.loads(status_response.content.decode("utf-8")) # Gets The Status Data
-            is_open = status_data.get("is_open", False) # Checks If The Restaurant Is Open
+    closed_response = _checkOpen(request) # Checks The Opening Hours
+    if closed_response: return closed_response
 
-            if not is_open:
-                return JsonResponse({
-                    "success": False,
-                    "message": "Objednávky nie je možné uskutočniť, keď je zatvorené."
-                }, status=400)
+    try:
+        front_end_domain = os.environ.get("FRONT_END_DOMAIN_URL", "http://localhost:4200/") # Gets The Front-End Domain URL
 
-            # Gets The Data
+        data = json.loads(request.body) # Gets The Data
+        draft = buildOrderDraft(data.get("items"), data.get("coupon_code"), include_tip=False) # Validates The Cart And Calculates The Prices (No Tip For Cash)
 
-            front_end_domain = os.environ.get("FRONT_END_DOMAIN_URL", "http://localhost:4200/") # Gets The Front-End Domain URL
+        new_order = saveOrder(draft, data.get("customer"), status="PREPARING", cash_on_delivery=True) # Saves The New Order
 
-            data = json.loads(request.body) # Gets The Data
-            items = data.get("items", []) # Gets The Items
-            customer = data.get("customer", {}) # Gets The Customer
-            coupon_code = data.get("coupon_code", None) # Gets The Coupon Code
+        return JsonResponse({
+            "success": True,
+            "message": "Objednávka bola prijatá.",
+            "tracking_code": new_order.tracking_code,
+            "url": f"{front_end_domain}success-order?code={new_order.tracking_code}"
+        }, status=200)
 
-            # Calculates The Price
+    except OrderValidationError as error:
+        return JsonResponse({
+            "success": False,
+            "message": str(error)
+        }, status=400)
 
-            discount_percent = 0 # Stores The Discount Percent
-
-            if coupon_code:
-                coupon = Coupon.objects.filter(code__iexact=coupon_code.strip(), is_active=True).first() # Gets The Active Coupon
-
-                if coupon and (not coupon.valid_until or coupon.valid_until > timezone.now()):
-                    discount_percent = coupon.discount_percent # Sets The Discount Percent
-
-            raw_items_price = 0 # Stores The Price In Cents Without The Discount
-
-            for one_item in items:
-                item_id = one_item.get("id") # Gets The Item ID
-
-                if item_id and int(item_id) != -1:
-                    raw_items_price += int(one_item.get("price", "0")) * int(one_item.get("quantity", "1")) # Calculates The Raw Items Price
-
-            discount_multiplier = (100 - discount_percent) / 100 if discount_percent > 0 else 1.0 # Gets The Discount Multiplayer (10% = 0.9)
-            discount_amount = int(raw_items_price * (discount_percent / 100)) if discount_percent > 0 else 0 # Gets The Discount Amount
-            discounted_items_price = raw_items_price - discount_amount # Stores The Discounted Items Price
-
-            # Processes The Order
-
-            # Saves The New Order
-            new_order = Order.objects.create(
-                first_name=customer.get("first_name", "Neznáme"),
-                last_name=customer.get("last_name", "Neznáme"),
-                address=customer.get("address", "Neznáma"),
-                city=customer.get("city", "Neznáme"),
-                phone_number=customer.get("phone_number", "Neznáme"),
-                message=customer.get("message", None),
-                price=discounted_items_price,
-                total_price=discounted_items_price,
-                status="PREPARING",
-                cash_on_delivery=True
-            )
-
-            for one_item in items:
-                item_id = one_item.get("id") # Gets The Item ID
-                original_unit_price = int(one_item.get("price", "0")) # Gets The Original Price
-                
-                if item_id and int(item_id) == -1:
-                    final_unit_price = original_unit_price # Doesn't Apply The Discount On The Tip
-
-                else:
-                    final_unit_price = int(round(original_unit_price * discount_multiplier)) # Applies The Discount On The Dish
-
-                # Saves The New Order
-                OrderItem.objects.create(
-                    order=new_order,
-                    dish_id=int(item_id) if item_id and int(item_id) != -1 else None,
-                    quantity=int(one_item.get("quantity", "1")),
-                    price_at_purchase=final_unit_price,
-                    is_tip=True if item_id and int(item_id) == -1 else False
-                )
-
-            return JsonResponse({
-                "success": True,
-                "message": "Objednávka bola prijatá.",
-                "tracking_code": new_order.tracking_code,
-                "url": f"{front_end_domain}success-order?code={new_order.tracking_code}"
-            }, status=200)
-
-        except Exception:
-            return JsonResponse({
-                "success": False, 
-                "message": "Pri spracovávaní objednávky došlo k chybe."
-            }, status=500)
-            
-    return JsonResponse({
-        "success": False, 
-        "message": "Objednávka sa dá uskutočniť len pomocou POST metódy."
-    }, status=405)
+    except Exception as error:
+        print(error)
+        return JsonResponse({
+            "success": False, 
+            "message": "Pri spracovávaní objednávky došlo k chybe."
+        }, status=500)
 
 @csrf_exempt
 def cancelOrder(request, tracking_code):
@@ -573,17 +453,19 @@ def getOrderStatus(request, tracking_code):
 
 @csrf_exempt
 def getOrderedItems(request, id):
-    items = OrderItem.objects.filter(order_id=id)
+    items = OrderItem.objects.filter(order_id=id).select_related("dish").prefetch_related("modifiers")
 
     # Creates Valid Format Of Ordered Items For JSON Response
     ordered_items = [
         {
             "id": one_item.dish.id,
+            "line_id": one_item.id,
             "title": one_item.dish.title,
             "description": one_item.dish.description,
             "price": one_item.price_at_purchase,
             "quantity": one_item.quantity,
             "image": request.build_absolute_uri(one_item.dish.image.url) if one_item.dish.image else None,
+            "modifiers": [modifier.title for modifier in one_item.modifiers.all()]
         }
 
         for one_item in items
