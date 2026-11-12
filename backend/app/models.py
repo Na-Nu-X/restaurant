@@ -448,8 +448,11 @@ class OrderItem(models.Model):
         verbose_name_plural = "Položky objednávky"
 
     def __str__(self):
+        if self.is_tip:
+            return f"Prepitné (Objednávka #{self.order.tracking_code})"
+
         dish_name = self.dish.title if self.dish else "Zmazané jedlo"
-        return f"{self.quantity}x {dish_name} (Objednávka #{self.order.id})"
+        return f"{self.quantity}× {dish_name} (Objednávka #{self.order.tracking_code})"
 
 class OrderItemModifier(models.Model):
     order_item = models.ForeignKey(

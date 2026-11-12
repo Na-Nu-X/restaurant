@@ -201,3 +201,60 @@ class OpeningHoursViewTests(TestCase):
         self.assertEqual(data["opening_hours"][0]["open_time"], "11:30")
         self.assertTrue(data["opening_hours"][2]["is_closed_all_day"])
         self.assertIn(data["today"], range(1, 8))
+
+
+class OrderAdminTests(OrderTestData):
+    def setUp(self):
+        from django.contrib.auth import get_user_model
+
+        self.admin = get_user_model().objects.create_superuser("admin", "admin@example.com", "heslo-12345")
+        self.client.force_login(self.admin)
+
+        self.today_order = Order.objects.create(first_name="Ján", last_name="Novák", address="Hlavná 1", city="BA", phone_number="1", price=900, total_price=1000, status="PREPARING")
+        item = OrderItem.objects.create(order=self.today_order, dish=self.pizza, quantity=2, price_at_purchase=1300)
+        OrderItemModifier.objects.create(order_item=item, modifier_item=self.large, title="45 cm", extra_price=400)
+
+        self.old_order = Order.objects.create(first_name="Eva", last_name="Malá", address="Dlhá 2", city="BA", phone_number="2", price=500, total_price=500, status="COMPLETED")
+        Order.objects.filter(id=self.old_order.id).update(creation_time=timezone.now() - timedelta(days=3))
+
+    def changelist(self, **params):
+        from django.urls import reverse
+        return self.client.get(reverse("admin:app_order_changelist"), params)
+
+    def test_list_shows_badges_items_and_newest_first(self):
+        response = self.changelist()
+        content = response.content.decode()
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("2× Pizza (45 cm)", content)
+        self.assertIn("Pripravuje sa", content)
+        self.assertLess(content.index(self.today_order.tracking_code), content.index(self.old_order.tracking_code))
+
+    def test_today_and_active_filters(self):
+        today = self.changelist(obdobie="dnes").content.decode()
+        self.assertIn(self.today_order.tracking_code, today)
+        self.assertNotIn(self.old_order.tracking_code, today)
+
+        closed = self.changelist(aktivne="nie").content.decode()
+        self.assertIn(self.old_order.tracking_code, closed)
+        self.assertNotIn(self.today_order.tracking_code, closed)
+
+    def test_bulk_status_action(self):
+        from django.urls import reverse
+
+        self.client.post(reverse("admin:app_order_changelist"), {
+            "action": "mark_delivering",
+            "_selected_action": [self.today_order.id]
+        })
+
+        self.today_order.refresh_from_db()
+        self.assertEqual(self.today_order.status, "DELIVERING")
+
+    def test_detail_page_lists_items_with_options(self):
+        from django.urls import reverse
+
+        response = self.client.get(reverse("admin:app_order_change", args=[self.today_order.id]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("45 cm", response.content.decode())
+        self.assertIn("26,00 €", response.content.decode())

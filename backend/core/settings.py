@@ -135,7 +135,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'sk' # Admin Interface And Date Formats In Slovak
 
 TIME_ZONE = 'Europe/Bratislava'
 
@@ -175,13 +175,20 @@ UNFOLD = {
     "SITE_HEADER": "Správa reštaurácie",
     "SITE_URL": "/",
     
+    # Primary Palette Matches The Website's Terracotta Brand Color (600 = `--brand-primary` #c2410c)
     "COLORS": {
         "primary": {
-            "50": "250 245 255",
-            "100": "243 232 255",
-            "500": "168 85 247",
-            "600": "147 51 234",
-            "700": "126 34 206"
+            "50": "255 247 237",
+            "100": "255 237 213",
+            "200": "254 215 170",
+            "300": "253 186 116",
+            "400": "251 146 60",
+            "500": "234 88 12",
+            "600": "194 65 12",
+            "700": "154 52 18",
+            "800": "124 45 18",
+            "900": "92 33 14",
+            "950": "67 20 7"
         }
     }
 }
