@@ -656,7 +656,6 @@ class DailySoup(models.Model):
     day_of_week = models.IntegerField(
         verbose_name="Deň v týždni", 
         help_text="Deň, ku ktorému patrí dená polievka.", 
-        max_length=1, 
         choices=DAY_CHOICES, 
         default=1, 
         unique=True,
@@ -712,7 +711,6 @@ class DailyMeal(models.Model):
     day_of_week = models.IntegerField(
         verbose_name="Deň v týždni", 
         help_text="Deň, ku ktorému patrí dené jedlo.", 
-        max_length=1, 
         choices=DAY_CHOICES, 
         default=1, 
         null=False
