@@ -2,8 +2,7 @@ import { Component, afterNextRender, inject } from "@angular/core"
 import { Banner } from "../banner/banner"
 import { DailyMenu } from "../daily-menu/daily-menu"
 import { Catalog } from "../catalog/catalog"
-import { ContactForm } from "../contact-form/contact-form"
-import { Map } from "../map/map"
+import { ContactSection } from "../contact-section/contact-section"
 import { ActivatedRoute, Router } from "@angular/router"
 import { Order } from "../services/order"
 import { SECTIONS, SectionScroll } from "../shared/section-scroll"
@@ -16,8 +15,7 @@ import { Cart } from "../services/cart"
     Banner,
     DailyMenu,
     Catalog,
-    ContactForm,
-    Map
+    ContactSection
   ],
   templateUrl: "./home.html",
   styleUrl: "./home.scss"

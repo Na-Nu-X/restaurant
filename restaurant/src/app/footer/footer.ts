@@ -1,5 +1,7 @@
-import { Component } from "@angular/core"
+import { Component, inject } from "@angular/core"
 import { BRAND, SocialNetwork, PaymentMethod } from "../config/brand.config"
+import { OpeningHours } from "../shared/opening-hours/opening-hours"
+import { SECTIONS, SectionId, SectionScroll } from "../shared/section-scroll"
 
 // Display Data For Each Supported Social Network (Font Awesome Icon + Label)
 const SOCIAL_META:Record<SocialNetwork, { icon:string, label:string }> = {
@@ -22,13 +24,26 @@ const PAYMENT_LABELS:Record<PaymentMethod, string> = {
 
 @Component({
   selector: "app-footer",
-  imports: [],
+  imports: [OpeningHours],
   templateUrl: "./footer.html",
   styleUrl: "./footer.scss"
 })
 
 export class Footer {
+  private sectionScroll:SectionScroll = inject(SectionScroll)
+
   readonly brand = BRAND
+
+  readonly links:{ id:SectionId, label:string }[] = [
+    { id: SECTIONS.menu, label: "Menu" },
+    { id: SECTIONS.dailyMenu, label: "Denné menu" },
+    { id: SECTIONS.contact, label: "Rezervácia a kontakt" }
+  ]
+
+  // Method For Scroll To A Home Page Section
+  go(id:SectionId, event:Event):void {
+    this.sectionScroll.go(id, event)
+  }
   readonly year:number = new Date().getFullYear()
 
   // Social Networks That Have A Link Filled In The Brand Config

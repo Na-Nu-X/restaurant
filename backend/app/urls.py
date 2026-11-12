@@ -6,6 +6,7 @@ urlpatterns = [
     path('api/dishes/', views.getDishes, name='get_dishes_url'),
     path('api/get-categories/', views.getCategories, name='get_categories_url'),
     path('api/today-menu/', views.getTodayMenu, name='get_today_menu_url'),
+    path('api/opening-hours/', views.getOpeningHours, name='get_opening_hours_url'),
     path('api/create-checkout-session/', views.createCheckoutSession, name='create_checkout_session_url'),
     path('api/create-order/', views.createOrder, name='create_order_url'),
     path('api/cancel-order/<str:tracking_code>/', views.cancelOrder, name='cancel_order_url'),

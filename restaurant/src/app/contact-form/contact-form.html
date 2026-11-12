@@ -1,14 +1,16 @@
-<form class="contact_form" novalidate (submit)="$event.preventDefault(); sendMessage()">
-    <div class="name_container">
+<form class="contact" novalidate (submit)="$event.preventDefault(); sendMessage()">
+    <div class="contact__row">
         <div class="field">
-            <input type="text" name="first_name" placeholder="Meno" aria-label="Meno" maxlength="20" required autocomplete="given-name"
+            <label class="field__label" for="contact-first_name">Meno</label>
+            <input id="contact-first_name" class="input" type="text" name="first_name" maxlength="20" required autocomplete="given-name"
                 [class.invalid]="errors().first_name" [attr.aria-invalid]="!!errors().first_name"
                 [(ngModel)]="contact_form.first_name" (ngModelChange)="onInput()">
             @if(errors().first_name; as error) { <span class="field__error">{{ error }}</span> }
         </div>
 
         <div class="field">
-            <input type="text" name="last_name" placeholder="Priezvisko" aria-label="Priezvisko" maxlength="50" required autocomplete="family-name"
+            <label class="field__label" for="contact-last_name">Priezvisko</label>
+            <input id="contact-last_name" class="input" type="text" name="last_name" maxlength="50" required autocomplete="family-name"
                 [class.invalid]="errors().last_name" [attr.aria-invalid]="!!errors().last_name"
                 [(ngModel)]="contact_form.last_name" (ngModelChange)="onInput()">
             @if(errors().last_name; as error) { <span class="field__error">{{ error }}</span> }
@@ -16,22 +18,32 @@
     </div>
 
     <div class="field">
-        <input type="email" name="email_address" placeholder="E-mail" aria-label="E-mail" maxlength="50" required autocomplete="email"
+        <label class="field__label" for="contact-email_address">E-mail</label>
+        <input id="contact-email_address" class="input" type="email" name="email_address" maxlength="50" required autocomplete="email" inputmode="email"
             [class.invalid]="errors().email_address" [attr.aria-invalid]="!!errors().email_address"
             [(ngModel)]="contact_form.email_address" (ngModelChange)="onInput()">
         @if(errors().email_address; as error) { <span class="field__error">{{ error }}</span> }
     </div>
 
     <div class="field">
-        <textarea name="message" placeholder="Správa..." aria-label="Správa" rows="5" maxlength="250" required
+        <label class="field__label" for="contact-message">Správa</label>
+        <textarea id="contact-message" class="input" name="message" rows="5" maxlength="250" required
+            placeholder="Napr. rezervácia stola pre 4 osoby v piatok o 19:00."
             [class.invalid]="errors().message" [attr.aria-invalid]="!!errors().message"
             [(ngModel)]="contact_form.message" (ngModelChange)="onInput()"></textarea>
+
+        <span class="contact__counter" aria-hidden="true">{{ contact_form.message.length }} / 250</span>
         @if(errors().message; as error) { <span class="field__error">{{ error }}</span> }
     </div>
 
-    <button type="submit" class="send" [disabled]="sending()">{{ sending() ? "Odosielam..." : "Odoslať správu" }}</button>
+    <button type="submit" class="btn btn--primary btn--lg contact__submit" [disabled]="sending()">
+        @if(sending()) { Odosielam... } @else { Odoslať správu <i class="fa-solid fa-paper-plane" aria-hidden="true"></i> }
+    </button>
 
     @if(status(); as message) {
-        <p class="form_status" [class.is-error]="message.tone === 'error'" [attr.role]="message.tone === 'error' ? 'alert' : 'status'">{{ message.text }}</p>
+        <p class="contact__status" [class.is-error]="message.tone === 'error'" [attr.role]="message.tone === 'error' ? 'alert' : 'status'">
+            <i class="fa-solid" [class.fa-circle-check]="message.tone === 'success'" [class.fa-circle-exclamation]="message.tone === 'error'" aria-hidden="true"></i>
+            {{ message.text }}
+        </p>
     }
 </form>

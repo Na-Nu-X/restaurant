@@ -97,6 +97,28 @@ def getStatus(request):
             "next_open": opening_hour.open_time.strftime("%H:%M")
         })
 
+def getOpeningHours(request):
+    hours = OpeningHour.objects.order_by("day_of_week") # Gets The Opening Hours Of The Whole Week
+
+    # Creates Valid Format Of Opening Hours For JSON Response
+    opening_hours = [
+        {
+            "day_of_week": one_day.day_of_week,
+            "open_time": one_day.open_time.strftime("%H:%M"),
+            "close_time": one_day.close_time.strftime("%H:%M"),
+            "is_closed_all_day": one_day.is_closed_all_day
+        }
+
+        for one_day in hours
+    ]
+
+    return JsonResponse({
+        "success": True,
+        "message": "Otváracie hodiny boli nájdené.",
+        "today": timezone.localtime(timezone.now()).isoweekday(),
+        "opening_hours": opening_hours
+    }, status=200)
+
 def getTodayMenu(request):
     day = request.GET.get("day") # Gets The Day Number
     

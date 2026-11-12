@@ -6,7 +6,7 @@ from unittest.mock import patch
 from django.test import TestCase
 from django.utils import timezone
 
-from .models import Coupon, Dish, DishModifierGroup, DishModifierItem, Order, OrderItem, OrderItemModifier
+from .models import Coupon, OpeningHour, Dish, DishModifierGroup, DishModifierItem, Order, OrderItem, OrderItemModifier
 from .ordering import OrderValidationError, buildOrderDraft
 
 
@@ -172,3 +172,17 @@ class CreateOrderViewTests(OrderTestData):
         items = self.client.get(f"/api/ordered-items/{order_id}/").json()["ordered_items"]
 
         self.assertEqual(items[0]["modifiers"], ["45 cm"])
+
+
+class OpeningHoursViewTests(TestCase):
+    def test_returns_the_week_ordered_by_day(self):
+        OpeningHour.objects.create(day_of_week=3, open_time="10:00", close_time="22:00")
+        OpeningHour.objects.create(day_of_week=1, open_time="11:30", close_time="21:00")
+        OpeningHour.objects.create(day_of_week=7, open_time="00:00", close_time="00:00", is_closed_all_day=True)
+
+        data = self.client.get("/api/opening-hours/").json()
+
+        self.assertEqual([day["day_of_week"] for day in data["opening_hours"]], [1, 3, 7])
+        self.assertEqual(data["opening_hours"][0]["open_time"], "11:30")
+        self.assertTrue(data["opening_hours"][2]["is_closed_all_day"])
+        self.assertIn(data["today"], range(1, 8))

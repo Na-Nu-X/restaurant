@@ -1,55 +1,50 @@
-@import "../../partials/variables";
 @import "../../partials/mixins";
 
-.contact_form {
+.contact {
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    max-width: 500px;
-    margin: 20px auto 0px;
-    padding: 20px;
-    background-color: $secondary-color;
-    border-radius: $medium-border-radius;
-    box-shadow: 0 4px 6px transparentize($main-color, 0.92), 0 2px 4px transparentize($main-color, 0.95);
-  
-    .name_container {
-        display: flex;
-        gap: 10px;
-  
-        input {
-            flex: 1;
-        }
+    gap: var(--space-4);
+}
+
+.contact__row {
+    display: grid;
+    gap: var(--space-4);
+
+    @include bp(sm) {
+        grid-template-columns: 1fr 1fr;
     }
-  
-    input[type="text"],
-    input[type="email"],
-    textarea {
-        @include form_input;
+}
+
+.contact__counter {
+    align-self: flex-end;
+    color: var(--color-text-subtle);
+    font-size: var(--text-xs);
+}
+
+.contact__submit {
+    align-self: stretch;
+
+    @include bp(sm) {
+        align-self: flex-start;
     }
-  
-    textarea {
-        resize: none;
-        min-height: 100px;
+}
+
+.contact__status {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    background-color: var(--color-success-soft);
+    color: var(--color-success);
+    font-size: var(--text-sm);
+    border-radius: var(--radius-md);
+
+    i {
+        margin-top: 3px;
     }
 
-    .field {
-        flex: 1;
-    }
-
-    .form_status {
-        color: var(--color-success);
-        font-size: var(--text-sm);
-        text-align: center;
-
-        &.is-error {
-            color: var(--color-danger);
-        }
-    }
-
-    .send {
-        @include orange_button($width: auto);
-        max-width: 100%;
-        padding: 10px 20px;
-        text-align: center;
+    &.is-error {
+        background-color: var(--color-danger-soft);
+        color: var(--color-danger);
     }
 }

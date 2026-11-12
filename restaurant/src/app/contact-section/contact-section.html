@@ -1,0 +1,53 @@
+<section class="contact-section section" [id]="section_id" aria-labelledby="contact-title">
+    <div class="contact-section__inner">
+        <header class="section__header">
+            <p class="eyebrow">Rezervácia a kontakt</p>
+            <h2 id="contact-title" class="section__title">Tešíme sa na vás</h2>
+            <p class="section__lead">Stôl si rezervujte telefonicky alebo nám napíšte správu. Ozveme sa vám čo najskôr.</p>
+        </header>
+
+        <div class="contact-section__grid">
+            <!-- Contact Details -->
+            <aside class="card info" aria-label="Kontaktné údaje">
+                <a class="btn btn--primary btn--lg btn--block" [href]="'tel:' + brand.contact.phone">
+                    <i class="fa-solid fa-phone" aria-hidden="true"></i>
+                    Zavolať {{ brand.contact.phoneDisplay }}
+                </a>
+
+                <ul class="info__list" role="list">
+                    <li>
+                        <span class="info__icon" aria-hidden="true"><i class="fa-regular fa-envelope"></i></span>
+                        <span>
+                            <small>E-mail</small>
+                            <a [href]="'mailto:' + brand.contact.email">{{ brand.contact.email }}</a>
+                        </span>
+                    </li>
+
+                    <li>
+                        <span class="info__icon" aria-hidden="true"><i class="fa-solid fa-location-dot"></i></span>
+                        <span>
+                            <small>Adresa</small>
+                            <span>{{ brand.address.street }}, {{ brand.address.postalCode }} {{ brand.address.city }}</span>
+                            <a class="info__link" [href]="brand.address.mapLink" target="_blank" rel="noopener">
+                                Navigovať <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+                            </a>
+                        </span>
+                    </li>
+                </ul>
+
+                <div class="info__hours">
+                    <h3 class="info__title"><i class="fa-regular fa-clock" aria-hidden="true"></i> Otváracie hodiny</h3>
+                    <app-opening-hours></app-opening-hours>
+                </div>
+            </aside>
+
+            <!-- Message Form -->
+            <div class="card form-card">
+                <h3 class="form-card__title">Napíšte nám</h3>
+                <app-contact-form></app-contact-form>
+            </div>
+        </div>
+
+        <app-map class="contact-section__map"></app-map>
+    </div>
+</section>
