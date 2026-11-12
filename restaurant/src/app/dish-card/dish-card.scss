@@ -1,0 +1,207 @@
+@use "../../partials/mixins" as *;
+
+:host {
+    display: block;
+    height: 100%;
+}
+
+/******************************************************************************
+ Phones: Horizontal Row (Text Left, Photo Right)
+ 768px+: Vertical Card (Photo On Top)
+******************************************************************************/
+
+.dish {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 112px;
+    grid-template-areas: "body media";
+    gap: var(--space-4);
+    height: 100%;
+    padding: var(--space-4);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: box-shadow var(--duration) ease, transform var(--duration) var(--ease-out), border-color var(--duration) ease;
+
+    &:hover {
+        border-color: var(--color-border-strong);
+        box-shadow: var(--shadow-md);
+    }
+
+    // Keyboard Focus On The Title Button Highlights The Whole Card
+    &:has(.dish__open:focus-visible) {
+        box-shadow: var(--focus-ring);
+    }
+
+    @include bp(md) {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+        grid-template-areas: "media" "body";
+        gap: 0;
+        padding: 0;
+        overflow: hidden;
+
+        &:hover {
+            transform: translateY(-3px);
+        }
+    }
+}
+
+/******************************************************************************
+ Photo + Add Button
+******************************************************************************/
+
+.dish__media {
+    grid-area: media;
+    position: relative;
+    align-self: start;
+}
+
+.dish__image {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    background-color: var(--color-surface-muted);
+    border-radius: var(--radius-md);
+
+    @include bp(md) {
+        aspect-ratio: 4 / 3;
+        border-radius: 0;
+        transition: transform var(--duration-slow) var(--ease-out);
+
+        .dish:hover & {
+            transform: scale(1.04);
+        }
+    }
+}
+
+.dish__image--empty {
+    display: grid;
+    place-items: center;
+    color: var(--color-text-subtle);
+    font-size: 1.75rem;
+}
+
+.dish__add {
+    @include button_primary;
+    position: absolute;
+    right: calc(-1 * var(--space-2));
+    bottom: calc(-1 * var(--space-2));
+    width: 40px;
+    height: 40px;
+    min-height: 40px;
+    padding: 0;
+    border: 3px solid var(--color-surface);
+    box-shadow: var(--shadow-md);
+    z-index: var(--z-raised);
+
+    &.is-added {
+        background-color: var(--color-success);
+    }
+
+    @include bp(md) {
+        right: var(--space-3);
+        bottom: var(--space-3);
+        width: 44px;
+        height: 44px;
+        border: none;
+    }
+}
+
+/******************************************************************************
+ Text
+******************************************************************************/
+
+.dish__body {
+    grid-area: body;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    min-width: 0;
+
+    @include bp(md) {
+        padding: var(--space-4) var(--space-5) var(--space-5);
+    }
+}
+
+.dish__title {
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    line-height: var(--leading-snug);
+
+    @include bp(md) {
+        font-size: var(--text-xl);
+    }
+}
+
+.dish__open {
+    padding: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    border: none;
+    cursor: pointer;
+
+    &:focus-visible {
+        outline: none; // The Whole Card Shows The Focus Ring
+    }
+}
+
+.dish__description {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    line-height: var(--leading-snug);
+}
+
+.dish__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-4);
+    margin-top: auto;
+    padding-top: var(--space-1);
+}
+
+.dish__price {
+    color: var(--color-text);
+    font-size: var(--text-base);
+    font-weight: var(--weight-bold);
+
+    @include bp(md) {
+        font-size: var(--text-lg);
+    }
+}
+
+.dish__from {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+}
+
+.dish__rating {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+
+    i {
+        color: var(--color-accent);
+    }
+}
+
+.dish__rating-count {
+    color: var(--color-text-subtle);
+    font-weight: var(--weight-regular);
+}
+
+.dish__allergens {
+    color: var(--color-text-subtle);
+    font-size: var(--text-xs);
+}

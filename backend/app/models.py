@@ -448,8 +448,52 @@ class OrderItem(models.Model):
         verbose_name_plural = "Položky objednávky"
 
     def __str__(self):
+        if self.is_tip:
+            return f"Prepitné (Objednávka #{self.order.tracking_code})"
+
         dish_name = self.dish.title if self.dish else "Zmazané jedlo"
-        return f"{self.quantity}x {dish_name} (Objednávka #{self.order.id})"
+        return f"{self.quantity}× {dish_name} (Objednávka #{self.order.tracking_code})"
+
+class OrderItemModifier(models.Model):
+    order_item = models.ForeignKey(
+        OrderItem,
+        verbose_name="Položka objednávky",
+        help_text="Položka objednávky ku ktorej patrí zvolená možnosť.",
+        on_delete=models.CASCADE,
+        related_name="modifiers",
+        null=False
+    )
+
+    modifier_item = models.ForeignKey(
+        DishModifierItem,
+        verbose_name="Možnosť",
+        help_text="Zvolená možnosť jedla (ostane prázdne, ak bola možnosť medzičasom zmazaná).",
+        on_delete=models.SET_NULL,
+        related_name="ordered",
+        null=True,
+        blank=True
+    )
+
+    title = models.CharField(
+        verbose_name="Názov",
+        help_text="Názov možnosti v čase objednania.",
+        max_length=100,
+        null=False
+    )
+
+    extra_price = models.PositiveIntegerField(
+        verbose_name="Príplatok (v centoch)",
+        help_text="Príplatok za možnosť v čase objednania (pred zľavou).",
+        default=0,
+        null=False
+    )
+
+    class Meta:
+        verbose_name = "Zvolená možnosť"
+        verbose_name_plural = "Zvolené možnosti"
+
+    def __str__(self):
+        return f"{self.title} (+{self.extra_price / 100}€)" if self.extra_price > 0 else self.title
 
 class Rating(models.Model):
     order = models.ForeignKey(
@@ -612,7 +656,6 @@ class DailySoup(models.Model):
     day_of_week = models.IntegerField(
         verbose_name="Deň v týždni", 
         help_text="Deň, ku ktorému patrí dená polievka.", 
-        max_length=1, 
         choices=DAY_CHOICES, 
         default=1, 
         unique=True,
@@ -668,7 +711,6 @@ class DailyMeal(models.Model):
     day_of_week = models.IntegerField(
         verbose_name="Deň v týždni", 
         help_text="Deň, ku ktorému patrí dené jedlo.", 
-        max_length=1, 
         choices=DAY_CHOICES, 
         default=1, 
         null=False

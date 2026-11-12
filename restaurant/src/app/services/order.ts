@@ -1,9 +1,40 @@
 import { HttpClient } from "@angular/common/http"
 import { Injectable } from "@angular/core"
 import { Observable } from "rxjs"
+import { apiUrl } from "../config/api"
 
-import type { OrderDetails } from "../track-order/track-order"
-import type { CartItem } from "./cart"
+
+export type OrderStatus = "PENDING" | "PAID" | "PREPARING" | "DELIVERING" | "COMPLETED" | "CANCELLED"
+
+// One Ordered Dish (The Tip Is Not Included)
+export interface OrderedItem {
+  line_id:number,
+  dish_id:number|null, // null When The Dish Was Deleted From The Menu
+  title:string,
+  image:string|null,
+  quantity:number,
+  unit_price:number, // In Cents, After The Discount, Including The Options
+  modifiers:string[],
+  rating:number|null // Rating Already Given By The Customer
+}
+
+export interface OrderDetails {
+  id:number,
+  tracking_code:string,
+  first_name:string,
+  last_name:string,
+  address:string,
+  city:string,
+  phone_number:string,
+  message:string|null,
+  price:number, // Dishes After The Discount
+  tip:number,
+  total_price:number,
+  status:OrderStatus,
+  cash_on_delivery:boolean,
+  creation_time:string,
+  items:OrderedItem[]
+}
 
 @Injectable({ providedIn: "root" })
 export class Order {
@@ -18,7 +49,7 @@ export class Order {
         return this.http.get<{ 
             success:string,
             message:string
-        }>(`http://127.0.0.1:8001/api/cancel-order/${tracking_code}/`)
+        }>(apiUrl(`cancel-order/${tracking_code}/`))
     }
 
     // Method For Get The Order Status
@@ -32,21 +63,7 @@ export class Order {
             success:string,
             message:string,
             order_details?:OrderDetails
-        }>(`http://127.0.0.1:8001/api/order-status/${tracking_code}/`)
-    }
-
-    // Method For Get All Ordered And Delivered Items
-    getOrderedItems(order_id:number):Observable<{ 
-        success:string,
-        message:string,
-        ordered_items:CartItem[]
-    }> {
-        // Returns The Data
-        return this.http.get<{ 
-            success:string,
-            message:string,
-            ordered_items:CartItem[]
-        }>(`http://127.0.0.1:8001/api/ordered-items/${order_id}/`)
+        }>(apiUrl(`order-status/${tracking_code}/`))
     }
 
     // Method For Send The Rating
@@ -71,6 +88,6 @@ export class Order {
         return this.http.post<{
             success:string,
             message:string
-        }>("http://127.0.0.1:8001/api/send-rating/", all_ratings_to_send)
+        }>(apiUrl("send-rating/"), all_ratings_to_send)
     }
 }

@@ -1,54 +1,49 @@
-@import "../../partials/variables";
+:host {
+    display: block;
+}
 
-.search_bar_container {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    max-width: 500px;
-    width: 100%;
-    height: 45px;
-    margin: 0px auto 20px;
-    padding: 0px 15px;
-    background-color: $secondary-color;
-    border: 1px solid transparentize($main-color, 0.8);
-    border-radius: $small-border-radius;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+.search {
+    position: relative;
+}
 
-    .fa-magnifying-glass {
-        color: transparentize($main-color, 0.8);
-        transition: color 0.2s ease;
+.search__icon {
+    position: absolute;
+    top: 50%;
+    left: var(--space-4);
+    color: var(--color-text-subtle);
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.search__input {
+    padding-inline: calc(var(--space-4) + 1.75rem) calc(var(--space-2) + 36px);
+    border-radius: var(--radius-pill);
+
+    &::-webkit-search-decoration,
+    &::-webkit-search-cancel-button,
+    &::-webkit-search-results-button,
+    &::-webkit-search-results-decoration {
+        display: none;
     }
+}
 
-    &:focus-within {
-        border-color: transparentize($main-color, 0.5);
-        box-shadow: 0px 0px 3px 1px transparentize($main-color, 0.8);
+.search__clear {
+    position: absolute;
+    top: 50%;
+    right: var(--space-1);
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    background: none;
+    color: var(--color-text-muted);
+    border: none;
+    border-radius: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
 
-        .fa-magnifying-glass {
-            color: transparentize($main-color, 0.5);
-        }
-    }
-
-    .search_bar {
-        all: unset;
-        width: 100%;
-        color: $main-color;
-
-        &::placeholder {
-            color: darken($secondary-color, 40%);
-        }
-
-        &::-webkit-search-decoration,
-        &::-webkit-search-cancel-button,
-        &::-webkit-search-results-button,
-        &::-webkit-search-results-decoration {
-            display: none;
-        }
-    }
-
-    .delete {
-        all: unset;
-        margin-left: auto;
-        color: transparentize($main-color, 0.5);
-        cursor: pointer;
+    &:hover {
+        background-color: var(--color-surface-muted);
+        color: var(--color-text);
     }
 }

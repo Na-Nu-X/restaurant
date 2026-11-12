@@ -1,28 +1,16 @@
-// Colors
+/******************************************************************************
+ Sass Variables
 
-$main-color: #000; // Background
-$secondary-color: #fff; // Text
+ Colors, fonts, spacing and radii are CSS custom properties in `_theme.scss`
+ (use `var(--...)`), so a client can be re-themed in one place. Only values
+ that CSS variables cannot express (media query breakpoints) live here.
+******************************************************************************/
 
-$orange-color: #fdc152;
-$yellow-color: #fcfad5;
-$light-yellow-color: #fdfcf6;
-$green-color: #4ade80;
-$red-color: #df3535;
+// Breakpoints (Mobile-First, Used With The `bp()` Mixin)
 
-// Dimensions
-
-$main-width: 1000px;
-
-// Fonts
-
-$heading-font: "Nunito", sans-serif;
-$main-font: Poppins, Arial, sans-serif;
-$copywrite-font: 'Courier New', Courier, monospace;
-
-$default-font-size: 15px;
-
-// Borders
-
-$big-border-radius: 25px;
-$medium-border-radius: 10px;
-$small-border-radius: 5px;
+$breakpoints: (
+    sm: 480px,
+    md: 768px,
+    lg: 1024px,
+    xl: 1280px
+);

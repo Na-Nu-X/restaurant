@@ -1,34 +1,64 @@
-<footer>
-    <h2>Reštaurácia</h2>
+<footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__grid">
+            <!-- Brand -->
+            <div class="footer__brand">
+                <p class="footer__name">{{ brand.name }}</p>
+                <p class="footer__description">{{ brand.description }}</p>
 
-    <div class="address">
-        <p>Mlynské nivy 5/A</p>
-        <p>821 08 Bratislava</p>
-    </div>
+                @if(socials.length > 0) {
+                    <ul class="footer__socials" role="list">
+                        @for(social of socials; track social.url) {
+                            <li>
+                                <a [href]="social.url" [attr.aria-label]="social.label" target="_blank" rel="noopener">
+                                    <i [class]="social.icon" aria-hidden="true"></i>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
 
-    <div class="contact_us">
-        <p><i class="fa-regular fa-envelope"></i> <a href="mailto:behulpatrik@gmail.com" title="Napísať...">behulpatrik@gmail.com</a></p> <!-- https://fontawesome.com/icons/envelope -->
-        <p><i class="fa-solid fa-phone"></i> <a href="tel:+421940322633" title="Zavolať...">+421 940 322 633</a></p> <!-- https://fontawesome.com/icons/phone -->
-    </div>
+            <!-- Contact -->
+            <div class="footer__column">
+                <h2 class="footer__heading">Kontakt</h2>
+                <ul class="footer__list" role="list">
+                    <li><i class="fa-solid fa-phone" aria-hidden="true"></i><a [href]="'tel:' + brand.contact.phone">{{ brand.contact.phoneDisplay }}</a></li>
+                    <li><i class="fa-regular fa-envelope" aria-hidden="true"></i><a [href]="'mailto:' + brand.contact.email">{{ brand.contact.email }}</a></li>
+                    <li>
+                        <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+                        <a [href]="brand.address.mapLink" target="_blank" rel="noopener">
+                            {{ brand.address.street }}<br>{{ brand.address.postalCode }} {{ brand.address.city }}
+                        </a>
+                    </li>
+                </ul>
+            </div>
 
-    <div class="social_media">
-        <a href="https://www.instagram.com/" title="Instagram" target="_blank"><i class="fa-brands fa-instagram"></i></a> <!-- https://fontawesome.com/icons/instagram -->
-        <a href="https://www.facebook.com/" title="Facebook" target="_blank"><i class="fa-brands fa-facebook"></i></a> <!-- https://fontawesome.com/icons/facebook -->
-        <a href="https://www.tiktok.com/" title="TikTok" target="_blank"><i class="fa-brands fa-tiktok"></i></a> <!-- https://fontawesome.com/icons/tiktok -->
-    </div>
+            <!-- Opening Hours -->
+            <div class="footer__column">
+                <h2 class="footer__heading">Otváracie hodiny</h2>
+                <app-opening-hours tone="inverse"></app-opening-hours>
+            </div>
 
-    <div class="payment_methods">
-        <div class="icons">
-            <img src="images/visa.png" title="Visa" alt="Visa"> <!-- https://www.flaticon.com/free-icon/visa_5968299 -->
-            <img src="images/mastercard.png" title="Mastercard" alt="Mastercard"> <!-- https://www.flaticon.com/free-icon/card_16174534 -->
-            <img src="images/amex.png" title="American Express" alt="American Express"> <!-- https://www.flaticon.com/free-icon/amex_179431 -->
-            <img src="images/discover.png" title="Discover" alt="Discover"> <!-- https://www.flaticon.com/free-icon/discover_349230 -->
-            <img src="images/diners_club.png" title="Diners Club" alt="Diners Club"> <!-- https://www.flaticon.com/free-icon/diners-club_229142 -->
-            <img src="images/jcb.png" title="JCB" alt="JCB"> <!-- https://www.flaticon.com/free-icon/jcb_196559 -->
+            <!-- Links -->
+            <nav class="footer__column" aria-label="Odkazy v pätičke">
+                <h2 class="footer__heading">Stránka</h2>
+                <ul class="footer__list" role="list">
+                    @for(link of links; track link.id) {
+                        <li><a [href]="'/#' + link.id" (click)="go(link.id, $event)">{{ link.label }}</a></li>
+                    }
+                </ul>
+            </nav>
         </div>
-    </div>
-    
-    <div class="other">
-        <p class="copywrite">&copy; Reštaurácia 2026, Všetky práva vyhradené.</p>
+
+        <div class="footer__bottom">
+            <p class="footer__copyright">&copy; {{ year }} {{ brand.name }}. Všetky práva vyhradené.</p>
+
+            <ul class="footer__payments" role="list" aria-label="Prijímame karty">
+                @for(payment of payments; track payment.src) {
+                    <li><img [src]="payment.src" [alt]="payment.label" [title]="payment.label" width="40" height="26" loading="lazy"></li> <!-- https://www.flaticon.com/ -->
+                }
+            </ul>
+        </div>
     </div>
 </footer>

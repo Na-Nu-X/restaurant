@@ -1,0 +1,48 @@
+<main class="confirmation">
+    <div class="confirmation__card card">
+        <div class="confirmation__icon" aria-hidden="true">
+            <svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="24" /><path d="M15 27l7.5 7.5L38 19" /></svg>
+        </div>
+
+        <h1 class="confirmation__title">{{ title() }}</h1>
+
+        <p class="confirmation__lead">
+            Ďakujeme@if(first_name(); as name) {, {{ name }}}! Vašu objednávku sme odovzdali do kuchyne a čoskoro bude na ceste k vám.
+        </p>
+
+        @if(tracking_code(); as code) {
+            <div class="code">
+                <span class="code__label">Kód objednávky</span>
+                <strong class="code__value">{{ code }}</strong>
+                <button type="button" class="btn btn--ghost btn--sm code__copy" (click)="copyCode()">
+                    <i class="fa-regular" [class.fa-copy]="!copied()" [class.fa-circle-check]="copied()" aria-hidden="true"></i>
+                    {{ copied() ? "Skopírované" : "Kopírovať" }}
+                </button>
+            </div>
+        } @else {
+            <p class="notice">Kód objednávky sa nepodarilo načítať. Ak máte otázky, zavolajte nám na {{ brand.contact.phoneDisplay }}.</p>
+        }
+
+        @if(order()?.cash_on_delivery && order(); as details) {
+            <p class="cash">
+                <i class="fa-solid fa-money-bill-wave" aria-hidden="true"></i>
+                <span>Pri prevzatí si pripravte <strong>{{ details.total_price | price }}</strong>.</span>
+            </p>
+        }
+
+        <ol class="next" role="list" aria-label="Čo bude nasledovať">
+            <li><span class="next__icon" aria-hidden="true"><i class="fa-solid fa-fire-burner"></i></span> Pripravujeme vaše jedlo</li>
+            <li><span class="next__icon" aria-hidden="true"><i class="fa-solid fa-motorcycle"></i></span> Kuriér ho privezie</li>
+            <li><span class="next__icon" aria-hidden="true"><i class="fa-solid fa-utensils"></i></span> Dobrú chuť!</li>
+        </ol>
+
+        <div class="confirmation__actions">
+            @if(tracking_code(); as code) {
+                <a class="btn btn--primary btn--lg" [routerLink]="['/objednavka', code]">
+                    Sledovať objednávku <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                </a>
+            }
+            <a class="btn btn--secondary btn--lg" routerLink="/">Späť na úvod</a>
+        </div>
+    </div>
+</main>

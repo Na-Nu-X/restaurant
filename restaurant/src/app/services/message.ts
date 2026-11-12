@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core"
 import { HttpClient } from "@angular/common/http"
 import { Observable } from "rxjs"
+import { apiUrl } from "../config/api"
 
 import type { ContactMessage } from "../contact-form/contact-form"
 
@@ -8,7 +9,7 @@ import type { ContactMessage } from "../contact-form/contact-form"
   providedIn: "root"
 })
 export class Message {
-    private api_url:string = "http://127.0.0.1:8001/api/contact/" // Connection To The Back-End API
+    private api_url:string = apiUrl("contact/") // Connection To The Back-End API
 
     constructor(private http: HttpClient) { }
 

@@ -1,5 +1,6 @@
-<span class="preloader" [class.hidden]="!is_loading"></span> <!-- https://cssloaders.github.io/ -->
-<canvas #background_canvas class="background_canvas"></canvas>
+<span class="preloader" [class.hidden]="!is_loading()"></span> <!-- https://cssloaders.github.io/ -->
 <app-navigation-bar></app-navigation-bar>
 <router-outlet></router-outlet>
 <app-footer></app-footer>
+<app-cart-drawer></app-cart-drawer>
+<app-toast-host></app-toast-host>

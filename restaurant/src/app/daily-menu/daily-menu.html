@@ -1,19 +1,51 @@
-<div class="daily_menu" *ngIf="!is_loading">
-    <h2>Denné menu (dnes)</h2>
-    
-    <p class="soup">{{ soup }}</p>
-    
-    <ul *ngIf="meals.length > 0">
-        <li *ngFor="let one_meal of meals">
-            <p class="meal"><span class="number">{{ one_meal.number }}.</span> {{ one_meal.title }}</p>
-            <p class="price">{{ (one_meal.price / 100) | currency:'EUR':'':'1.2-2':'sk-SK' }}<span>€</span></p>
-        </li>
-    </ul>
+<section class="daily section" [id]="section_id" aria-labelledby="daily-menu-title">
+    <div class="daily__inner">
+        <header class="section__header daily__header">
+            <p class="eyebrow">Obedové menu</p>
+            <h2 id="daily-menu-title" class="section__title">Denné menu</h2>
+            <p class="section__lead">
+                <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+                {{ today }}
+            </p>
+        </header>
 
-    <p *ngIf="meals.length === 0" class="no-meals">Hlavné jedlá pre dnešný deň zatiaľ neboli pridané.</p>
-</div>
+        <div class="card daily__card" [attr.aria-busy]="state() === 'loading'">
+            @switch(state()) {
+                @case("loading") {
+                    <div class="skeleton skeleton--soup"></div>
+                    @for(row of [1, 2, 3]; track row) {
+                        <div class="skeleton skeleton--row"></div>
+                    }
+                }
 
-<div class="daily_menu_loading" *ngIf="is_loading">
-    <h2>Denné menu (dnes)</h2>
-    <p class="soup">Načítavam obedové menu...</p>
-</div>
+                @case("error") {
+                    <p class="daily__empty">
+                        <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+                        Denné menu sa nepodarilo načítať. Skúste to prosím neskôr.
+                    </p>
+                }
+
+                @default {
+                    <div class="daily__soup">
+                        <span class="daily__tag"><i class="fa-solid fa-mug-hot" aria-hidden="true"></i> Polievka</span>
+                        <p>{{ soup() }}</p>
+                    </div>
+
+                    @if(meals().length > 0) {
+                        <ol class="daily__list" role="list">
+                            @for(meal of meals(); track meal.id) {
+                                <li class="daily__item">
+                                    <span class="daily__number" aria-hidden="true">{{ meal.number }}</span>
+                                    <p class="daily__title"><span class="visually-hidden">Menu {{ meal.number }}: </span>{{ meal.title }}</p>
+                                    <span class="daily__price">{{ meal.price | price }}</span>
+                                </li>
+                            }
+                        </ol>
+                    } @else {
+                        <p class="daily__empty">Hlavné jedlá pre dnešný deň zatiaľ neboli pridané.</p>
+                    }
+                }
+            }
+        </div>
+    </div>
+</section>

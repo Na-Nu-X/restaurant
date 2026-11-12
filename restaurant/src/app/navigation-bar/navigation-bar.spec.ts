@@ -1,3 +1,6 @@
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideRouter } from '@angular/router';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NavigationBar } from './navigation-bar';
@@ -9,6 +12,7 @@ describe('NavigationBar', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [NavigationBar],
+      providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(NavigationBar);

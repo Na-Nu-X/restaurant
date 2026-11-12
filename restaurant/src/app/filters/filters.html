@@ -1,30 +1,36 @@
-<div class="select_menus">
-    <div class="select_menu" *ngFor="let group of filter_groups">
-        <button 
-            class="refresh" 
-            title="Obnoviť predvolené filtre" 
-            aria-label="Obnoviť predvolené filtre"
-            (click)="resetGroupFilter(group.id)"
-        >
-            <i class="fa-solid fa-arrow-rotate-right"></i> <!-- https://fontawesome.com/icons/arrow-rotate-right -->
-        </button>
+<div class="filters" role="toolbar" aria-label="Filtrovať podľa kategórie">
+    <button
+        type="button"
+        class="chip"
+        [class.is-active]="selected() === null"
+        [attr.aria-pressed]="selected() === null"
+        (click)="selected.set(null)"
+    >
+        Všetko
+    </button>
 
-        <div class="select" tabindex="0" (click)="toggleShowSelectMenu(group.id)">
-            <span>{{ getGroupLabel(group) }}</span>
-            <i class="fa-solid fa-angle-down"></i> <!-- https://fontawesome.com/icons/angle-down -->
-        </div>
+    @for(group of groups(); track group.id) {
+        @if(group.categories.length > 0) {
+            <span class="filters__divider" aria-hidden="true"></span>
 
-        <div class="options_list" [class.active]="open_group_id === group.id">
-            <div 
-                *ngFor="let one_category of group.categories"
-                class="option" 
-                [class.selected]="selected_filters[group.id]?.id === one_category.id"
-                (click)="selectCategory(group.id, one_category)" 
-                tabindex="0"
-            >
-                <i [class]="one_category.icon"></i>
-                <span>{{ one_category.name }}</span>
+            <div class="filters__group" role="group" [attr.aria-label]="group.name">
+                <span class="filters__group-label" aria-hidden="true">{{ group.name }}</span>
+
+                @for(category of group.categories; track category.id) {
+                    <button
+                        type="button"
+                        class="chip"
+                        [class.is-active]="selected() === category.id"
+                        [attr.aria-pressed]="selected() === category.id"
+                        (click)="select(category.id)"
+                    >
+                        @if(icon(category); as icon_class) {
+                            <i [class]="icon_class" aria-hidden="true"></i>
+                        }
+                        {{ label(category) }}
+                    </button>
+                }
             </div>
-        </div>
-    </div>
+        }
+    }
 </div>

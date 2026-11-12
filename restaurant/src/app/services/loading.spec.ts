@@ -10,7 +10,19 @@ describe('Loading', () => {
     service = TestBed.inject(Loading);
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
+  it('stays visible until every parallel request has finished', () => {
+    service.show();
+    service.show();
+    service.hide();
+    expect(service.is_loading()).toBe(true);
+
+    service.hide();
+    expect(service.is_loading()).toBe(false);
+  });
+
+  it('never goes below zero', () => {
+    service.hide();
+    service.show();
+    expect(service.is_loading()).toBe(true);
   });
 });

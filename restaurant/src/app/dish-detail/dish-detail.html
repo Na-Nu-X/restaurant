@@ -1,0 +1,109 @@
+<dialog
+    #dialog
+    class="sheet"
+    aria-labelledby="dish-detail-title"
+    (click)="onDialogClick($event)"
+    (cancel)="onCancel($event)"
+>
+    @if(dish(); as d) {
+        <div class="sheet__panel">
+            <button type="button" class="sheet__close" aria-label="Zavrieť" (click)="close()">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
+
+            <div class="sheet__body">
+                @if(d.image) {
+                    <img class="sheet__image" [src]="d.image" [alt]="d.title" width="800" height="500">
+                }
+
+                <div class="sheet__content">
+                    <header class="sheet__header">
+                        <h2 id="dish-detail-title" class="sheet__title">{{ d.title }}</h2>
+
+                        <div class="sheet__meta">
+                            <span class="sheet__price">{{ d.price | price }}</span>
+
+                            @if((d.rating_amount ?? 0) > 0) {
+                                <span class="sheet__rating">
+                                    <i class="fa-solid fa-star" aria-hidden="true"></i>
+                                    {{ d.average_rating | number:'1.1-1':locale }}
+                                    <span class="sheet__rating-count">({{ d.rating_amount }} hodnotení)</span>
+                                </span>
+                            }
+                        </div>
+
+                        <p class="sheet__description">{{ d.description }}</p>
+                    </header>
+
+                    @if(d.allergens.length > 0) {
+                        <details class="sheet__allergens">
+                            <summary>
+                                <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                                Alergény: {{ d.allergens.length }}
+                                <i class="fa-solid fa-chevron-down sheet__allergens-chevron" aria-hidden="true"></i>
+                            </summary>
+
+                            <ul role="list">
+                                @for(allergen of d.allergens; track allergen.number) {
+                                    <li><span class="sheet__allergen-number">{{ allergen.number }}</span> {{ allergen.name }}</li>
+                                }
+                            </ul>
+                        </details>
+                    }
+
+                    @for(group of groups(); track group.id) {
+                        <fieldset class="options" [id]="groupId(group)" [class.is-missing]="isMissing(group)">
+                            <legend class="options__legend">
+                                <span class="options__title">{{ group.title }}</span>
+                                <span class="badge" [class.badge--primary]="group.is_required && !isMissing(group)" [class.badge--danger]="isMissing(group)">
+                                    {{ groupHint(group) }}
+                                </span>
+                            </legend>
+
+                            @if(isMissing(group)) {
+                                <p class="options__error" role="alert">Vyberte prosím jednu z možností.</p>
+                            }
+
+                            @for(item of group.items; track item.id) {
+                                <label class="option" [class.is-selected]="isSelected(group, item)">
+                                    <input
+                                        class="option__input"
+                                        [type]="group.is_multiple_choice ? 'checkbox' : 'radio'"
+                                        [name]="groupId(group)"
+                                        [checked]="isSelected(group, item)"
+                                        (click)="toggle(group, item)"
+                                    >
+                                    <span class="option__control" [class.option__control--round]="!group.is_multiple_choice" aria-hidden="true">
+                                        <i class="fa-solid fa-check"></i>
+                                    </span>
+                                    <span class="option__title">{{ item.title }}</span>
+
+                                    @if(item.extra_price > 0) {
+                                        <span class="option__price">+ {{ item.extra_price | price }}</span>
+                                    }
+                                </label>
+                            }
+                        </fieldset>
+                    }
+                </div>
+            </div>
+
+            <footer class="sheet__footer">
+                <div class="stepper" role="group" aria-label="Množstvo">
+                    <button type="button" class="stepper__button" aria-label="Menej" [disabled]="quantity() <= 1" (click)="changeQuantity(-1)">
+                        <i class="fa-solid fa-minus" aria-hidden="true"></i>
+                    </button>
+                    <output class="stepper__value" aria-live="polite">{{ quantity() }}</output>
+                    <button type="button" class="stepper__button" aria-label="Viac" [disabled]="quantity() >= max_quantity" (click)="changeQuantity(1)">
+                        <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                    </button>
+                </div>
+
+                <button type="button" class="btn btn--primary btn--lg sheet__add" (click)="confirm()">
+                    <span>Pridať</span>
+                    <span class="sheet__add-price">{{ total_price() | price }}</span>
+                </button>
+            </footer>
+        </div>
+    }
+</dialog>

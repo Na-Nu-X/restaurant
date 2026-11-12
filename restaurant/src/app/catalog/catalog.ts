@@ -1,154 +1,155 @@
-import { 
-  ChangeDetectorRef,
-  Component,
-  OnInit
-} from "@angular/core"
+import { Component, OnInit, computed, inject, signal } from "@angular/core"
 
-import { CommonModule, CurrencyPipe } from "@angular/common"
-import { Dish } from "../services/dish"
 import { Cart } from "../services/cart"
+import { Dish } from "../services/dish"
 import { Filters } from "../filters/filters"
+import { SearchBar } from "../search-bar/search-bar"
+import { DishCard } from "../dish-card/dish-card"
+import { DishDetail, DishSelection } from "../dish-detail/dish-detail"
+import { Toast } from "../shared/toast/toast.service"
 
-import type { CartItem } from "../services/cart"
-import type { modifierGroup } from "../services/cart"
+import type { CartItem, ModifierItem } from "../services/cart"
+import type { FilterGroup } from "../services/dish"
 
+type LoadState = "loading" | "ready" | "error"
+
+// Lower-Case Text Without Diacritics, So "kuraci" Finds "Kurací"
+function normalize(text:string):string {
+  return text.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim()
+}
+
+// Slovak Plural Of "Jedlo" (1 Jedlo, 2–4 Jedlá, 0 / 5+ Jedál)
+export function dishCountLabel(count:number):string {
+  if(count === 1) return "1 jedlo"
+  if(count >= 2 && count <= 4) return `${count} jedlá`
+  return `${count} jedál`
+}
+
+// Menu Section: Search, Category Chips, Dish Grid And The Dish Detail Panel
 @Component({
   selector: "app-catalog",
-  imports: [CommonModule, CurrencyPipe, Filters],
+  imports: [Filters, SearchBar, DishCard, DishDetail],
   templateUrl: "./catalog.html",
   styleUrl: "./catalog.scss",
 })
-
 export class Catalog implements OnInit {
-  is_any_filters:boolean = false // Stores The Information If Any Filters Exist
-  dishes:CartItem[] = [] // Stores The Dishes Data
-  filtered_dishes:CartItem[] = [] // Stores The Filtered Dishes Data
+  private dishService:Dish = inject(Dish)
+  private cartService:Cart = inject(Cart)
+  private toast:Toast = inject(Toast)
+  private added_timer?:ReturnType<typeof setTimeout>
 
-  constructor(
-    private dishService:Dish, 
-    private cartService:Cart,
-    private cdr:ChangeDetectorRef
-  ) { }
+  readonly state = signal<LoadState>("loading")
+  readonly dishes = signal<CartItem[]>([]) // All Dishes From The Back-End
+  readonly groups = signal<FilterGroup[]>([]) // Filter Groups With Their Categories
+
+  readonly query = signal<string>("") // Search Text
+  readonly category = signal<number|null>(null) // Selected Category (null = Everything)
+
+  readonly selected_dish = signal<CartItem|null>(null) // Dish Shown In The Detail Panel
+  readonly just_added_id = signal<number|null>(null) // Card Whose "+" Shows A Check Mark
+
+  readonly skeletons:number[] = [1, 2, 3, 4, 5, 6]
+
+  // Dishes Matching Both The Search Text And The Selected Category
+  readonly filtered = computed<CartItem[]>(() => {
+    const query:string = normalize(this.query())
+    const category:number|null = this.category()
+
+    return this.dishes().filter(dish =>
+      (category === null || dish.category_id === category) &&
+      (!query || normalize(`${dish.title} ${dish.description}`).includes(query))
+    )
+  })
+
+  readonly has_active_filters = computed<boolean>(() => this.query().trim() !== "" || this.category() !== null)
+  readonly result_label = computed<string>(() => dishCountLabel(this.filtered().length))
 
   // Method Which Executes In Beginning
   ngOnInit():void {
-    // Gets The Categories
+    this.loadCategories()
+    this.loadDishes()
+  }
+
+  // Method For Load The Filter Groups (The Menu Works Without Them)
+  private loadCategories():void {
     this.dishService.getCategories().subscribe({
       next:(response) => {
-        if(response && response.success) {
-          if(response.filter_groups.length > 0) this.is_any_filters = true // Sets The Information That There Are Any Filters Available
-        }
-        
-        else {
-          console.error(response.message) // Shows The Error Message
-        }
+        if(response?.success) this.groups.set(response.filter_groups)
+        else console.error(response.message)
       },
 
-      error:(error) => {
-        console.error(error) // Shows The Error
-      }
+      error:(error) => console.error(error)
     })
+  }
 
-    // Gets The Dishes
+  // Method For Load The Dishes
+  loadDishes():void {
+    this.state.set("loading")
+
     this.dishService.getDishes().subscribe({
       next:(response) => {
-        if(response && response.success) {
-          this.dishes = response.dishes // Sets The Dishes Data
-          this.filtered_dishes = response.dishes // Sets The Filtered Dishes Data
-          this.listenToSearch() // Initializes The Listen To Search
+        if(response?.success) {
+          this.dishes.set(response.dishes)
+          this.state.set("ready")
         }
-        
+
         else {
-          console.error(response.message) // Shows The Error Message
+          console.error(response.message)
+          this.state.set("error")
         }
       },
 
       error:(error) => {
-        console.error(error) // Shows The Error
-        alert("Pri načítaní položiek došlo k chybe.") // Shows The Alert
+        console.error(error)
+        this.state.set("error")
       }
     })
   }
 
-  // Method For Listen To Search
-  private listenToSearch():void {
-    this.dishService.searched_text$.subscribe(text => {
-      const searched_text:string = text.toLowerCase().trim() // Gets The Clear Search Text
-    
-      if(!searched_text) this.filtered_dishes = this.dishes // Shows Everything If The Search is Empty
-      else this.filtered_dishes = this.dishes.filter(one_dish => one_dish.title.toLowerCase().includes(searched_text)) // Filters The Dishes
-
-      this.cdr.detectChanges() // Rerenders The HTML
-    })
+  // Method For Reset The Search And The Category
+  resetFilters():void {
+    this.query.set("")
+    this.category.set(null)
   }
 
-  // Method For Listen On The Category Change
-  listenToCategory(active_filters:{ [group_id:number]:number|null }):void {
-    const has_active_filters:boolean = Object.values(active_filters).some(id => id !== null) // Checks If Are Any Filters Applied
+  // Method For Open The Dish Detail Panel
+  open(dish:CartItem):void {
+    this.selected_dish.set(dish)
+  }
 
-    if(!has_active_filters) {
-      this.filtered_dishes = [...this.dishes] // Shows Everything If The Filters Are Empty
+  // Method For Close The Dish Detail Panel
+  closeDetail():void {
+    this.selected_dish.set(null)
+  }
+
+  // "+" On A Card: Dishes With Options Open The Panel, Others Go Straight To The Cart
+  quickAdd(dish:CartItem):void {
+    if((dish.modifier_groups?.length ?? 0) > 0) {
+      this.open(dish)
       return
     }
 
-    // Filters The Dishes
-    this.filtered_dishes = this.dishes.filter(one_dish => {
-      return Object.entries(active_filters).every(([group_id, category_id]) => {
-        if(category_id === null) return true
-        return one_dish.category_id === category_id
-      })
+    this.addToCart(dish, [], 1)
+  }
+
+  // Confirmed In The Detail Panel
+  onConfirm(selection:DishSelection):void {
+    this.addToCart(selection.dish, selection.modifiers, selection.quantity)
+    this.closeDetail()
+  }
+
+  // Method For Add To Cart With Visual Feedback
+  private addToCart(dish:CartItem, modifiers:ModifierItem[], quantity:number):void {
+    this.cartService.addToCart(dish, modifiers, quantity)
+
+    // Shows A Check Mark On The Card For A Moment
+    clearTimeout(this.added_timer)
+    this.just_added_id.set(dish.id)
+    this.added_timer = setTimeout(() => this.just_added_id.set(null), 1400)
+
+    this.toast.success(`${quantity > 1 ? quantity + "× " : ""}${dish.title} je v košíku`, {
+      label: "Zobraziť košík",
+      run: () => this.cartService.openCart()
     })
-  }
-
-  // Method For Select The Modifier With A Radio Button
-  SelectModifierRadio(
-    dish:CartItem, 
-    group:modifierGroup, 
-
-    item:{
-      id:number,
-      title:string,
-      extra_price:number
-    }
-  ) {
-    if(!dish.selected_modifiers) dish.selected_modifiers = {}
-    dish.selected_modifiers[group.id] = [item]
-  }
-
-  // Method For Toggle The Modifier With A Checkbox Button
-  ToggleModifierCheckbox(
-    dish:CartItem, 
-    group:modifierGroup, 
-
-    item:{
-      id:number,
-      title:string,
-      extra_price:number
-    }, 
-    
-    event:Event
-  ) {
-    const is_checked:boolean = (event.target as HTMLInputElement).checked
-
-    if(!dish.selected_modifiers) dish.selected_modifiers = {}
-    if(!dish.selected_modifiers[group.id]) dish.selected_modifiers[group.id] = []
-    if(is_checked) dish.selected_modifiers[group.id].push(item)
-    else dish.selected_modifiers[group.id] = dish.selected_modifiers[group.id].filter(item => item.id !== item.id)
-  }
-
-  // Method For Add The Dish To The Cart
-  addToCart(dish:CartItem) {
-    this.cartService.addToCart(dish) // Stores The Dish
-  }
-
-  // Method For Get Allergens Tooltip Content
-  getAllergensTooltip(
-    allergens: { 
-      number:number,
-      name: string 
-    }[]
-  ):string {
-    if(allergens.length === 0) return "" // Returns The Empty Tooltip Content
-    return allergens.map(a => `${a.number}. ${a.name}`).join('\n\n') // Returns The Tooltip Content
   }
 }

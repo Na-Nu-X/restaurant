@@ -1,0 +1,47 @@
+<article class="dish" (click)="opened.emit(dish())">
+    <div class="dish__media">
+        @if(dish().image) {
+            <img class="dish__image" [src]="dish().image" [alt]="dish().title" loading="lazy" decoding="async" width="400" height="300">
+        } @else {
+            <div class="dish__image dish__image--empty" aria-hidden="true"><i class="fa-solid fa-utensils"></i></div>
+        }
+
+        <button
+            type="button"
+            class="dish__add"
+            [class.is-added]="just_added()"
+            [attr.aria-label]="add_label()"
+            (click)="onAdd($event)"
+        >
+            <i class="fa-solid" [class.fa-plus]="!just_added()" [class.fa-check]="just_added()" aria-hidden="true"></i>
+        </button>
+    </div>
+
+    <div class="dish__body">
+        <h3 class="dish__title">
+            <!-- The Whole Card Is Clickable; This Button Makes It Reachable With The Keyboard -->
+            <button type="button" class="dish__open" (click)="$event.stopPropagation(); opened.emit(dish())">{{ dish().title }}</button>
+        </h3>
+
+        <p class="dish__description">{{ dish().description }}</p>
+
+        <div class="dish__meta">
+            <span class="dish__price">
+                @if(has_options()) { <span class="dish__from">od</span> }
+                {{ dish().price | price }}
+            </span>
+
+            @if(has_rating()) {
+                <span class="dish__rating" [attr.aria-label]="'Hodnotenie ' + (dish().average_rating | number:'1.1-1':locale) + ' z 5'">
+                    <i class="fa-solid fa-star" aria-hidden="true"></i>
+                    {{ dish().average_rating | number:'1.1-1':locale }}
+                    <span class="dish__rating-count">({{ dish().rating_amount }})</span>
+                </span>
+            }
+        </div>
+
+        @if(dish().allergens.length > 0) {
+            <p class="dish__allergens">Alergény: {{ allergen_numbers() }}</p>
+        }
+    </div>
+</article>
